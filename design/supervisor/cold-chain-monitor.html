@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — مراقبة التبريد</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] }, colors: { brand: { DEFAULT:'#DC2626', hover:'#B91C1C' } } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 16px; border-radius:8px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; transition:all 0.15s; cursor:pointer; }
+    .sidebar-link:hover { background:rgba(255,255,255,0.08); color:white; }
+    .sidebar-link.active { background:#DC2626 !important; color:white; border-right:3px solid #ff6b6b; }
+    @keyframes pulse-badge {
+      0%, 100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.6; transform:scale(0.95); }
+    }
+    .violation-badge { animation: pulse-badge 1.5s ease-in-out infinite; }
+    .temp-bar { transition: height 0.3s ease; }
+  </style>
+</head>
+<body class="bg-gray-50 font-arabic">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:#0D0D0D; direction:rtl;">
+    <div class="px-4 py-5 border-b border-white/10">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2" onerror="this.style.display='none'">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-lg"></i>
+        <div>
+          <p class="text-white font-bold text-sm leading-tight">إدهام</p>
+          <p class="text-xs" style="color:#DC2626">للنقل المبرد</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <div class="sidebar-link" data-link="dashboard.html"><i class="ti ti-layout-dashboard text-lg"></i><span>لوحة التحكم</span></div>
+      <div class="sidebar-link" data-link="orders.html"><i class="ti ti-package text-lg"></i><span>إدارة الطلبات</span></div>
+      <div class="sidebar-link" data-link="live-map.html"><i class="ti ti-map text-lg"></i><span>خريطة الأسطول</span></div>
+      <div class="sidebar-link" data-link="fleet.html"><i class="ti ti-truck text-lg"></i><span>إدارة الأسطول</span></div>
+      <div class="sidebar-link" data-link="drivers.html"><i class="ti ti-steering-wheel text-lg"></i><span>السائقون</span></div>
+      <div class="sidebar-link" data-link="users.html"><i class="ti ti-users text-lg"></i><span>المستخدمون</span></div>
+      <div class="sidebar-link active" data-link="cold-chain-monitor.html"><i class="ti ti-snowflake text-lg"></i><span>مراقبة التبريد</span></div>
+      <div class="sidebar-link" data-link="reports.html"><i class="ti ti-report-analytics text-lg"></i><span>التقارير</span></div>
+      <div class="sidebar-link" data-link="notifications.html"><i class="ti ti-bell text-lg"></i><span>الإشعارات</span></div>
+      <div class="sidebar-link" style="margin-top:16px; opacity:0.5" data-link="../index.html"><i class="ti ti-arrow-right text-lg"></i><span>الرئيسية</span></div>
+    </nav>
+    <div class="px-3 py-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-3 py-2">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#DC2626">
+          <i class="ti ti-user text-white text-base"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-white text-sm font-semibold truncate">أحمد المنصور</p>
+          <p class="text-gray-400 text-[11px]">مشرف عمليات</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <div>
+        <h1 class="text-xl font-bold text-gray-800">مراقبة التبريد (Cold Chain)</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <span class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+          آخر تحديث: منذ 45 ثانية
+        </div>
+        <button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+          <i class="ti ti-refresh"></i>
+          تحديث
+        </button>
+      </div>
+    </div>
+
+    <div class="p-8">
+
+      <!-- Urgent Alert -->
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <i class="ti ti-alert-triangle text-red-600 text-xl"></i>
+          <span class="font-bold text-red-800">انتهاك درجة حرارة — رحلة EDH-2026-0147</span>
+          <span class="mr-auto bg-red-600 text-white text-xs px-2 py-0.5 rounded-full violation-badge">عاجل</span>
+        </div>
+        <p class="text-red-700 text-sm">الشاحنة أ ب ج ٤٥٦ | السائق: فيصل الحربي | درجة الحرارة: -12°C (المطلوب: أقل من -18°C)</p>
+        <p class="text-red-500 text-xs mt-1">منذ 8 دقائق</p>
+        <div class="flex items-center gap-3 mt-3">
+          <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition-colors">
+            <i class="ti ti-phone"></i>
+            اتصال بالسائق
+          </button>
+          <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-300 text-red-700 text-xs font-semibold hover:bg-red-100 transition-colors">
+            <i class="ti ti-eye"></i>
+            تتبع الشاحنة
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="grid grid-cols-4 gap-5 mb-8">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">شحنات مبردة نشطة</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:#FEF2F2">
+              <i class="ti ti-snowflake text-lg" style="color:#DC2626"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-gray-800">5</p>
+          <p class="text-xs text-gray-400 mt-1">رحلة جارية</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">ضمن النطاق</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-green-50">
+              <i class="ti ti-circle-check text-lg text-green-600"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-green-600">4</p>
+          <p class="text-xs text-gray-400 mt-1">درجة حرارة طبيعية</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-red-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">انتهاك</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-red-50 violation-badge">
+              <i class="ti ti-alert-triangle text-lg text-red-600"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-red-600 violation-badge">1</p>
+          <p class="text-xs text-red-400 mt-1">يتطلب تدخلاً فورياً</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">متوسط درجة الحرارة</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-50">
+              <i class="ti ti-temperature text-lg text-blue-600"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-blue-600">-17.2°</p>
+          <p class="text-xs text-gray-400 mt-1">عبر جميع الشحنات</p>
+        </div>
+      </div>
+
+      <!-- Main Table -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="font-bold text-gray-800">الشحنات المبردة النشطة</h2>
+          <div class="flex items-center gap-3">
+            <select class="border border-gray-200 rounded-lg py-1.5 px-3 text-sm text-gray-600 focus:outline-none focus:border-red-400">
+              <option>جميع الشحنات</option>
+              <option>طبيعي</option>
+              <option>تحذير</option>
+              <option>انتهاك</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-100">
+                <th class="text-right text-xs font-semibold text-gray-500 px-6 py-3">رقم الطلب</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">السائق</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">المركبة</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">النطاق المسموح</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">آخر قراءة</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">الوقت</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">الحالة</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">إجراء</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              <!-- Row 1 — VIOLATION -->
+              <tr class="bg-red-50/40 hover:bg-red-50/60 transition-colors">
+                <td class="px-6 py-4">
+                  <span class="font-mono text-sm font-semibold text-gray-800">EDH-2026-0147</span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">فيصل الحربي</td>
+                <td class="px-4 py-4 text-sm text-gray-600">Isuzu أ ب ج ٤٥٦</td>
+                <td class="px-4 py-4 text-sm text-gray-600">أقل من -18°C</td>
+                <td class="px-4 py-4">
+                  <span class="text-red-600 font-bold text-sm">-12.3°C</span>
+                </td>
+                <td class="px-4 py-4 text-xs text-gray-500">منذ 8 د</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 violation-badge">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>انتهاك
+                  </span>
+                </td>
+                <td class="px-4 py-4">
+                  <button class="flex items-center gap-1 text-xs text-white px-3 py-1.5 rounded-lg font-semibold transition-colors" style="background:#DC2626">
+                    <i class="ti ti-phone text-xs"></i>اتصال
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <span class="font-mono text-sm font-semibold text-gray-800">EDH-2026-0151</span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">محمد العتيبي</td>
+                <td class="px-4 py-4 text-sm text-gray-600">Isuzu أ ب ت ١٢٣</td>
+                <td class="px-4 py-4 text-sm text-gray-600">2°C – 8°C</td>
+                <td class="px-4 py-4">
+                  <span class="text-green-600 font-bold text-sm">4.8°C</span>
+                </td>
+                <td class="px-4 py-4 text-xs text-gray-500">منذ 2 د</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>طبيعي
+                  </span>
+                </td>
+                <td class="px-4 py-4">
+                  <button class="text-xs text-blue-600 hover:text-blue-800 font-medium px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">عرض</button>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <span class="font-mono text-sm font-semibold text-gray-800">EDH-2026-0153</span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">خالد السهلي</td>
+                <td class="px-4 py-4 text-sm text-gray-600">Isuzu ح ط ٠١٢</td>
+                <td class="px-4 py-4 text-sm text-gray-600">2°C – 8°C</td>
+                <td class="px-4 py-4">
+                  <span class="text-green-600 font-bold text-sm">5.1°C</span>
+                </td>
+                <td class="px-4 py-4 text-xs text-gray-500">منذ 1 د</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>طبيعي
+                  </span>
+                </td>
+                <td class="px-4 py-4">
+                  <button class="text-xs text-blue-600 hover:text-blue-800 font-medium px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">عرض</button>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <span class="font-mono text-sm font-semibold text-gray-800">EDH-2026-0155</span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">عبدالله الزهراني</td>
+                <td class="px-4 py-4 text-sm text-gray-600">Isuzu و ز ٧٨٩</td>
+                <td class="px-4 py-4 text-sm text-gray-600">أقل من -18°C</td>
+                <td class="px-4 py-4">
+                  <span class="text-green-600 font-bold text-sm">-19.8°C</span>
+                </td>
+                <td class="px-4 py-4 text-xs text-gray-500">منذ 3 د</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>طبيعي
+                  </span>
+                </td>
+                <td class="px-4 py-4">
+                  <button class="text-xs text-blue-600 hover:text-blue-800 font-medium px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">عرض</button>
+                </td>
+              </tr>
+              <!-- Row 5 — WARNING -->
+              <tr class="bg-yellow-50/30 hover:bg-yellow-50/50 transition-colors">
+                <td class="px-6 py-4">
+                  <span class="font-mono text-sm font-semibold text-gray-800">EDH-2026-0148</span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">أحمد البقمي</td>
+                <td class="px-4 py-4 text-sm text-gray-600">Isuzu د ر ٣٣٤</td>
+                <td class="px-4 py-4 text-sm text-gray-600">2°C – 8°C</td>
+                <td class="px-4 py-4">
+                  <span class="text-amber-600 font-bold text-sm">7.2°C</span>
+                </td>
+                <td class="px-4 py-4 text-xs text-gray-500">منذ 5 د</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>تحذير
+                  </span>
+                </td>
+                <td class="px-4 py-4">
+                  <button class="text-xs text-blue-600 hover:text-blue-800 font-medium px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">عرض</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mini Charts Section -->
+      <div>
+        <h2 class="font-bold text-gray-800 text-lg mb-4">سجل درجات الحرارة لكل رحلة</h2>
+        <div class="grid grid-cols-1 gap-4">
+
+          <!-- Chart Card 1 — VIOLATION -->
+          <div class="bg-white rounded-xl shadow-sm border border-red-200 p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-gray-800 text-sm">EDH-2026-0147</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold violation-badge">انتهاك</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-0.5">فيصل الحربي — Isuzu أ ب ج ٤٥٦ — النطاق: أقل من -18°C</p>
+              </div>
+              <div class="text-left">
+                <p class="text-2xl font-bold text-red-600">-12.3°C</p>
+                <p class="text-xs text-gray-400">آخر قراءة</p>
+              </div>
+            </div>
+            <!-- Bar Chart Temp History -->
+            <div class="flex items-end gap-1 h-16 mb-1">
+              <div class="flex-1 rounded-t" style="height:100%; background:#10B981" title="-20°C"></div>
+              <div class="flex-1 rounded-t" style="height:95%; background:#10B981" title="-19°C"></div>
+              <div class="flex-1 rounded-t" style="height:90%; background:#10B981" title="-18.5°C"></div>
+              <div class="flex-1 rounded-t" style="height:88%; background:#10B981" title="-18.2°C"></div>
+              <div class="flex-1 rounded-t" style="height:75%; background:#F59E0B" title="-17°C"></div>
+              <div class="flex-1 rounded-t" style="height:60%; background:#F59E0B" title="-15°C"></div>
+              <div class="flex-1 rounded-t" style="height:45%; background:#EF4444" title="-13°C"></div>
+              <div class="flex-1 rounded-t" style="height:40%; background:#EF4444" title="-12.3°C"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-300">
+              <span>قبل 2 س</span>
+              <span>قبل 1 س</span>
+              <span>الآن</span>
+            </div>
+          </div>
+
+          <!-- Charts Row 2-3 -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Chart 2 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-gray-800 text-sm">EDH-2026-0151</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 font-semibold">طبيعي</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-0.5">محمد العتيبي — النطاق: 2°C – 8°C</p>
+                </div>
+                <p class="text-xl font-bold text-green-600">4.8°C</p>
+              </div>
+              <div class="flex items-end gap-1 h-12 mb-1">
+                <div class="flex-1 rounded-t bg-green-400" style="height:60%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:65%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:70%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:68%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:62%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:60%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:63%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:60%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-300 mt-1"><span>قبل 2 س</span><span>الآن</span></div>
+            </div>
+
+            <!-- Chart 3 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-gray-800 text-sm">EDH-2026-0153</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 font-semibold">طبيعي</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-0.5">خالد السهلي — النطاق: 2°C – 8°C</p>
+                </div>
+                <p class="text-xl font-bold text-green-600">5.1°C</p>
+              </div>
+              <div class="flex items-end gap-1 h-12 mb-1">
+                <div class="flex-1 rounded-t bg-green-400" style="height:70%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:68%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:65%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:72%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:69%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:65%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:68%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:64%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-300 mt-1"><span>قبل 2 س</span><span>الآن</span></div>
+            </div>
+          </div>
+
+          <!-- Charts Row 4-5 -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Chart 4 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-gray-800 text-sm">EDH-2026-0155</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700 font-semibold">طبيعي</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-0.5">عبدالله الزهراني — النطاق: أقل من -18°C</p>
+                </div>
+                <p class="text-xl font-bold text-green-600">-19.8°C</p>
+              </div>
+              <div class="flex items-end gap-1 h-12 mb-1">
+                <div class="flex-1 rounded-t bg-blue-400" style="height:100%"></div>
+                <div class="flex-1 rounded-t bg-blue-400" style="height:100%"></div>
+                <div class="flex-1 rounded-t bg-blue-500" style="height:100%"></div>
+                <div class="flex-1 rounded-t bg-blue-400" style="height:100%"></div>
+                <div class="flex-1 rounded-t bg-blue-500" style="height:100%"></div>
+                <div class="flex-1 rounded-t bg-blue-400" style="height:100%"></div>
+                <div class="flex-1 rounded-t bg-blue-500" style="height:100%"></div>
+                <div class="flex-1 rounded-t bg-blue-400" style="height:100%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-300 mt-1"><span>قبل 2 س</span><span>الآن</span></div>
+            </div>
+
+            <!-- Chart 5 -->
+            <div class="bg-white rounded-xl shadow-sm border border-yellow-100 p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-gray-800 text-sm">EDH-2026-0148</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 font-semibold">تحذير</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-0.5">أحمد البقمي — النطاق: 2°C – 8°C</p>
+                </div>
+                <p class="text-xl font-bold text-amber-600">7.2°C</p>
+              </div>
+              <div class="flex items-end gap-1 h-12 mb-1">
+                <div class="flex-1 rounded-t bg-green-400" style="height:50%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:55%"></div>
+                <div class="flex-1 rounded-t bg-green-400" style="height:60%"></div>
+                <div class="flex-1 rounded-t bg-green-500" style="height:65%"></div>
+                <div class="flex-1 rounded-t bg-yellow-400" style="height:78%"></div>
+                <div class="flex-1 rounded-t bg-yellow-400" style="height:83%"></div>
+                <div class="flex-1 rounded-t bg-yellow-500" style="height:90%"></div>
+                <div class="flex-1 rounded-t bg-amber-500" style="height:95%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-300 mt-1"><span>قبل 2 س</span><span>الآن</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('[data-link]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); window.location.href = el.dataset.link; });
+  });
+
+  // Simulate live update countdown
+  let seconds = 45;
+  const updateEl = document.querySelector('.text-gray-500');
+  setInterval(() => {
+    seconds++;
+    if (seconds >= 60) seconds = 0;
+    if (updateEl) updateEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-400 inline-block"></span> آخر تحديث: منذ ${seconds} ثانية`;
+  }, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — الإشعارات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] }, colors: { brand: { DEFAULT:'#DC2626', hover:'#B91C1C' } } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 16px; border-radius:8px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; transition:all 0.15s; cursor:pointer; }
+    .sidebar-link:hover { background:rgba(255,255,255,0.08); color:white; }
+    .sidebar-link.active { background:#DC2626 !important; color:white; border-right:3px solid #ff6b6b; }
+    .tab-filter { padding:6px 16px; border-radius:999px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; color:#6B7280; border:1px solid transparent; }
+    .tab-filter.active { background:#DC2626; color:white; border-color:#DC2626; }
+    .tab-filter:not(.active):hover { background:#F3F4F6; color:#374151; border-color:#E5E7EB; }
+    .notif-item { display:flex; gap:16px; padding:16px 24px; border-bottom:1px solid #F9FAFB; cursor:pointer; transition:background 0.15s; }
+    .notif-item:hover { background:#F9FAFB; }
+    .notif-item.unread { background:#EFF6FF22; border-right:3px solid #3B82F6; }
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+    .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-gray-50 font-arabic">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:#0D0D0D; direction:rtl;">
+    <div class="px-4 py-5 border-b border-white/10">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2" onerror="this.style.display='none'">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-lg"></i>
+        <div>
+          <p class="text-white font-bold text-sm leading-tight">إدهام</p>
+          <p class="text-xs" style="color:#DC2626">للنقل المبرد</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <div class="sidebar-link" data-link="dashboard.html"><i class="ti ti-layout-dashboard text-lg"></i><span>لوحة التحكم</span></div>
+      <div class="sidebar-link" data-link="orders.html"><i class="ti ti-package text-lg"></i><span>إدارة الطلبات</span></div>
+      <div class="sidebar-link" data-link="live-map.html"><i class="ti ti-map text-lg"></i><span>خريطة الأسطول</span></div>
+      <div class="sidebar-link" data-link="fleet.html"><i class="ti ti-truck text-lg"></i><span>إدارة الأسطول</span></div>
+      <div class="sidebar-link" data-link="drivers.html"><i class="ti ti-steering-wheel text-lg"></i><span>السائقون</span></div>
+      <div class="sidebar-link" data-link="users.html"><i class="ti ti-users text-lg"></i><span>المستخدمون</span></div>
+      <div class="sidebar-link" data-link="cold-chain-monitor.html"><i class="ti ti-snowflake text-lg"></i><span>مراقبة التبريد</span></div>
+      <div class="sidebar-link" data-link="reports.html"><i class="ti ti-report-analytics text-lg"></i><span>التقارير</span></div>
+      <div class="sidebar-link active" data-link="notifications.html">
+        <i class="ti ti-bell text-lg"></i>
+        <span>الإشعارات</span>
+        <span class="mr-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">6</span>
+      </div>
+      <div class="sidebar-link" style="margin-top:16px; opacity:0.5" data-link="../index.html"><i class="ti ti-arrow-right text-lg"></i><span>الرئيسية</span></div>
+    </nav>
+    <div class="px-3 py-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-3 py-2">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#DC2626">
+          <i class="ti ti-user text-white text-base"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-white text-sm font-semibold truncate">أحمد المنصور</p>
+          <p class="text-gray-400 text-[11px]">مشرف عمليات</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <div class="flex items-center gap-3">
+        <h1 class="text-xl font-bold text-gray-800">الإشعارات</h1>
+        <span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded-full">6 غير مقروء</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="markAllRead()" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+          <i class="ti ti-checks text-green-500"></i>
+          تحديد الكل كمقروء
+        </button>
+        <button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+          <i class="ti ti-settings text-gray-400"></i>
+          إعدادات الإشعارات
+        </button>
+      </div>
+    </div>
+
+    <div class="p-8">
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
+          <p class="text-2xl font-bold text-gray-800">24</p>
+          <p class="text-xs text-gray-400 mt-1">إجمالي الإشعارات</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-blue-100 text-center">
+          <p class="text-2xl font-bold text-blue-600">6</p>
+          <p class="text-xs text-gray-400 mt-1">غير مقروء</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-red-100 text-center">
+          <p class="text-2xl font-bold text-red-600">3</p>
+          <p class="text-xs text-gray-400 mt-1">تنبيهات عاجلة</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
+          <p class="text-2xl font-bold text-gray-600">15</p>
+          <p class="text-xs text-gray-400 mt-1">عمليات</p>
+        </div>
+      </div>
+
+      <!-- Notification Panel -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+
+        <!-- Tabs Filter -->
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2 flex-wrap">
+          <button class="tab-filter active" onclick="filterTab(this,'all')">
+            الكل <span class="mr-1 text-xs opacity-80">(24)</span>
+          </button>
+          <button class="tab-filter" onclick="filterTab(this,'unread')">
+            غير مقروء <span class="mr-1 text-xs opacity-80">(6)</span>
+          </button>
+          <button class="tab-filter" onclick="filterTab(this,'alert')">
+            تنبيهات <span class="mr-1 text-xs opacity-80">(3)</span>
+          </button>
+          <button class="tab-filter" onclick="filterTab(this,'ops')">
+            عمليات <span class="mr-1 text-xs opacity-80">(15)</span>
+          </button>
+          <button class="tab-filter" onclick="filterTab(this,'system')">
+            نظام <span class="mr-1 text-xs opacity-80">(6)</span>
+          </button>
+        </div>
+
+        <!-- Notifications List -->
+        <div id="notifList">
+
+          <!-- 1. Temperature Violation — UNREAD — ALERT -->
+          <div class="notif-item unread" data-type="alert unread" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-red-100">
+              <i class="ti ti-alert-triangle text-red-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <p class="text-sm font-bold text-gray-800">انتهاك درجة حرارة</p>
+                <span class="text-xs px-1.5 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold">عاجل</span>
+              </div>
+              <p class="text-xs text-gray-500">رحلة EDH-2026-0147 — الشاحنة أ ب ج ٤٥٦ — درجة الحرارة: -12°C بدلاً من -18°C</p>
+              <div class="flex items-center gap-3 mt-2">
+                <p class="text-xs text-gray-400">منذ 8 دقائق</p>
+                <button class="text-xs text-red-600 hover:text-red-800 font-semibold">اتصال بالسائق</button>
+                <button class="text-xs text-blue-600 hover:text-blue-800 font-semibold">عرض التفاصيل</button>
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+              <div class="w-2.5 h-2.5 rounded-full bg-red-500 pulse-dot"></div>
+            </div>
+          </div>
+
+          <!-- 2. New Order — UNREAD — OPS -->
+          <div class="notif-item unread" data-type="ops unread" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-100">
+              <i class="ti ti-package text-blue-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-bold text-gray-800">طلب جديد</p>
+              <p class="text-xs text-gray-500">شركة النخيل للتجارة — شحنة مبردة من الرياض إلى جدة — 4,200 كجم</p>
+              <div class="flex items-center gap-3 mt-2">
+                <p class="text-xs text-gray-400">منذ 15 دقيقة</p>
+                <button class="text-xs text-blue-600 hover:text-blue-800 font-semibold">عرض الطلب</button>
+                <button class="text-xs text-green-600 hover:text-green-800 font-semibold">تعيين سائق</button>
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+              <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+            </div>
+          </div>
+
+          <!-- 3. Trip Completed — READ — OPS -->
+          <div class="notif-item" data-type="ops" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-green-100">
+              <i class="ti ti-circle-check text-green-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-700">رحلة مكتملة</p>
+              <p class="text-xs text-gray-500">EDH-2026-0145 — محمد العتيبي — الرياض إلى الدمام — تسليم ناجح</p>
+              <p class="text-xs text-gray-400 mt-2">منذ 32 دقيقة</p>
+            </div>
+          </div>
+
+          <!-- 4. Maintenance Request — UNREAD — ALERT -->
+          <div class="notif-item unread" data-type="alert unread" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-red-100">
+              <i class="ti ti-tool text-red-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <p class="text-sm font-bold text-gray-800">طلب صيانة عاجل</p>
+                <span class="text-xs px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-700 font-semibold">عطل</span>
+              </div>
+              <p class="text-xs text-gray-500">شاحنة أ ب ج ٤٥٦ — عطل في وحدة التبريد — بلغ عنه السائق فيصل الحربي</p>
+              <div class="flex items-center gap-3 mt-2">
+                <p class="text-xs text-gray-400">منذ ساعة</p>
+                <button class="text-xs text-red-600 hover:text-red-800 font-semibold">جدولة صيانة</button>
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+              <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+            </div>
+          </div>
+
+          <!-- 5. Driver Arrived — READ — OPS -->
+          <div class="notif-item" data-type="ops" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-100">
+              <i class="ti ti-map-pin text-blue-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-700">سائق وصل نقطة التسليم</p>
+              <p class="text-xs text-gray-500">خالد السهلي — رحلة EDH-2026-0149 — مستودع شركة الفهد — جدة</p>
+              <p class="text-xs text-gray-400 mt-2">منذ ساعة</p>
+            </div>
+          </div>
+
+          <!-- 6. License Expiry Warning — UNREAD — ALERT -->
+          <div class="notif-item unread" data-type="alert unread" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-yellow-100">
+              <i class="ti ti-id text-yellow-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <p class="text-sm font-bold text-gray-800">رخصة قيادة تنتهي قريباً</p>
+                <span class="text-xs px-1.5 py-0.5 rounded-full bg-yellow-100 text-yellow-700 font-semibold">تحذير</span>
+              </div>
+              <p class="text-xs text-gray-500">عبدالله الزهراني — DRV-003 — تنتهي الرخصة خلال 15 يوماً (2026/07/13)</p>
+              <div class="flex items-center gap-3 mt-2">
+                <p class="text-xs text-gray-400">منذ ساعتين</p>
+                <button class="text-xs text-yellow-600 hover:text-yellow-800 font-semibold">تذكير السائق</button>
+                <button class="text-xs text-gray-500 hover:text-gray-700 font-semibold">عرض ملف السائق</button>
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+              <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+            </div>
+          </div>
+
+          <!-- 7. New Order — READ — OPS -->
+          <div class="notif-item" data-type="ops" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-100">
+              <i class="ti ti-package text-blue-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-700">طلب جديد</p>
+              <p class="text-xs text-gray-500">مصنع الوطني للأغذية — شحنة مجمدة من جدة إلى الرياض — 8,500 كجم</p>
+              <p class="text-xs text-gray-400 mt-2">منذ 3 ساعات</p>
+            </div>
+          </div>
+
+          <!-- 8. Driver Started Trip — READ — OPS -->
+          <div class="notif-item" data-type="ops" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
+              <i class="ti ti-steering-wheel text-gray-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-700">سائق بدأ رحلة</p>
+              <p class="text-xs text-gray-500">فيصل الحربي — رحلة EDH-2026-0147 — المغادرة من مستودع الرياض الرئيسي</p>
+              <p class="text-xs text-gray-400 mt-2">منذ 4 ساعات</p>
+            </div>
+          </div>
+
+          <!-- 9. Invoice Paid — READ — SYSTEM -->
+          <div class="notif-item" data-type="system" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-green-100">
+              <i class="ti ti-receipt text-green-600 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-700">فاتورة مدفوعة</p>
+              <p class="text-xs text-gray-500">شركة الفهد للتجارة — فاتورة #INV-2026-0089 — 24,500 ريال</p>
+              <p class="text-xs text-gray-400 mt-2">منذ 5 ساعات</p>
+            </div>
+          </div>
+
+          <!-- 10. Maintenance Completed — READ — SYSTEM -->
+          <div class="notif-item" data-type="system" onclick="markRead(this)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
+              <i class="ti ti-tool text-gray-500 text-lg"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-700">صيانة دورية اكتملت</p>
+              <p class="text-xs text-gray-500">شاحنة أ ب ت ١٢٣ — Isuzu — تم الفحص الدوري واستبدال الفلتر — جاهزة للعمل</p>
+              <p class="text-xs text-gray-400 mt-2">منذ يوم واحد</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Load More -->
+        <div class="px-6 py-4 border-t border-gray-100 text-center">
+          <button class="text-sm text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1.5 mx-auto">
+            <i class="ti ti-chevron-down text-sm"></i>
+            عرض المزيد (14 إشعار)
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('[data-link]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); window.location.href = el.dataset.link; });
+  });
+
+  function markRead(item) {
+    item.classList.remove('unread');
+    const dot = item.querySelector('.w-2\\.5');
+    if (dot) dot.remove();
+    updateUnreadCount();
+  }
+
+  function markAllRead() {
+    document.querySelectorAll('.notif-item.unread').forEach(item => {
+      item.classList.remove('unread');
+      const dot = item.querySelector('.w-2\\.5');
+      if (dot) dot.remove();
+    });
+    updateUnreadCount();
+  }
+
+  function updateUnreadCount() {
+    const count = document.querySelectorAll('.notif-item.unread').length;
+    // Update header badge
+    const headerBadge = document.querySelector('.bg-red-100.text-red-700');
+    if (headerBadge) {
+      headerBadge.textContent = count > 0 ? `${count} غير مقروء` : 'لا يوجد غير مقروء';
+      headerBadge.className = count > 0 ? 'bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded-full' : 'bg-gray-100 text-gray-500 text-xs font-bold px-2 py-0.5 rounded-full';
+    }
+    // Update stats
+    const statsEl = document.querySelectorAll('.grid.grid-cols-4.gap-4 .text-2xl.font-bold')[1];
+    if (statsEl) statsEl.textContent = count;
+  }
+
+  function filterTab(btn, type) {
+    document.querySelectorAll('.tab-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const items = document.querySelectorAll('.notif-item');
+    items.forEach(item => {
+      const types = item.dataset.type || '';
+      if (type === 'all') {
+        item.style.display = 'flex';
+      } else if (type === 'unread') {
+        item.style.display = types.includes('unread') ? 'flex' : 'none';
+      } else if (type === 'alert') {
+        item.style.display = types.includes('alert') ? 'flex' : 'none';
+      } else if (type === 'ops') {
+        item.style.display = types.includes('ops') ? 'flex' : 'none';
+      } else if (type === 'system') {
+        item.style.display = types.includes('system') ? 'flex' : 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>

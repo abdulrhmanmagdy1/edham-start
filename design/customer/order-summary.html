@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — ملخص الطلب</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#FFF5F5',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#0D0D0D' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame {
+      width: 390px;
+      min-height: 844px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 0 1px #E4E4E7, 0 25px 50px rgba(0,0,0,0.15);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+    .screen-content {
+      height: 844px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 100px;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen p-8 flex items-center justify-center font-arabic">
+
+  <div class="mobile-frame">
+    <div class="screen-content">
+
+      <!-- Status Bar -->
+      <div class="bg-white px-5 pt-3 pb-2 flex items-center justify-between border-b border-gray-100">
+        <span class="text-gray-800 text-xs font-semibold">9:41</span>
+        <div class="flex items-center gap-1">
+          <i class="ti ti-wifi text-gray-600 text-xs"></i>
+          <i class="ti ti-battery-3 text-gray-600 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="bg-white px-4 py-4 border-b border-gray-100 flex items-center gap-3">
+        <button class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-lg" data-link="new-order-4.html">
+          <i class="ti ti-chevron-right text-xl"></i>
+        </button>
+        <h1 class="font-semibold text-gray-800 text-base">مراجعة الطلب</h1>
+      </div>
+
+      <!-- Content -->
+      <div class="bg-gray-50 px-4 pt-4 pb-4">
+
+        <!-- Trip Summary Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-4">
+          <h3 class="font-semibold text-gray-800 text-sm mb-4 flex items-center gap-2">
+            <i class="ti ti-route text-primary-600 text-base"></i>
+            تفاصيل الرحلة
+          </h3>
+
+          <!-- From/To -->
+          <div class="flex gap-3 mb-4">
+            <div class="flex flex-col items-center mt-1">
+              <div class="w-3 h-3 rounded-full bg-green-500 border-2 border-white ring-2 ring-green-200"></div>
+              <div class="w-px flex-1 bg-dashed border-r-2 border-dashed border-gray-200 my-1" style="min-height:36px;"></div>
+              <div class="w-3 h-3 rounded-full bg-primary-600 border-2 border-white ring-2 ring-primary-200"></div>
+            </div>
+            <div class="flex-1">
+              <div class="mb-4">
+                <p class="text-xs text-gray-400 mb-0.5">من</p>
+                <p class="text-sm font-semibold text-gray-800">مستودع العاصمة الصناعي</p>
+                <p class="text-xs text-gray-400">طريق الملك عبدالله، الرياض</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400 mb-0.5">إلى</p>
+                <p class="text-sm font-semibold text-gray-800">مخازن جدة الغربية</p>
+                <p class="text-xs text-gray-400">المنطقة الصناعية، جدة</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-100 my-3"></div>
+
+          <!-- Grid Details -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-gray-50 rounded-xl p-3">
+              <p class="text-xs text-gray-400 mb-1 flex items-center gap-1"><i class="ti ti-route text-xs"></i> المسافة</p>
+              <p class="text-sm font-bold text-gray-800">980 كم</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-3">
+              <p class="text-xs text-gray-400 mb-1 flex items-center gap-1"><i class="ti ti-clock text-xs"></i> وقت السفر</p>
+              <p class="text-sm font-bold text-gray-800">9–10 ساعات</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-3">
+              <p class="text-xs text-gray-400 mb-1 flex items-center gap-1"><i class="ti ti-weight text-xs"></i> الوزن</p>
+              <p class="text-sm font-bold text-gray-800">3,200 كغ</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-3">
+              <p class="text-xs text-gray-400 mb-1 flex items-center gap-1"><i class="ti ti-truck text-xs"></i> المركبة</p>
+              <p class="text-sm font-bold text-gray-800">Isuzu مبردة</p>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-100 my-3"></div>
+
+          <!-- Extras -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i class="ti ti-snowflake text-primary-500 text-sm"></i>
+              <span class="text-xs font-semibold text-primary-700">Cold Chain: 2°C – 8°C</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-gray-500">
+              <i class="ti ti-calendar text-xs"></i>
+              <span>الأحد 28 يونيو، 8:00 ص</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Pricing Info -->
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i class="ti ti-clock text-amber-600 text-xl"></i>
+            </div>
+            <div>
+              <p class="font-bold text-amber-800 text-sm mb-1">السعر يُحدَّد بواسطة المشرف</p>
+              <p class="text-xs text-amber-700 leading-relaxed mb-2">بعد إرسال الطلب، سيراجعه المشرف ويُرسل إليك تكلفة النقل على إيميل شركتك للموافقة.</p>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+                <span class="text-xs text-amber-600">قبول السعر → تنفيذ الشحنة</span>
+              </div>
+              <div class="flex items-center gap-2 mt-1">
+                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                <span class="text-xs text-amber-600">رفض السعر → إلغاء الطلب</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms Note -->
+        <p class="text-xs text-center text-gray-400 px-4">
+          بإرسال الطلب توافق على
+          <span class="text-primary-600 underline cursor-pointer">شروط الخدمة</span>
+          و
+          <span class="text-primary-600 underline cursor-pointer">سياسة الاستخدام</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer Button -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-4 shadow-lg">
+      <button class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl text-base transition-colors flex items-center justify-center gap-2" id="confirmBtn" data-link="home.html">
+        <i class="ti ti-send text-lg"></i>
+        إرسال طلب الشحن
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('confirmBtn').addEventListener('click', () => {
+      // Show success toast
+      const toast = document.createElement('div');
+      toast.innerHTML = `<div class="fixed top-6 left-1/2 -translate-x-1/2 bg-amber-600 text-white text-sm font-semibold px-6 py-3 rounded-xl shadow-xl z-50 flex items-center gap-2 animate-bounce">
+        <i class="ti ti-clock text-lg"></i>
+        تم إرسال طلبك — في انتظار تسعير المشرف
+      </div>`;
+      document.body.appendChild(toast);
+      setTimeout(() => window.location.href = 'home.html', 1500);
+    });
+
+    document.querySelectorAll('[data-link]').forEach(el => {
+      if (el.id !== 'confirmBtn') {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.location.href = el.dataset.link;
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — الملف الشخصي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame { width:390px; min-height:844px; margin:0 auto; background:white; box-shadow:0 0 0 1px #E4E4E7, 0 25px 50px rgba(0,0,0,0.15); border-radius:40px; overflow:hidden; }
+    .toggle-track { width:44px; height:24px; background:#DC2626; border-radius:12px; position:relative; cursor:pointer; display:inline-flex; align-items:center; padding:2px; }
+    .toggle-thumb { width:20px; height:20px; background:white; border-radius:10px; transition:transform 0.2s; transform:translateX(20px); }
+    .toggle-track.off { background:#E4E4E7; }
+    .toggle-track.off .toggle-thumb { transform:translateX(0); }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen flex items-center justify-center p-8" style="direction:rtl;">
+
+  <div class="mobile-frame flex flex-col">
+
+    <!-- Status Bar -->
+    <div class="flex items-center justify-between px-6 pt-3 pb-1" style="background:#0D0D0D;">
+      <span class="text-white text-xs font-semibold">9:41</span>
+      <div class="flex items-center gap-1.5">
+        <i class="ti ti-wifi text-white text-xs"></i>
+        <i class="ti ti-signal-4g text-white text-xs"></i>
+        <i class="ti ti-battery-3 text-white text-xs"></i>
+      </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="px-5 py-4 flex items-center justify-between" style="background:#0D0D0D;">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-base"></i>
+        <p class="text-white font-bold text-sm">إدهام للنقل المبرد</p>
+      </div>
+      <button class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+        <i class="ti ti-bell text-white text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto bg-gray-50">
+
+      <!-- Profile Header -->
+      <div class="bg-white px-5 pt-6 pb-5 text-center border-b border-gray-100">
+        <div class="relative inline-block mb-3">
+          <div class="w-20 h-20 rounded-full flex items-center justify-center text-xl font-bold text-white mx-auto" style="background:linear-gradient(135deg,#DC2626,#991B1B);">
+            م ع
+          </div>
+          <button class="absolute bottom-0 left-0 w-7 h-7 rounded-full flex items-center justify-center border-2 border-white" style="background:#DC2626">
+            <i class="ti ti-camera text-white text-xs"></i>
+          </button>
+        </div>
+        <p class="text-xs text-red-500 font-semibold mb-3 cursor-pointer">تغيير الصورة</p>
+        <p class="font-bold text-gray-900 text-lg">مصطفى العمري</p>
+        <p class="text-sm text-gray-500 mt-0.5">عميل مميز</p>
+        <div class="flex items-center justify-center gap-1 mt-2">
+          <i class="ti ti-star-filled text-yellow-400 text-sm"></i>
+          <i class="ti ti-star-filled text-yellow-400 text-sm"></i>
+          <i class="ti ti-star-filled text-yellow-400 text-sm"></i>
+          <i class="ti ti-star-filled text-yellow-400 text-sm"></i>
+          <i class="ti ti-star-half-filled text-yellow-400 text-sm"></i>
+          <span class="text-xs text-gray-400 mr-1">4.8</span>
+        </div>
+      </div>
+
+      <div class="px-5 py-4 space-y-4">
+
+        <!-- معلومات الحساب -->
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="px-4 py-3 border-b border-gray-50">
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">معلومات الحساب</p>
+          </div>
+          <!-- الاسم -->
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-user text-gray-500 text-sm"></i>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400">الاسم</p>
+                <p class="text-sm font-semibold text-gray-800">مصطفى العمري</p>
+              </div>
+            </div>
+            <button class="text-xs text-red-600 font-semibold">تعديل</button>
+          </div>
+          <!-- الجوال -->
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-phone text-gray-500 text-sm"></i>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400">رقم الجوال</p>
+                <p class="text-sm font-semibold text-gray-800" dir="ltr">0501234567</p>
+              </div>
+            </div>
+            <button class="text-xs text-red-600 font-semibold">تغيير</button>
+          </div>
+          <!-- البريد -->
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-mail text-gray-500 text-sm"></i>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400">البريد الإلكتروني</p>
+                <p class="text-sm font-semibold text-gray-800" dir="ltr">mostafa@company.com</p>
+              </div>
+            </div>
+            <button class="text-xs text-red-600 font-semibold">تعديل</button>
+          </div>
+          <!-- العناوين -->
+          <div class="flex items-center justify-between px-4 py-3.5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-map-pin text-gray-500 text-sm"></i>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400">العناوين المحفوظة</p>
+                <p class="text-sm font-semibold text-gray-800">3 عناوين</p>
+              </div>
+            </div>
+            <button class="text-xs text-red-600 font-semibold">إدارة</button>
+          </div>
+        </div>
+
+        <!-- الإعدادات -->
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="px-4 py-3 border-b border-gray-50">
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">الإعدادات</p>
+          </div>
+          <!-- الإشعارات -->
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-bell text-gray-500 text-sm"></i>
+              </div>
+              <p class="text-sm font-semibold text-gray-800">الإشعارات</p>
+            </div>
+            <div class="toggle-track" onclick="this.classList.toggle('off')">
+              <div class="toggle-thumb"></div>
+            </div>
+          </div>
+          <!-- اللغة -->
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-gray-50">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-language text-gray-500 text-sm"></i>
+              </div>
+              <p class="text-sm font-semibold text-gray-800">لغة التطبيق</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-500">العربية</span>
+              <i class="ti ti-chevron-left text-gray-400 text-sm"></i>
+            </div>
+          </div>
+          <!-- SMS -->
+          <div class="flex items-center justify-between px-4 py-3.5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-message text-gray-500 text-sm"></i>
+              </div>
+              <p class="text-sm font-semibold text-gray-800">إشعارات SMS</p>
+            </div>
+            <div class="toggle-track off" onclick="this.classList.toggle('off')">
+              <div class="toggle-thumb"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="pb-2">
+          <button class="w-full py-3 rounded-2xl border-2 border-red-500 text-red-600 font-semibold text-sm flex items-center justify-center gap-2 hover:bg-red-50 transition-colors">
+            <i class="ti ti-logout text-base"></i> تسجيل الخروج
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bg-white border-t border-gray-100 px-2 py-2 flex items-center justify-around" style="padding-bottom:max(8px, env(safe-area-inset-bottom));">
+      <a href="home.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl hover:bg-gray-50">
+        <i class="ti ti-home text-gray-400 text-xl"></i>
+        <span class="text-[10px] text-gray-400 font-medium">الرئيسية</span>
+      </a>
+      <a href="new-order.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl hover:bg-gray-50">
+        <i class="ti ti-plus-circle text-gray-400 text-xl"></i>
+        <span class="text-[10px] text-gray-400 font-medium">طلب جديد</span>
+      </a>
+      <a href="tracking.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl hover:bg-gray-50">
+        <i class="ti ti-map-pin text-gray-400 text-xl"></i>
+        <span class="text-[10px] text-gray-400 font-medium">التتبع</span>
+      </a>
+      <a href="history.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl hover:bg-gray-50">
+        <i class="ti ti-history text-gray-400 text-xl"></i>
+        <span class="text-[10px] text-gray-400 font-medium">السجل</span>
+      </a>
+      <a href="profile.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl">
+        <i class="ti ti-user-circle text-xl" style="color:#DC2626"></i>
+        <span class="text-[10px] font-bold" style="color:#DC2626">حسابي</span>
+      </a>
+    </div>
+
+  </div>
+
+</body>
+</html>

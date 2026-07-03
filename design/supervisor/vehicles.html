@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — إدارة المركبات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',500:'#F59E0B',600:'#D97706',700:'#B45309' },
+            brand: { DEFAULT:'#DC2626', hover:'#B91C1C', light:'#FEE2E2' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 16px; border-radius:8px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; transition:all 0.15s; cursor:pointer; }
+    .sidebar-link:hover { background:rgba(255,255,255,0.08); color:white; }
+    .sidebar-link.active { background:#DC2626 !important; color:white; border-right:3px solid #ff6b6b; }
+    .sidebar-link.active i { color:white; }
+    .filter-btn { padding:6px 14px; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; border:1px solid #E5E7EB; color:#6B7280; background:white; }
+    .filter-btn.active { background:#DC2626; color:white; border-color:#DC2626; }
+    .filter-btn:not(.active):hover { background:#F9FAFB; }
+  </style>
+</head>
+<body class="bg-gray-50 font-arabic">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:#0D0D0D; direction:rtl;">
+    <div class="px-4 py-5 border-b border-white/10">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2"
+           onerror="this.style.display='none'">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-lg"></i>
+        <div>
+          <p class="text-white font-bold text-sm leading-tight">إدهام</p>
+          <p class="text-xs" style="color:#DC2626">للنقل المبرد</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <div class="sidebar-link" data-link="dashboard.html"><i class="ti ti-layout-dashboard text-lg"></i><span>لوحة التحكم</span></div>
+      <div class="sidebar-link" data-link="orders.html"><i class="ti ti-package text-lg"></i><span>إدارة الطلبات</span></div>
+      <div class="sidebar-link" data-link="live-map.html"><i class="ti ti-map text-lg"></i><span>خريطة الأسطول</span></div>
+      <div class="sidebar-link" data-link="fleet.html"><i class="ti ti-truck text-lg"></i><span>إدارة المركبات</span></div>
+      <div class="sidebar-link" data-link="users.html"><i class="ti ti-users text-lg"></i><span>إدارة المستخدمين</span></div>
+      <div class="sidebar-link active" data-link="vehicles.html"><i class="ti ti-truck text-lg"></i><span>إدارة المركبات</span></div>
+      <div class="sidebar-link"><i class="ti ti-steering-wheel text-lg"></i><span>السائقون</span></div>
+      <div class="sidebar-link"><i class="ti ti-building text-lg"></i><span>العملاء</span></div>
+      <div class="sidebar-link"><i class="ti ti-snowflake text-lg"></i><span>مراقبة التبريد</span></div>
+      <div class="sidebar-link"><i class="ti ti-report-analytics text-lg"></i><span>التقارير</span></div>
+    </nav>
+    <div class="px-3 py-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-3 py-2">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#DC2626">
+          <i class="ti ti-user text-white text-base"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-white text-sm font-semibold truncate">أحمد المنصور</p>
+          <p class="text-gray-400 text-[11px]">مشرف عمليات</p>
+        </div>
+        <i class="ti ti-logout text-white/40 text-sm cursor-pointer hover:text-white/70"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto bg-gray-50">
+
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <div>
+        <h1 class="text-xl font-bold text-gray-800">إدارة المركبات</h1>
+        <p class="text-sm text-gray-400 mt-0.5">24 مركبة مسجلة في الأسطول</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="relative w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-gray-200 transition-colors">
+          <i class="ti ti-bell text-gray-600 text-xl"></i>
+          <span class="absolute -top-1 -left-1 w-5 h-5 bg-red-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold">3</span>
+        </button>
+        <button onclick="openModal()" class="flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-xl text-sm" style="background:#DC2626">
+          <i class="ti ti-plus text-base"></i>
+          إضافة مركبة
+        </button>
+      </div>
+    </div>
+
+    <div class="px-8 py-6">
+
+      <!-- Filter Bar -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-6 flex items-center gap-4 flex-wrap">
+        <div class="relative flex-1 min-w-48">
+          <i class="ti ti-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input type="text" placeholder="ابحث برقم اللوحة أو اسم السائق..."
+            class="w-full border border-gray-200 rounded-lg pr-9 pl-3 py-2 text-sm focus:outline-none focus:border-red-400">
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-500">نوع المركبة:</span>
+          <div class="flex gap-1">
+            <button class="filter-btn active" onclick="setFilter(this)">الكل</button>
+            <button class="filter-btn" onclick="setFilter(this)">HiAce</button>
+            <button class="filter-btn" onclick="setFilter(this)">Isuzu</button>
+            <button class="filter-btn" onclick="setFilter(this)">Volvo</button>
+          </div>
+        </div>
+        <select class="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 focus:outline-none focus:border-red-400">
+          <option>جميع الحالات</option>
+          <option>في رحلة</option>
+          <option>متاح</option>
+          <option>صيانة</option>
+          <option>خارج الخدمة</option>
+        </select>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-5 gap-4 mb-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-gray-900">24</p>
+          <p class="text-xs text-gray-500 mt-1">إجمالي المركبات</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl border border-blue-200 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-blue-700">8</p>
+          <p class="text-xs text-blue-600 mt-1">في رحلة</p>
+        </div>
+        <div class="bg-green-50 rounded-xl border border-green-200 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-green-700">12</p>
+          <p class="text-xs text-green-600 mt-1">متاحة</p>
+        </div>
+        <div class="bg-orange-50 rounded-xl border border-orange-200 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-orange-700">3</p>
+          <p class="text-xs text-orange-600 mt-1">صيانة</p>
+        </div>
+        <div class="bg-gray-100 rounded-xl border border-gray-200 shadow-sm p-4 text-center">
+          <p class="text-2xl font-bold text-gray-600">1</p>
+          <p class="text-xs text-gray-500 mt-1">خارج الخدمة</p>
+        </div>
+      </div>
+
+      <!-- Vehicle Grid -->
+      <div class="grid grid-cols-3 gap-5">
+
+        <!-- مركبة 1 — Isuzu — في رحلة -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="p-5">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center">
+                  <i class="ti ti-truck text-red-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-900">Isuzu مبردة</p>
+                  <p class="text-xs text-gray-500 mt-0.5">شاحنة توزيع — 2022</p>
+                </div>
+              </div>
+              <span class="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full font-semibold">في رحلة</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg px-4 py-2 mb-4 text-center">
+              <span class="font-bold text-gray-800 tracking-wider text-lg">أ ب ت ١٢٣</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-user text-xs"></i> السائق</span>
+                <span class="font-medium text-gray-700">محمد العتيبي</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-clock text-xs"></i> آخر تحديث</span>
+                <span class="text-gray-600">منذ 5 دقائق</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs bg-blue-50 text-blue-600 border border-blue-200 px-2.5 py-1 rounded-full flex items-center gap-1">
+                <i class="ti ti-snowflake text-xs"></i> Cold Chain ✓
+              </span>
+            </div>
+          </div>
+          <div class="border-t border-gray-100 p-4 flex gap-2">
+            <button onclick="openModal()" class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+              <i class="ti ti-edit text-xs"></i> تعديل
+            </button>
+            <button class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors">
+              تفاصيل
+            </button>
+          </div>
+        </div>
+
+        <!-- مركبة 2 — Isuzu — متاح -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="p-5">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center">
+                  <i class="ti ti-truck text-red-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-900">Isuzu مبردة</p>
+                  <p class="text-xs text-gray-500 mt-0.5">شاحنة توزيع — 2023</p>
+                </div>
+              </div>
+              <span class="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-semibold">متاح</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg px-4 py-2 mb-4 text-center">
+              <span class="font-bold text-gray-800 tracking-wider text-lg">ن ز ه ٧٨٣</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-user text-xs"></i> السائق</span>
+                <span class="font-medium text-gray-700">عبدالله الزهراني</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-clock text-xs"></i> آخر تحديث</span>
+                <span class="text-gray-600">منذ 2 دقيقة</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs bg-blue-50 text-blue-600 border border-blue-200 px-2.5 py-1 rounded-full flex items-center gap-1">
+                <i class="ti ti-snowflake text-xs"></i> Cold Chain ✓
+              </span>
+            </div>
+          </div>
+          <div class="border-t border-gray-100 p-4 flex gap-2">
+            <button onclick="openModal()" class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+              <i class="ti ti-edit text-xs"></i> تعديل
+            </button>
+            <button class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors">
+              تفاصيل
+            </button>
+          </div>
+        </div>
+
+        <!-- مركبة 3 — Volvo — في رحلة -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="p-5">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
+                  <i class="ti ti-truck text-slate-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-900">Volvo FH</p>
+                  <p class="text-xs text-gray-500 mt-0.5">شاحنة ثقيلة — 2021</p>
+                </div>
+              </div>
+              <span class="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full font-semibold">في رحلة</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg px-4 py-2 mb-4 text-center">
+              <span class="font-bold text-gray-800 tracking-wider text-lg">ن ص ه ١١٥</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-user text-xs"></i> السائق</span>
+                <span class="font-medium text-gray-700">خالد السهلي</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-clock text-xs"></i> آخر تحديث</span>
+                <span class="text-gray-600">منذ 8 دقائق</span>
+              </div>
+            </div>
+            <div class="mt-3 h-6"></div>
+          </div>
+          <div class="border-t border-gray-100 p-4 flex gap-2">
+            <button onclick="openModal()" class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+              <i class="ti ti-edit text-xs"></i> تعديل
+            </button>
+            <button class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors">
+              تفاصيل
+            </button>
+          </div>
+        </div>
+
+        <!-- مركبة 4 — HiAce — متاح -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="p-5">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                  <i class="ti ti-van text-amber-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-900">Toyota HiAce</p>
+                  <p class="text-xs text-gray-500 mt-0.5">فان توصيل — 2024</p>
+                </div>
+              </div>
+              <span class="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-semibold">متاح</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg px-4 py-2 mb-4 text-center">
+              <span class="font-bold text-gray-800 tracking-wider text-lg">د هـ و ١١١</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-user text-xs"></i> السائق</span>
+                <span class="font-medium text-gray-700">فيصل الدوسري</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-clock text-xs"></i> آخر تحديث</span>
+                <span class="text-gray-600">منذ 12 دقيقة</span>
+              </div>
+            </div>
+            <div class="mt-3 h-6"></div>
+          </div>
+          <div class="border-t border-gray-100 p-4 flex gap-2">
+            <button onclick="openModal()" class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+              <i class="ti ti-edit text-xs"></i> تعديل
+            </button>
+            <button class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors">
+              تفاصيل
+            </button>
+          </div>
+        </div>
+
+        <!-- مركبة 5 — Isuzu — صيانة -->
+        <div class="bg-white rounded-xl border border-orange-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="p-5">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                  <i class="ti ti-truck text-orange-600 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-900">Isuzu مبردة</p>
+                  <p class="text-xs text-gray-500 mt-0.5">شاحنة توزيع — 2020</p>
+                </div>
+              </div>
+              <span class="text-xs bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-semibold">صيانة</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg px-4 py-2 mb-4 text-center">
+              <span class="font-bold text-gray-800 tracking-wider text-lg">أ ب ج ٤٥٦</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-user text-xs"></i> السائق</span>
+                <span class="font-medium text-gray-700">محمد العتيبي</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-clock text-xs"></i> آخر تحديث</span>
+                <span class="text-gray-600">منذ 45 دقيقة</span>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs bg-blue-50 text-blue-600 border border-blue-200 px-2.5 py-1 rounded-full flex items-center gap-1">
+                <i class="ti ti-snowflake text-xs"></i> Cold Chain ✓
+              </span>
+              <span class="text-xs text-orange-600 flex items-center gap-1">
+                <i class="ti ti-tool text-xs"></i> عطل تبريد
+              </span>
+            </div>
+          </div>
+          <div class="border-t border-gray-100 p-4 flex gap-2">
+            <button onclick="openModal()" class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+              <i class="ti ti-edit text-xs"></i> تعديل
+            </button>
+            <button class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors">
+              تفاصيل
+            </button>
+          </div>
+        </div>
+
+        <!-- مركبة 6 — Volvo — خارج الخدمة -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow opacity-70">
+          <div class="p-5">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                  <i class="ti ti-truck text-gray-400 text-2xl"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-gray-900">Volvo FH</p>
+                  <p class="text-xs text-gray-500 mt-0.5">شاحنة ثقيلة — 2019</p>
+                </div>
+              </div>
+              <span class="text-xs bg-gray-200 text-gray-600 px-2.5 py-1 rounded-full font-semibold">خارج الخدمة</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg px-4 py-2 mb-4 text-center">
+              <span class="font-bold text-gray-500 tracking-wider text-lg">ر ل م ٩٩٩</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-user text-xs"></i> السائق</span>
+                <span class="text-gray-400">غير معين</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 flex items-center gap-1.5"><i class="ti ti-clock text-xs"></i> آخر تحديث</span>
+                <span class="text-gray-400">منذ 3 أيام</span>
+              </div>
+            </div>
+            <div class="mt-3 h-6"></div>
+          </div>
+          <div class="border-t border-gray-100 p-4 flex gap-2">
+            <button onclick="openModal()" class="flex-1 border border-gray-200 text-gray-500 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-1">
+              <i class="ti ti-edit text-xs"></i> تعديل
+            </button>
+            <button class="flex-1 border border-gray-200 text-gray-500 hover:bg-gray-50 text-sm font-medium py-2 rounded-lg transition-colors">
+              تفاصيل
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Load More -->
+      <div class="mt-6 text-center">
+        <button class="border border-gray-200 text-gray-600 hover:bg-gray-50 px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+          عرض المزيد (18 مركبة)
+        </button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Modal: إضافة مركبة -->
+<div id="modal-overlay" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden" onclick="closeModalOnOverlay(event)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6" onclick="event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+        <i class="ti ti-truck" style="color:#DC2626"></i>
+        إضافة مركبة جديدة
+      </h2>
+      <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+        <i class="ti ti-x text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="space-y-4">
+      <!-- رقم اللوحة -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">رقم اللوحة <span class="text-red-500">*</span></label>
+        <div class="flex gap-2 items-center">
+          <input type="text" placeholder="أ ب ت" maxlength="3"
+            class="w-24 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-center font-mono tracking-widest focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+          <span class="text-gray-400 font-bold">—</span>
+          <input type="text" placeholder="١٢٣" maxlength="4"
+            class="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-center font-mono tracking-widest focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+          <div class="bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-500 text-center flex-shrink-0">
+            المملكة العربية السعودية
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">نوع المركبة <span class="text-red-500">*</span></label>
+          <select class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+            <option value="">— اختر النوع —</option>
+            <option value="hiace">Toyota HiAce (فان)</option>
+            <option value="isuzu">Isuzu مبردة (شاحنة توزيع)</option>
+            <option value="volvo">Volvo FH (شاحنة ثقيلة)</option>
+            <option value="other">أخرى</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">الموديل والسنة <span class="text-red-500">*</span></label>
+          <input type="text" placeholder="مثال: 2023"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">السائق المعيّن</label>
+        <select class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+          <option value="">— اختر السائق (اختياري) —</option>
+          <option value="drv001">محمد العتيبي (DRV-001)</option>
+          <option value="drv002">عبدالله الزهراني (DRV-002)</option>
+          <option value="drv003">خالد السهلي (DRV-003)</option>
+          <option value="drv004">فيصل الدوسري (DRV-004)</option>
+        </select>
+      </div>
+
+      <!-- Cold Chain Toggle -->
+      <div class="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <i class="ti ti-snowflake text-blue-600 text-sm"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-700">نظام Cold Chain</p>
+            <p class="text-xs text-gray-400">تبريد مدمج في المركبة</p>
+          </div>
+        </div>
+        <button onclick="toggleColdChain(this)" id="cold-chain-toggle"
+          class="w-12 h-6 rounded-full transition-all relative flex items-center" style="background:#DC2626;">
+          <span class="w-5 h-5 bg-white rounded-full shadow absolute transition-all" style="right:2px;"></span>
+        </button>
+      </div>
+      <p id="cold-chain-label" class="text-xs text-green-600 -mt-2 mr-1">مفعّل — هذه المركبة تدعم النقل المبرد</p>
+    </div>
+
+    <!-- Modal Actions -->
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeModal()"
+        class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium py-2.5 rounded-xl text-sm transition-colors">
+        إلغاء
+      </button>
+      <button class="flex-1 text-white font-semibold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2" style="background:#DC2626">
+        <i class="ti ti-device-floppy text-sm"></i>
+        حفظ المركبة
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Sidebar navigation
+  document.querySelectorAll('[data-link]').forEach(el => {
+    el.addEventListener('click', (e) => { e.preventDefault(); window.location.href = el.dataset.link; });
+  });
+
+  // Filter buttons
+  function setFilter(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Modal
+  function openModal() {
+    document.getElementById('modal-overlay').classList.remove('hidden');
+  }
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.add('hidden');
+  }
+  function closeModalOnOverlay(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  // Cold chain toggle
+  let coldChainOn = true;
+  function toggleColdChain(btn) {
+    coldChainOn = !coldChainOn;
+    const span = btn.querySelector('span');
+    const label = document.getElementById('cold-chain-label');
+    if (coldChainOn) {
+      btn.style.background = '#DC2626';
+      span.style.right = '2px';
+      span.style.left = 'auto';
+      label.textContent = 'مفعّل — هذه المركبة تدعم النقل المبرد';
+      label.className = 'text-xs text-green-600 -mt-2 mr-1';
+    } else {
+      btn.style.background = '#D1D5DB';
+      span.style.left = '2px';
+      span.style.right = 'auto';
+      label.textContent = 'معطّل — لا تدعم هذه المركبة النقل المبرد';
+      label.className = 'text-xs text-gray-400 -mt-2 mr-1';
+    }
+  }
+</script>
+</body>
+</html>

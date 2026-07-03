@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — طلباتي</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#FFF5F5',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#0D0D0D' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame {
+      width: 390px;
+      min-height: 844px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 0 1px #E4E4E7, 0 25px 50px rgba(0,0,0,0.15);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+    .screen-content {
+      height: 844px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      white-space: nowrap;
+      transition: all 0.1s ease;
+      cursor: pointer;
+    }
+    .filter-chip.active {
+      background: #2563EB;
+      color: white;
+    }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen p-8 flex items-center justify-center font-arabic">
+
+  <div class="mobile-frame">
+    <div class="screen-content">
+
+      <!-- Status Bar -->
+      <div class="bg-white px-5 pt-3 pb-2 flex items-center justify-between border-b border-gray-100">
+        <span class="text-gray-800 text-xs font-semibold">9:41</span>
+        <div class="flex items-center gap-1">
+          <i class="ti ti-wifi text-gray-600 text-xs"></i>
+          <i class="ti ti-battery-3 text-gray-600 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="bg-white px-4 pt-4 pb-3 border-b border-gray-100">
+        <h1 class="text-xl font-bold text-gray-800 mb-3">طلباتي</h1>
+
+        <!-- Search -->
+        <div class="relative mb-3">
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="ti ti-search text-lg"></i>
+          </div>
+          <input
+            type="text"
+            placeholder="ابحث برقم الطلب أو العنوان"
+            class="w-full h-11 bg-gray-50 border border-gray-200 rounded-xl pr-10 pl-4 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary-400"
+          />
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+          <button class="filter-chip active text-xs font-semibold px-4 py-2 rounded-full bg-primary-600 text-white flex-shrink-0">الكل</button>
+          <button class="filter-chip text-xs font-medium px-4 py-2 rounded-full bg-gray-100 text-gray-600 flex-shrink-0">جارية</button>
+          <button class="filter-chip text-xs font-medium px-4 py-2 rounded-full bg-gray-100 text-gray-600 flex-shrink-0">مكتملة</button>
+          <button class="filter-chip text-xs font-medium px-4 py-2 rounded-full bg-gray-100 text-gray-600 flex-shrink-0">ملغاة</button>
+          <button class="filter-chip text-xs font-medium px-4 py-2 rounded-full bg-gray-100 text-gray-600 flex-shrink-0">في الانتظار</button>
+        </div>
+      </div>
+
+      <!-- Orders List -->
+      <div class="bg-gray-50 px-4 pt-3 pb-4">
+        <p class="text-xs text-gray-400 mb-3">عرض 5 طلبات</p>
+
+        <!-- Order 1 - In Transit (Active) -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="invoice.html">
+          <div class="border-r-4 border-blue-500 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono font-semibold text-gray-700">EDH-2026-0142</span>
+              <span class="bg-blue-100 text-blue-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="ti ti-truck text-[10px]"></i> في الطريق
+              </span>
+            </div>
+            <div class="flex items-center gap-1 mb-1">
+              <div class="flex flex-col items-center">
+                <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                <div class="w-px h-3 bg-gray-200"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+              </div>
+              <div class="mr-2">
+                <p class="text-xs text-gray-700 font-medium">الرياض ← جدة</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1">
+              <i class="ti ti-snowflake text-primary-400 text-xs"></i>
+              <span class="text-xs text-gray-500">Isuzu مبردة</span>
+            </div>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+              <span class="text-xs text-gray-400">27 يونيو 2026</span>
+              <span class="text-xs font-semibold text-primary-600 flex items-center gap-1">
+                <i class="ti ti-map-pin text-xs"></i>
+                تتبع الشحنة
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order 2 - Completed -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="invoice.html">
+          <div class="border-r-4 border-green-500 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono font-semibold text-gray-700">EDH-2026-0138</span>
+              <span class="bg-green-100 text-green-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="ti ti-circle-check text-[10px]"></i> مكتمل
+              </span>
+            </div>
+            <p class="text-xs text-gray-700 font-medium mb-1">الرياض ← الدمام</p>
+            <p class="text-xs text-gray-500">Toyota HiAce</p>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+              <span class="text-xs text-gray-400">25 يونيو 2026</span>
+              <span class="text-sm font-bold text-gray-800">850 ريال</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order 3 - Cancelled -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="invoice.html">
+          <div class="border-r-4 border-red-400 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono font-semibold text-gray-700">EDH-2026-0131</span>
+              <span class="bg-red-100 text-red-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="ti ti-x text-[10px]"></i> ملغى
+              </span>
+            </div>
+            <p class="text-xs text-gray-700 font-medium mb-1">الرياض ← المدينة المنورة</p>
+            <p class="text-xs text-gray-500">Volvo FH</p>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+              <span class="text-xs text-gray-400">20 يونيو 2026</span>
+              <span class="text-xs text-red-500">تم الإلغاء</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order 4 - Completed -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="invoice.html">
+          <div class="border-r-4 border-green-500 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono font-semibold text-gray-700">EDH-2026-0125</span>
+              <span class="bg-green-100 text-green-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="ti ti-circle-check text-[10px]"></i> مكتمل
+              </span>
+            </div>
+            <p class="text-xs text-gray-700 font-medium mb-1">جدة ← المدينة المنورة</p>
+            <div class="flex items-center gap-1">
+              <i class="ti ti-snowflake text-primary-400 text-xs"></i>
+              <span class="text-xs text-gray-500">Isuzu مبردة</span>
+            </div>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+              <span class="text-xs text-gray-400">15 يونيو 2026</span>
+              <span class="text-sm font-bold text-gray-800">1,840 ريال</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order 5 - Completed -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="invoice.html">
+          <div class="border-r-4 border-green-500 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono font-semibold text-gray-700">EDH-2026-0118</span>
+              <span class="bg-green-100 text-green-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="ti ti-circle-check text-[10px]"></i> مكتمل
+              </span>
+            </div>
+            <p class="text-xs text-gray-700 font-medium mb-1">الرياض ← الخرج</p>
+            <p class="text-xs text-gray-500">Toyota HiAce</p>
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+              <span class="text-xs text-gray-400">10 يونيو 2026</span>
+              <span class="text-sm font-bold text-gray-800">420 ريال</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Load More -->
+        <button class="w-full py-3 text-primary-600 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary-50 rounded-xl transition-colors">
+          <i class="ti ti-refresh text-sm"></i>
+          تحميل المزيد
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg" style="height:64px;">
+      <div class="flex items-stretch h-full">
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="home.html">
+          <i class="ti ti-home text-xl"></i>
+          <span class="text-[10px]">الرئيسية</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="new-order-1.html">
+          <i class="ti ti-plus text-xl"></i>
+          <span class="text-[10px]">طلب جديد</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="tracking.html">
+          <i class="ti ti-map-pin text-xl"></i>
+          <span class="text-[10px]">تتبع</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-primary-600">
+          <i class="ti ti-history text-xl"></i>
+          <span class="text-[10px] font-medium">طلباتي</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400">
+          <i class="ti ti-user text-xl"></i>
+          <span class="text-[10px]">حسابي</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Filter chip interaction
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => {
+          c.classList.remove('active');
+          c.classList.remove('bg-primary-600', 'text-white');
+          c.classList.add('bg-gray-100', 'text-gray-600');
+        });
+        chip.classList.add('active');
+        chip.classList.remove('bg-gray-100', 'text-gray-600');
+        chip.classList.add('bg-primary-600', 'text-white');
+      });
+    });
+
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = el.dataset.link;
+      });
+    });
+  </script>
+</body>
+</html>
+

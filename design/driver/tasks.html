@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — مهامي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',500:'#F59E0B',600:'#D97706',700:'#B45309' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame { width:390px; min-height:844px; margin:0 auto; background:white; box-shadow:0 0 0 1px #E4E4E7,0 25px 50px rgba(0,0,0,0.15); border-radius:40px; overflow:hidden; position:relative; }
+    .screen-content { height:844px; overflow-y:auto; overflow-x:hidden; padding-bottom:80px; }
+    .screen-content::-webkit-scrollbar { display:none; }
+    @keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.05);opacity:0.85} }
+    .pulse-anim { animation: pulse-ring 2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-slate-200 min-h-screen p-8 flex items-center justify-center font-arabic">
+
+  <div class="mobile-frame">
+    <div class="screen-content">
+
+      <!-- Status Bar -->
+      <div class="bg-primary-900 px-5 pt-3 pb-2 flex items-center justify-between">
+        <span class="text-white text-xs font-semibold">9:41</span>
+        <div class="flex items-center gap-1">
+          <i class="ti ti-wifi text-white text-xs"></i>
+          <i class="ti ti-battery-3 text-white text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="bg-primary-900 px-5 pb-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-white font-semibold text-base">محمد الزهراني</p>
+            <p class="text-blue-300 text-xs mt-0.5">DRV-0047 · الجمعة، 27 يونيو 2026</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <!-- Online Badge -->
+            <div class="flex items-center gap-1.5 bg-green-500/20 border border-green-400/40 rounded-full px-3 py-1">
+              <div class="w-2 h-2 rounded-full bg-green-400 pulse-anim"></div>
+              <span class="text-green-300 text-[10px] font-semibold">متاح الآن</span>
+            </div>
+            <button class="relative w-9 h-9 bg-white/10 rounded-full flex items-center justify-center">
+              <i class="ti ti-bell text-white text-lg"></i>
+              <span class="absolute top-0.5 left-0.5 w-4 h-4 bg-red-500 rounded-full text-white text-[9px] flex items-center justify-center font-bold">1</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Background -->
+      <div class="bg-gray-50">
+
+        <!-- NEW TRIP NOTIFICATION - Prominent Card -->
+        <div class="px-4 pt-4">
+          <div class="bg-white rounded-2xl border-2 border-amber-400 shadow-lg overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-amber-500 px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i class="ti ti-truck text-white text-xl"></i>
+                <span class="text-white font-bold text-base">رحلة جديدة!</span>
+              </div>
+              <span class="bg-white text-amber-700 text-[10px] font-bold px-2.5 py-1 rounded-full">مُسندة الآن</span>
+            </div>
+
+            <!-- Route Info -->
+            <div class="p-4">
+              <div class="flex items-start gap-3 mb-4">
+                <div class="flex flex-col items-center mt-1 flex-shrink-0">
+                  <div class="w-3 h-3 rounded-full bg-green-500 border-2 border-green-200"></div>
+                  <div class="w-0.5 h-8 bg-gray-200 my-1"></div>
+                  <div class="w-3 h-3 rounded-full bg-primary-600 border-2 border-blue-200"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="mb-3">
+                    <p class="text-xs text-gray-400 mb-0.5">من</p>
+                    <p class="text-sm font-semibold text-gray-800">مستودع الرياض الصناعي</p>
+                    <p class="text-xs text-gray-500">حي الصناعية، الرياض</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-gray-400 mb-0.5">إلى</p>
+                    <p class="text-sm font-semibold text-gray-800">شركة الفهد للتجارة</p>
+                    <p class="text-xs text-gray-500">جدة، المنطقة الصناعية</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Trip Details Grid -->
+              <div class="grid grid-cols-3 gap-2 bg-gray-50 rounded-xl p-3 mb-4">
+                <div class="text-center">
+                  <i class="ti ti-route text-primary-500 text-lg mb-0.5"></i>
+                  <p class="text-xs font-bold text-gray-800">950 كم</p>
+                  <p class="text-[10px] text-gray-400">المسافة</p>
+                </div>
+                <div class="text-center border-x border-gray-200">
+                  <i class="ti ti-truck text-primary-500 text-lg mb-0.5"></i>
+                  <p class="text-xs font-bold text-gray-800">Isuzu مبردة</p>
+                  <p class="text-[10px] text-gray-400">الشاحنة</p>
+                </div>
+                <div class="text-center">
+                  <i class="ti ti-snowflake text-primary-500 text-lg mb-0.5"></i>
+                  <p class="text-xs font-bold text-blue-600">2 – 8°C</p>
+                  <p class="text-[10px] text-gray-400">Cold Chain</p>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex gap-3">
+                <button class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-3 rounded-xl text-sm border border-red-200 transition-colors flex items-center justify-center gap-2">
+                  <i class="ti ti-x"></i>
+                  رفض
+                </button>
+                <button class="flex-[2] bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2" data-link="trip-details.html">
+                  <i class="ti ti-check"></i>
+                  قبول الرحلة
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Trips Section -->
+        <div class="px-4 pt-5 pb-4">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-semibold text-gray-800 text-sm">رحلات اليوم</h4>
+            <span class="text-gray-400 text-xs">الجمعة 27 يونيو</span>
+          </div>
+
+          <!-- Completed Trip -->
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3">
+            <div class="border-r-4 border-green-500 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono text-gray-600 font-semibold">EDH-2026-0141</span>
+                <span class="bg-green-100 text-green-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i class="ti ti-check text-[10px]"></i> مكتملة
+                </span>
+              </div>
+              <div class="flex items-start gap-2 mb-2">
+                <div class="flex flex-col items-center mt-1">
+                  <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                  <div class="w-px h-5 bg-gray-200 my-0.5"></div>
+                  <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-700">الرياض — مستودع الدمام</p>
+                  <p class="text-xs text-gray-700 mt-2">الدمام — مخازن العميل</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 text-xs text-gray-400 pt-2 border-t border-gray-50">
+                <span class="flex items-center gap-1"><i class="ti ti-clock text-xs"></i> انتهت 7:30 ص</span>
+                <span class="flex items-center gap-1"><i class="ti ti-route text-xs"></i> 420 كم</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Card -->
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <h5 class="text-xs font-semibold text-gray-500 mb-3">إحصائياتك اليوم</h5>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-primary-50 rounded-xl p-3 text-center">
+                <p class="text-2xl font-bold text-primary-600 font-mono">2</p>
+                <p class="text-[10px] text-gray-500 mt-0.5">رحلات</p>
+              </div>
+              <div class="bg-green-50 rounded-xl p-3 text-center">
+                <p class="text-2xl font-bold text-green-600 font-mono">1370</p>
+                <p class="text-[10px] text-gray-500 mt-0.5">كيلومتر</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg" style="height:64px;">
+      <div class="flex items-stretch h-full">
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-primary-600" data-link="tasks.html">
+          <i class="ti ti-home text-xl"></i>
+          <span class="text-[10px] font-medium">الرئيسية</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="active-trip.html">
+          <i class="ti ti-steering-wheel text-xl"></i>
+          <span class="text-[10px]">رحلتي</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="history.html">
+          <i class="ti ti-history text-xl"></i>
+          <span class="text-[10px]">السجل</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400">
+          <i class="ti ti-user text-xl"></i>
+          <span class="text-[10px]">حسابي</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', () => { window.location.href = el.dataset.link; });
+    });
+  </script>
+</body>
+</html>

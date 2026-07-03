@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Stories & Flows — إدهام</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: #F9FAFB; }
+    @media print { body { background: white; font-size: 11pt; } .no-print { display: none; } .page-break { page-break-before: always; } }
+    .role-header { background: #0D0D0D; color: white; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; }
+    .story-card { border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; background: white; }
+    .story-card:hover { border-color: #DC2626; }
+    .acceptance { background: #F9FAFB; border-radius: 6px; padding: 10px 14px; margin-top: 10px; }
+    .flow-step { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #F3F4F6; align-items: start; }
+    .step-num { background: #DC2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .step-num.alt { background: #D97706; }
+    .step-num.err { background: #6B7280; }
+    .flow-box { border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px; background: white; margin-bottom: 16px; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .tag-p0 { background: #FEE2E2; color: #B91C1C; }
+    .tag-p1 { background: #FEF3C7; color: #92400E; }
+    .tag-p2 { background: #D1FAE5; color: #065F46; }
+    .nav-tab { padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+    .nav-tab.active { background: #DC2626; color: white; }
+    .nav-tab:not(.active) { color: #6B7280; }
+    .nav-tab:not(.active):hover { background: #F3F4F6; color: #374151; }
+    .role-section { display: none; }
+    .role-section.active { display: block; }
+  </style>
+</head>
+<body class="font-arabic">
+
+  <!-- Header -->
+  <div style="background:#0D0D0D" class="text-white py-10 px-8 text-center">
+    <img src="../logo-edham-logistics.png" alt="إدهام" class="h-16 mx-auto mb-3"
+         onerror="this.style.display:'none'">
+    <h1 class="text-2xl font-bold">User Stories & Work Flows</h1>
+    <p style="color:#DC2626" class="text-sm font-medium mt-1">إدهام للنقل المبرد — كل الأدوار</p>
+  </div>
+
+  <!-- Navigation -->
+  <div class="sticky top-0 bg-white border-b border-gray-200 z-10 px-6 py-3 no-print">
+    <div class="max-w-5xl mx-auto flex gap-2 overflow-x-auto">
+      <button class="nav-tab active" onclick="showRole('customer')">العميل</button>
+      <button class="nav-tab" onclick="showRole('driver')">السائق</button>
+      <button class="nav-tab" onclick="showRole('supervisor')">المشرف</button>
+      <button class="nav-tab" onclick="showRole('accountant')">المحاسب</button>
+      <button class="nav-tab" onclick="showRole('workshop')">الورشة</button>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-8">
+
+    <!-- ======================== CUSTOMER ======================== -->
+    <div id="role-customer" class="role-section active">
+      <div class="role-header">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📦</span>
+          <div>
+            <h2 class="text-xl font-bold">العميل (Customer)</h2>
+            <p class="text-gray-300 text-sm mt-0.5">حساب شركة (B2B) | التسجيل برقم الهاتف + OTP + بيانات الشركة | تطبيق موبايل Android/iOS</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-3">User Stories</h3>
+      <div class="space-y-3 mb-8">
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني ممثل شركة، أريد أن <strong>أُسجّل شركتي في النظام</strong> لكي أبدأ الاستفادة من خدمات الشحن المبرد</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p class="font-semibold text-gray-700 mb-1">معايير القبول:</p>
+            <p>☐ أدخل رقم الهاتف → أتلقى رمز OTP للتحقق</p>
+            <p>☐ أدخل بيانات الشركة: اسم الشركة، رقم السجل التجاري، الرقم الضريبي</p>
+            <p>☐ أدخل بيانات جهة الاتصال: الاسم، البريد الإلكتروني</p>
+            <p>☐ أُكمل التسجيل وأدخل إلى حسابي مباشرة</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني عميل، أريد أن <strong>أطلب شحن بضاعة</strong> لكي أتمكن من نقلها من مكان لآخر</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p class="font-semibold text-gray-700 mb-1">معايير القبول:</p>
+            <p>☐ أدخل عنوان الاستلام (يدوي أو من الخريطة)</p>
+            <p>☐ أدخل عنوان التسليم الرئيسي مع إمكانية إضافة محطات إضافية</p>
+            <p>☐ أحدد نوع الشحنة: مبردة (2-8°C) أو مجمدة (أقل من -18°C) والوزن التقريبي</p>
+            <p>☐ تُقترح المركبة المناسبة تلقائياً حسب نوع الشحنة والوزن</p>
+            <p>☐ أضغط "إرسال طلب الشحن" — الطلب يُرسَل للمشرف بحالة "بانتظار التسعير"</p>
+            <p>☐ أتلقى إيميلاً بالسعر المحدد من المشرف لأراجعه وأوافق أو أرفض</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني عميل، أريد أن <strong>أتابع موقع شحنتي لحظياً</strong> لكي أعرف متى تصل وأستعد لاستقبالها</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أرى موقع المركبة على خريطة مباشرة</p>
+            <p>☐ أرى الوقت التقديري للوصول (ETA) يتحدث تلقائياً</p>
+            <p>☐ أرى تاريخ الأحداث (تم التحميل في X / في الطريق / وصل)</p>
+            <p>☐ لو الشحنة مبردة أو مجمدة، أرى درجة الحرارة الحالية</p>
+            <p>☐ في حالة الطلبات متعددة المحطات، أرى حالة كل محطة بشكل منفصل</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني عميل، أريد أن <strong>أستلم فاتورتي إلكترونياً</strong> لكي أعالج الدفع بسهولة</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ الفاتورة تظهر في تطبيقي وتُرسَل لبريدي بعد اكتمال جميع المحطات</p>
+            <p>☐ تتضمن: تفاصيل الرحلة + المبالغ + VAT 15% + رقم ضريبي</p>
+            <p>☐ يمكن تنزيلها كـ PDF</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني عميل، أريد أن <strong>أرى سجل طلباتي السابقة</strong> لكي أتابع تاريخ التعاملات</p>
+            <span class="tag tag-p1 flex-shrink-0">P1</span>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني عميل، أريد أن <strong>أقيّم الخدمة</strong> بعد التسليم لكي أعطي رأيي</p>
+            <span class="tag tag-p2 flex-shrink-0">P2</span>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني عميل، أريد أن <strong>أتلقى سعر الشحن بالبريد الإلكتروني</strong> لكي أراجعه قبل الالتزام بالطلب</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p class="font-semibold text-gray-700 mb-1">معايير القبول:</p>
+            <p>☐ أتلقى إيميلاً يتضمن: تفاصيل الطلب + السعر المحدد من المشرف + VAT 15% + إجمالي المبلغ</p>
+            <p>☐ الإيميل يحتوي على رابط مباشر لفتح تطبيقي لمراجعة السعر والرد</p>
+            <p>☐ أرى السعر أيضاً في تطبيقي ضمن تفاصيل الطلب بحالة "بانتظار موافقتك"</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني عميل، أريد أن <strong>أوافق أو أرفض السعر المقترح من التطبيق</strong> لكي أتحكم في المضي بالطلب</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p class="font-semibold text-gray-700 mb-1">معايير القبول:</p>
+            <p>☐ أرى في التطبيق: السعر المقترح + تفاصيله + زرَّي "قبول السعر" و"رفض الطلب"</p>
+            <p>☐ لو ضغطت "قبول السعر" → الطلب يتقدم لمرحلة إسناد السائق وأتلقى إشعاراً بالتأكيد</p>
+            <p>☐ لو ضغطت "رفض الطلب" → الطلب يُلغى (CANCELLED) وأتلقى تأكيداً بالإلغاء</p>
+            <p>☐ المشرف يتلقى إشعاراً فورياً بقرار العميل (قبول أو رفض)</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-4">Work Flows</h3>
+
+      <div class="flow-box">
+        <h4 class="font-bold text-gray-800 mb-1">Flow 1: تسجيل حساب الشركة</h4>
+        <p class="text-xs text-gray-400 mb-4">من أول فتح للتطبيق حتى تفعيل الحساب</p>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يفتح التطبيق للمرة الأولى ويضغط "إنشاء حساب شركة"</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يدخل رقم الهاتف → يتلقى رمز OTP → يُدخله للتحقق</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">يدخل بيانات الشركة: اسم الشركة + رقم السجل التجاري + الرقم الضريبي</p></div>
+          <div class="flow-step"><span class="step-num">4</span><p class="text-sm text-gray-700">يدخل بيانات جهة الاتصال: الاسم الكامل + البريد الإلكتروني</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">يضغط "إتمام التسجيل" → يدخل للتطبيق مباشرة</p></div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-xs font-semibold text-amber-700 mb-2">مسارات بديلة:</p>
+          <p class="text-xs text-gray-500">▸ رقم الهاتف مسجّل مسبقاً → رسالة "الحساب موجود، سجّل دخولك"</p>
+          <p class="text-xs text-gray-500">▸ رمز OTP منتهي الصلاحية → زر "إعادة الإرسال" (بعد 60 ثانية)</p>
+          <p class="text-xs text-gray-500">▸ رقم السجل التجاري غير صالح → رسالة خطأ توضيحية</p>
+        </div>
+      </div>
+
+      <div class="flow-box">
+        <h4 class="font-bold text-gray-800 mb-1">Flow 2: طلب شحن جديد</h4>
+        <p class="text-xs text-gray-400 mb-4">من الطلب حتى إسناد السائق — يدعم محطات متعددة</p>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يفتح التطبيق ويضغط "طلب شحن جديد"</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يدخل عنوان الاستلام (يدوي أو بتحديد على الخريطة)</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">يدخل عنوان التسليم الرئيسي</p></div>
+          <div class="flow-step"><span class="step-num alt">4</span><p class="text-sm text-gray-700">"هل يوجد محطات إضافية؟" — لو نعم: يضيف كل محطة (العنوان + جهة الاتصال) بالترتيب المطلوب</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">يحدد نوع الشحنة: <strong>مبردة (2-8°C)</strong> أو <strong>مجمدة (أقل من -18°C)</strong> + الوزن التقريبي → المركبة تُقترح تلقائياً</p></div>
+          <div class="flow-step"><span class="step-num">6</span><p class="text-sm text-gray-700">يختار تاريخ ووقت الاستلام</p></div>
+          <div class="flow-step"><span class="step-num">7</span><p class="text-sm text-gray-700">يراجع ملخص الطلب (جميع المحطات + نوع الشحنة) ويضغط "إرسال طلب الشحن"</p></div>
+          <div class="flow-step"><span class="step-num">8</span><p class="text-sm text-gray-700">يرى الحالة: "بانتظار التسعير" — المشرف يستلم الإشعار</p></div>
+          <div class="flow-step"><span class="step-num">9</span><p class="text-sm text-gray-700">يتلقى إيميلاً بالسعر المحدد من المشرف — يفتح التطبيق لمراجعة السعر والموافقة أو الرفض</p></div>
+          <div class="flow-step"><span class="step-num">10</span><p class="text-sm text-gray-700">بعد الموافقة على السعر: يتلقى إشعاراً "تم تخصيص سائق" مع اسم السائق وموقعه</p></div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-xs font-semibold text-amber-700 mb-2">مسارات بديلة:</p>
+          <p class="text-xs text-gray-500">▸ عنوان محفوظ → يختاره من القائمة المحفوظة</p>
+          <p class="text-xs text-gray-500">▸ لا مركبات مبردة / مجمدة متاحة → إشعار + خيار الانتظار أو تغيير الوقت</p>
+          <p class="text-xs text-gray-500">▸ المنطقة خارج التغطية → رسالة توضيح</p>
+          <p class="text-xs text-gray-500">▸ محطة إضافية بعنوان غير صالح → خطأ بتحديد المحطة المعنية</p>
+        </div>
+      </div>
+
+      <div class="flow-box">
+        <h4 class="font-bold text-gray-800 mb-1">Flow 3: تتبع الشحنة</h4>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يفتح التطبيق — يرى الطلب النشط مع شريط التقدم</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يضغط على الطلب — يرى خريطة حية بموقع المركبة</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">يرى ETA + سجل الأحداث + درجة الحرارة (لو مبرد/مجمد) + حالة كل محطة</p></div>
+          <div class="flow-step"><span class="step-num">4</span><p class="text-sm text-gray-700">عند اكتمال كل محطة يتلقى إشعاراً بتأكيد التسليم لتلك المحطة</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">عند اكتمال جميع المحطات يتلقى إشعار "تم تسليم شحنتك بالكامل"</p></div>
+        </div>
+      </div>
+
+      <div class="flow-box">
+        <h4 class="font-bold text-gray-800 mb-1">Flow 4: موافقة العميل على السعر</h4>
+        <p class="text-xs text-gray-400 mb-4">من استلام إيميل السعر حتى تأكيد الطلب أو إلغائه</p>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يستلم إيميلاً من النظام يتضمن: تفاصيل الطلب + السعر المحدد من المشرف + VAT 15% + الإجمالي</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يفتح التطبيق — يرى الطلب بحالة "بانتظار موافقتك" مع عرض السعر وتفاصيله</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">يختار: "قبول السعر" أو "رفض الطلب"</p></div>
+          <div class="flow-step"><span class="step-num alt">4a</span><p class="text-sm text-gray-700"><strong>في حالة القبول:</strong> الطلب ينتقل لحالة "جاهز للإسناد" — المشرف يتلقى إشعاراً ويُسند السائق</p></div>
+          <div class="flow-step"><span class="step-num err">4b</span><p class="text-sm text-gray-700"><strong>في حالة الرفض:</strong> الطلب يُلغى (CANCELLED) — إشعار للمشرف بأن العميل رفض السعر — العميل يتلقى تأكيد الإلغاء</p></div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-xs font-semibold text-amber-700 mb-2">مسارات بديلة:</p>
+          <p class="text-xs text-gray-500">▸ لم يرد العميل خلال 24 ساعة → النظام يُرسل تذكيراً تلقائياً</p>
+          <p class="text-xs text-gray-500">▸ الإيميل لم يصل → يرى العرض مباشرة في التطبيق بدون إيميل</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== DRIVER ======================== -->
+    <div id="role-driver" class="role-section">
+      <div class="role-header">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🚛</span>
+          <div>
+            <h2 class="text-xl font-bold">السائق (Driver)</h2>
+            <p class="text-gray-300 text-sm mt-0.5">يسجّل برقم الموظف + كلمة مرور | تطبيق موبايل | يعمل offline | تتبع GPS عبر هاتف السائق فقط</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-3">User Stories</h3>
+      <div class="space-y-3 mb-8">
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">كسائق، عندما يُسند إليّ رحلة، أريد <strong>رؤية تفاصيلها وبدء التنفيذ مباشرة</strong> لكي أعرف أين أذهب وما أحمله</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أتلقى إشعاراً فورياً عند إسناد الرحلة</p>
+            <p>☐ أرى: عناوين جميع المحطات بالترتيب + نوع الشحنة + متطلبات الحرارة</p>
+            <p>☐ أبدأ التوجه للاستلام مباشرة بعد الاطلاع على التفاصيل</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني سائق، أريد أن <strong>أحدّث حالة الرحلة خطوة بخطوة</strong> لكي يعرف المشرف والعميل ما يحدث</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ زر "وصلت لنقطة الاستلام" → "تم التحميل" → "في الطريق" → "وصلت للمحطة X" → "تم تسليم المحطة X" → (تكرار لكل محطة) → "تم التسليم الكامل"</p>
+            <p>☐ الحالة تتحدث فوراً للمشرف والعميل</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني سائق، أريد أن <strong>أرفع صور إثبات التسليم وأخذ توقيع المستلم</strong> في كل محطة لكي تكون الرحلة موثّقة</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ ألتقط صورة للبضاعة عند التحميل وعند التسليم في كل محطة</p>
+            <p>☐ آخذ توقيع إلكتروني من المستلم في كل محطة على شاشة الهاتف</p>
+            <p>☐ الصور والتوقيعات يرفعون تلقائياً — الرحلة لا تكتمل إلا بعد توثيق جميع المحطات</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني سائق، أريد أن <strong>أسجّل قراءات درجة الحرارة</strong> للشحنات المبردة لكي أثبت الالتزام بـ Cold Chain</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أدخل القراءة يدوياً في أي وقت أثناء الرحلة</p>
+            <p>☐ لو تجاوزت النطاق المسموح (2-8°C للمبردة، أقل من -18°C للمجمدة) → تنبيه فوري لي وللمشرف</p>
+            <p>☐ كل القراءات تُحفظ حتى بدون إنترنت وتُزامَن لاحقاً</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني سائق، أريد أن <strong>يعمل التطبيق بدون إنترنت</strong> لكي أكمل الرحلة في المناطق البعيدة</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ بيانات الرحلة وجميع المحطات محفوظة مسبقاً على الجهاز</p>
+            <p>☐ كل التحديثات والصور تُحفظ محلياً وتُرسَل لما يرجع النت</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني سائق، أريد أن <strong>أبلّغ عن مشكلة</strong> في الرحلة لكي أحصل على مساعدة فورية</p>
+            <span class="tag tag-p1 flex-shrink-0">P1</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-4">Work Flow الرئيسي: تنفيذ رحلة كاملة</h3>
+      <div class="flow-box">
+        <p class="text-xs text-gray-400 mb-3">ملاحظة: تتبع GPS يتم عبر هاتف السائق فقط — لا توجد أجهزة GPS مثبّتة في الشاحنة</p>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يتلقى إشعار "رحلة مُسندة" — يفتح التطبيق ويرى التفاصيل كاملة (المحطات بالترتيب + نوع الشحنة ومتطلبات الحرارة) ويبدأ التنفيذ مباشرة</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يتوجه لنقطة الاستلام (التطبيق يفتح الملاحة تلقائياً)</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">"وصلت لنقطة الاستلام" → يُحمَّل البضاعة</p></div>
+          <div class="flow-step"><span class="step-num">4</span><p class="text-sm text-gray-700">يرفع صورة البضاعة المحملة + يسجل قراءة الحرارة الأولية (مبردة أو مجمدة)</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">"تم التحميل — بدء الرحلة" → GPS (عبر هاتف السائق) يبدأ التتبع تلقائياً</p></div>
+          <div class="flow-step"><span class="step-num">6</span><p class="text-sm text-gray-700">خلال الرحلة: يسجل قراءات الحرارة دورياً (كل ساعتين)</p></div>
+          <div class="flow-step"><span class="step-num alt">7</span><p class="text-sm text-gray-700">عند كل محطة: "وصلت للمحطة X" → يُسلَّم البضاعة للمستلم → يأخذ توقيع إلكتروني + يرفع صورة إثبات → "تم تسليم المحطة X" — يُكرَّر لكل محطة</p></div>
+          <div class="flow-step"><span class="step-num">8</span><p class="text-sm text-gray-700">عند المحطة الأخيرة: يأخذ توقيع المستلم النهائي + يرفع صورة إثبات التسليم</p></div>
+          <div class="flow-step"><span class="step-num">9</span><p class="text-sm text-gray-700">"تم التسليم — جميع المحطات مكتملة" → الرحلة تُغلَق — GPS يتوقف</p></div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-xs font-semibold text-amber-700 mb-2">مسارات بديلة:</p>
+          <p class="text-xs text-gray-500">▸ لا أحد في نقطة التسليم / محطة → يبلّغ المشرف وينتظر</p>
+          <p class="text-xs text-gray-500">▸ درجة الحرارة تجاوزت الحد المسموح → تنبيه للسائق والمشرف فوراً</p>
+          <p class="text-xs text-gray-500">▸ انقطع الإنترنت → يكمل الرحلة offline وتُزامَن البيانات عند عودة الاتصال</p>
+          <p class="text-xs text-gray-500">▸ المستلم يرفض البضاعة في أي محطة → السائق يصوّر ويبلّغ المشرف</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== SUPERVISOR ======================== -->
+    <div id="role-supervisor" class="role-section">
+      <div class="role-header">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📊</span>
+          <div>
+            <h2 class="text-xl font-bold">المشرف (Supervisor)</h2>
+            <p class="text-gray-300 text-sm mt-0.5">يدير العمليات اليومية + إدارة النظام + إدخال الطلبات | Web Dashboard | دوام كامل</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-3">User Stories</h3>
+      <div class="space-y-3 mb-8">
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني مشرف، أريد أن <strong>أُنشئ طلب شحن جديد نيابةً عن عميل</strong> لكي أخدم الشركات التي تحتاج مساعدة في إدخال الطلبات</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أختار حساب الشركة العميلة من القائمة</p>
+            <p>☐ أدخل تفاصيل الطلب: عنوان الاستلام + عناوين التسليم (مع إمكانية إضافة محطات)</p>
+            <p>☐ أحدد نوع الشحنة: مبردة (2-8°C) أو مجمدة (أقل من -18°C) + تاريخ الاستلام</p>
+            <p>☐ النظام يُسند السائق والمركبة المناسبة تلقائياً</p>
+            <p>☐ الشركة العميلة تتلقى إشعاراً بتفاصيل الطلب والسائق المُسند</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني مشرف، أريد أن <strong>أرى جميع الطلبات في مكان واحد مع فلترة</strong> لكي أدير عبء العمل</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ فلترة بـ: الحالة / التاريخ / العميل / السائق / نوع المركبة / نوع الشحنة</p>
+            <p>☐ طلبات جديدة تظهر فوراً بدون refresh</p>
+            <p>☐ عمليات جماعية (تصدير، تغيير حالة متعددة)</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني مشرف، أريد أن <strong>أُحدد سعر الشحن يدوياً لكل طلب</strong> لكي أسعّر بناءً على الظروف الفعلية</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أرى قائمة الطلبات بحالة "بانتظار التسعير" بشكل واضح في Dashboard</p>
+            <p>☐ أفتح الطلب وأراجع التفاصيل (العناوين، المحطات، نوع الشحنة، الوقت المطلوب)</p>
+            <p>☐ أُدخل السعر يدوياً وأضغط "تأكيد وإرسال السعر للعميل"</p>
+            <p>☐ النظام يبعث إيميلاً فورياً للعميل بالسعر وتفاصيله</p>
+            <p>☐ حالة الطلب تتحول "بانتظار موافقة العميل"</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني مشرف، أريد أن <strong>أُسند الرحلة لسائق ومركبة</strong> — بعد موافقة العميل على السعر — لكي يبدأ التنفيذ</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أتلقى إشعاراً فور موافقة العميل على السعر — الطلب جاهز للإسناد</p>
+            <p>☐ أرى السائقين المتاحين مع مواقعهم على الخريطة</p>
+            <p>☐ أُسند في ضغطة واحدة — السائق يُبلَّغ فوراً ويبدأ التنفيذ مباشرة</p>
+            <p>☐ المركبة المقترحة تتطابق مع نوع الشحنة (مبردة / مجمدة)</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني مشرف، أريد أن <strong>أرى جميع المركبات على خريطة حية</strong> لكي أراقب العمليات</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ خريطة تُحدَّث كل 30 ثانية (GPS من هواتف السائقين)</p>
+            <p>☐ ألوان مختلفة: متاح / في رحلة / في صيانة</p>
+            <p>☐ أضغط على مركبة لأرى تفاصيلها وسائقها وحالة محطاتها</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني مشرف، أريد أن <strong>أضيف موظفين جدد ومركبات</strong> لكي أدير النظام</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أضيف: سائق / محاسب / موظف ورشة مع تحديد الدور</p>
+            <p>☐ أضيف مركبات بنوعها (مبردة / مجمدة) وسائقها ومعلوماتها</p>
+            <p>☐ أُعطّل حساب مستخدم فوراً</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني مشرف، أريد أن <strong>أتلقى تنبيهات Cold Chain</strong> فوراً لكي أتدخل إذا تعرضت الشحنة لخطر</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-4">Work Flows</h3>
+
+      <div class="flow-box">
+        <h4 class="font-bold text-gray-800 mb-1">Flow 1: تسعير وإسناد طلب وارد من العميل</h4>
+        <p class="text-xs text-gray-400 mb-4">من استلام الطلب حتى بدء التنفيذ — مرحلتان: التسعير أولاً، ثم الإسناد بعد موافقة العميل</p>
+        <div class="space-y-1">
+          <p class="text-xs font-semibold text-blue-700 mb-2 mt-1">المرحلة الأولى: التسعير</p>
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يرى إشعار "طلب جديد" في Dashboard — الطلب بحالة "بانتظار التسعير"</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يفتح التفاصيل: العناوين + المحطات الإضافية + نوع الشحنة (مبردة/مجمدة) + الوقت المطلوب</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">يُدخل السعر يدوياً بناءً على الظروف الفعلية (المسافة، نوع الشحنة، عدد المحطات)</p></div>
+          <div class="flow-step"><span class="step-num">4</span><p class="text-sm text-gray-700">يضغط "تأكيد وإرسال السعر للعميل" — النظام يبعث إيميلاً للعميل بالسعر وتفاصيله</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">حالة الطلب تتحول: "بانتظار موافقة العميل"</p></div>
+          <p class="text-xs font-semibold text-green-700 mb-2 mt-3">المرحلة الثانية: الإسناد (بعد موافقة العميل فقط)</p>
+          <div class="flow-step"><span class="step-num">6</span><p class="text-sm text-gray-700">يتلقى إشعاراً "العميل وافق على السعر" — الطلب جاهز للإسناد</p></div>
+          <div class="flow-step"><span class="step-num">7</span><p class="text-sm text-gray-700">يختار سائقاً متاحاً بالمركبة المناسبة لنوع الشحنة (يرى مواقعهم)</p></div>
+          <div class="flow-step"><span class="step-num">8</span><p class="text-sm text-gray-700">يضغط "إسناد للسائق" — السائق يتلقى الإشعار ويبدأ التنفيذ مباشرة</p></div>
+          <div class="flow-step"><span class="step-num">9</span><p class="text-sm text-gray-700">حالة الطلب: "تم الإسناد" — الشركة العميلة تتلقى إشعاراً</p></div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-xs font-semibold text-amber-700 mb-2">مسارات بديلة:</p>
+          <p class="text-xs text-gray-500">▸ العميل رفض السعر → الطلب يُلغى (CANCELLED)، يتلقى المشرف إشعاراً بالرفض</p>
+          <p class="text-xs text-gray-500">▸ لم يرد العميل خلال 24 ساعة → النظام يُرسل له تذكيراً تلقائياً</p>
+          <p class="text-xs text-gray-500">▸ مركبة في الصيانة → لا تظهر في القائمة</p>
+          <p class="text-xs text-gray-500">▸ لا مركبات مبردة / مجمدة متاحة → تنبيه للمشرف لاتخاذ قرار</p>
+          <p class="text-xs text-gray-500">▸ رخصة السائق منتهية → تنبيه تلقائي + منع الإسناد</p>
+        </div>
+      </div>
+
+      <div class="flow-box">
+        <h4 class="font-bold text-gray-800 mb-1">Flow 2: إنشاء طلب جديد نيابةً عن عميل</h4>
+        <p class="text-xs text-gray-400 mb-4">المشرف يُدخل الطلب مباشرة من Web Dashboard</p>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يفتح "إدارة الطلبات" ويضغط "طلب جديد"</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يختار حساب الشركة العميلة من القائمة</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">يدخل عنوان الاستلام + عنوان التسليم الرئيسي</p></div>
+          <div class="flow-step"><span class="step-num alt">4</span><p class="text-sm text-gray-700">يضيف المحطات الإضافية إن وجدت (العنوان + جهة الاتصال لكل محطة)</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">يحدد نوع الشحنة: <strong>مبردة (2-8°C)</strong> أو <strong>مجمدة (أقل من -18°C)</strong> + تاريخ ووقت الاستلام</p></div>
+          <div class="flow-step"><span class="step-num">6</span><p class="text-sm text-gray-700">يُراجع الملخص ويضغط "تأكيد الطلب" — النظام يُسند السائق والمركبة المناسبة تلقائياً</p></div>
+          <div class="flow-step"><span class="step-num">7</span><p class="text-sm text-gray-700">الشركة العميلة تتلقى إشعاراً بتفاصيل الطلب واسم السائق المُسند</p></div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <p class="text-xs font-semibold text-gray-500 mb-2">حالات الخطأ:</p>
+          <p class="text-xs text-gray-500">▸ لا مركبات متاحة بنوع الشحنة المطلوب → تنبيه للمشرف لاختيار وقت بديل</p>
+          <p class="text-xs text-gray-500">▸ الشركة العميلة غير مسجّلة → خيار إضافة شركة جديدة</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== ACCOUNTANT ======================== -->
+    <div id="role-accountant" class="role-section">
+      <div class="role-header">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">💰</span>
+          <div>
+            <h2 class="text-xl font-bold">المحاسب (Accountant)</h2>
+            <p class="text-gray-300 text-sm mt-0.5">يدير الفواتير والمدفوعات | Web Dashboard | صلاحيات مالية فقط</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-3">User Stories</h3>
+      <div class="space-y-3 mb-8">
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني محاسب، أريد أن <strong>أُنشئ فاتورة من رحلة مكتملة</strong> لكي يدفع العميل</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أرى قائمة الرحلات المكتملة غير المفوترة</p>
+            <p>☐ السعر المحدد مسبقاً من المشرف يظهر تلقائياً + VAT 15%</p>
+            <p>☐ أرسل الفاتورة لبريد العميل وتظهر في تطبيقه</p>
+            <p>☐ الفاتورة متوافقة مع ZATCA (رقم ضريبي + QR Code)</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني محاسب، أريد أن <strong>أتابع حالة الفواتير والمدفوعات</strong> لكي أعرف المستحقات</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ حالات: مسودة / مُرسَلة / مدفوعة / متأخرة</p>
+            <p>☐ تذكير تلقائي للعملاء المتأخرين بعد 30 يوم</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني محاسب، أريد أن <strong>أُصدر تقارير الإيرادات</strong> شهرياً لكي أتابع الأداء المالي</p>
+            <span class="tag tag-p1 flex-shrink-0">P1</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-4">Work Flow: إصدار فاتورة</h3>
+      <div class="flow-box">
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">يفتح قائمة الرحلات المكتملة غير المفوترة</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">يختار رحلة → يراجع التفاصيل (مسافة، نوع مركبة، وقت)</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">"إنشاء فاتورة" → يُراجع السعر + VAT 15%</p></div>
+          <div class="flow-step"><span class="step-num">4</span><p class="text-sm text-gray-700">"إرسال للعميل" → الفاتورة تصل لبريده ولتطبيقه</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">يُسجّل الدفع لما يستلمه → الحالة تتحول "مدفوعة"</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== WORKSHOP ======================== -->
+    <div id="role-workshop" class="role-section">
+      <div class="role-header">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🔧</span>
+          <div>
+            <h2 class="text-xl font-bold">الورشة (Workshop)</h2>
+            <p class="text-gray-300 text-sm mt-0.5">يدير صيانة الأسطول | Web Dashboard | صلاحيات تقنية فقط</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-3">User Stories</h3>
+      <div class="space-y-3 mb-8">
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني موظف ورشة، أريد أن <strong>أُسجّل مركبة "خارج الخدمة"</strong> لكي لا تُسنَد لها رحلات</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أغيّر حالة أي مركبة فوراً</p>
+            <p>☐ المشرف يرى المركبة "خارج الخدمة" في الخريطة والأسطول</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني موظف ورشة، أريد أن <strong>أُنشئ وأتابع طلبات الصيانة</strong> لكي أدير العمل الميداني</p>
+            <span class="tag tag-p0 flex-shrink-0">P0</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ أُنشئ طلب: رقم المركبة + نوع المشكلة + الوصف + التكلفة</p>
+            <p>☐ حالات: مفتوح → جارٍ → مكتمل</p>
+            <p>☐ أُحدّد موعد الصيانة الدورية التالي</p>
+          </div>
+        </div>
+
+        <div class="story-card">
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <p class="text-sm font-semibold text-gray-800">بما أني موظف ورشة، أريد أن <strong>أتلقى تنبيهاً قبل موعد الصيانة الدورية</strong> لكي أستعد</p>
+            <span class="tag tag-p1 flex-shrink-0">P1</span>
+          </div>
+          <div class="acceptance text-xs text-gray-600 space-y-1">
+            <p>☐ تنبيه تلقائي قبل 7 أيام من الموعد</p>
+            <p>☐ تنبيه للمشرف أيضاً</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 text-base mb-4">Work Flows</h3>
+
+      <div class="flow-box mb-4">
+        <h4 class="font-bold text-gray-700 mb-3 text-sm">عطل طارئ (أبلغ عنه السائق)</h4>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">السائق يضغط "إبلاغ عن مشكلة" في التطبيق + نوع + صورة</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">البلاغ يصل للمشرف وللورشة فوراً</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">موظف الورشة يُنشئ طلب صيانة ويُعيّن الفني</p></div>
+          <div class="flow-step"><span class="step-num">4</span><p class="text-sm text-gray-700">ينفّذ الإصلاح ويُدخل التكلفة والمواد</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">المركبة ترجع للخدمة — المشرف يتلقى إشعاراً</p></div>
+        </div>
+      </div>
+
+      <div class="flow-box">
+        <h4 class="font-bold text-gray-700 mb-3 text-sm">صيانة دورية مجدولة</h4>
+        <div class="space-y-1">
+          <div class="flow-step"><span class="step-num">1</span><p class="text-sm text-gray-700">النظام يُرسل تنبيهاً قبل 7 أيام من الموعد</p></div>
+          <div class="flow-step"><span class="step-num">2</span><p class="text-sm text-gray-700">موظف الورشة يُنشئ طلب الصيانة الدورية</p></div>
+          <div class="flow-step"><span class="step-num">3</span><p class="text-sm text-gray-700">يُسجّل المركبة "خارج الخدمة مؤقتاً"</p></div>
+          <div class="flow-step"><span class="step-num">4</span><p class="text-sm text-gray-700">ينفّذ الصيانة ويُدخل التفاصيل</p></div>
+          <div class="flow-step"><span class="step-num">5</span><p class="text-sm text-gray-700">يُحدّد موعد الصيانة التالي → المركبة ترجع للخدمة</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="text-center py-6 text-xs text-gray-400 border-t border-gray-200 mt-8">
+    <p>شركة ادهام للنقل البري | الرقم الوطني: 7003941213 | 2026-06-28</p>
+  </div>
+
+  <script>
+    function showRole(role) {
+      document.querySelectorAll('.role-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('role-' + role).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

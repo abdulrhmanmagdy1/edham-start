@@ -1,0 +1,473 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — تتبع الشحنة</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#FFF5F5',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#0D0D0D' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame {
+      width: 390px;
+      height: 844px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 0 1px #E4E4E7, 0 25px 50px rgba(0,0,0,0.15);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+    .map-area {
+      background: linear-gradient(160deg, #c8daf9 0%, #d4e8f7 30%, #c3d9f5 60%, #b8cfef 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .map-area::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(59,130,246,0.06) 0px, transparent 1px, transparent 50px),
+        repeating-linear-gradient(90deg, rgba(59,130,246,0.06) 0px, transparent 1px, transparent 50px);
+    }
+    /* Route line */
+    .route-line {
+      position: absolute;
+      width: 3px;
+      background: repeating-linear-gradient(to bottom, #2563EB 0px, #2563EB 8px, transparent 8px, transparent 14px);
+      border-radius: 2px;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .pulse-marker::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.4);
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+    .bottom-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.12);
+      overflow-y: auto;
+      max-height: 420px;
+    }
+    .bottom-sheet::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen p-8 font-arabic">
+
+  <!-- حالة الطلب — State Switcher للـ Mockup -->
+  <div class="flex justify-center mb-6 gap-2 flex-wrap">
+    <p class="w-full text-center text-xs text-gray-500 mb-2">👇 اختر حالة الطلب لمعاينة الشاشة</p>
+    <button onclick="setState('pending')" id="btn-pending"
+      class="state-btn px-4 py-2 rounded-full text-xs font-bold border-2 border-amber-400 bg-amber-100 text-amber-800">
+      ⏳ بانتظار التسعير
+    </button>
+    <button onclick="setState('priced')" id="btn-priced"
+      class="state-btn px-4 py-2 rounded-full text-xs font-bold border-2 border-gray-300 bg-white text-gray-600">
+      💰 تم تحديد السعر
+    </button>
+    <button onclick="setState('transit')" id="btn-transit"
+      class="state-btn px-4 py-2 rounded-full text-xs font-bold border-2 border-gray-300 bg-white text-gray-600">
+      🚛 في الطريق
+    </button>
+  </div>
+
+  <div class="flex items-start justify-center">
+
+  <div class="mobile-frame">
+
+    <!-- Map Area (full bleed) -->
+    <div class="map-area absolute inset-0" style="z-index:0;">
+
+      <!-- Road lines -->
+      <div class="absolute" style="width:4px; height:220px; background:rgba(255,255,255,0.7); top:80px; left:140px; border-radius:4px; transform:rotate(20deg);"></div>
+      <div class="absolute" style="width:130px; height:4px; background:rgba(255,255,255,0.7); top:200px; left:80px; border-radius:4px; transform:rotate(-10deg);"></div>
+      <div class="absolute" style="width:4px; height:150px; background:rgba(255,255,255,0.7); top:50px; left:240px; border-radius:4px; transform:rotate(5deg);"></div>
+      <div class="absolute" style="width:100px; height:4px; background:rgba(255,255,255,0.7); top:100px; left:250px; border-radius:4px;"></div>
+
+      <!-- Route Line (dotted blue) -->
+      <svg class="absolute" style="top:60px; left:80px; width:240px; height:280px;" viewBox="0 0 240 280" fill="none">
+        <path d="M 200 20 C 180 60, 160 100, 140 140 C 120 180, 100 220, 60 260" stroke="#2563EB" stroke-width="3" stroke-dasharray="8,6" stroke-linecap="round" fill="none"/>
+      </svg>
+
+      <!-- Pickup Pin (Green) -->
+      <div class="absolute flex flex-col items-center" style="top:55px; left:247px; transform:translateX(-50%);">
+        <div class="w-8 h-8 bg-green-500 rounded-full border-2 border-white shadow-md flex items-center justify-center">
+          <i class="ti ti-package text-white text-sm"></i>
+        </div>
+        <div class="bg-white rounded-lg px-2 py-0.5 mt-1 shadow text-xs text-gray-700 font-semibold whitespace-nowrap">الرياض</div>
+      </div>
+
+      <!-- Delivery Pin (Blue) -->
+      <div class="absolute flex flex-col items-center" style="bottom:255px; left:95px; transform:translateX(-50%);">
+        <div class="bg-white rounded-lg px-2 py-0.5 mb-1 shadow text-xs text-gray-700 font-semibold whitespace-nowrap">جدة</div>
+        <div class="w-8 h-8 bg-primary-600 rounded-full border-2 border-white shadow-md flex items-center justify-center">
+          <i class="ti ti-map-pin-filled text-white text-sm"></i>
+        </div>
+      </div>
+
+      <!-- Truck Marker (Current Position) -->
+      <div class="absolute pulse-marker flex items-center justify-center" style="top:50%; left:44%; transform:translate(-50%,-50%);">
+        <div class="w-11 h-11 bg-primary-600 rounded-full border-3 border-white shadow-xl flex items-center justify-center relative z-10" style="border:3px solid white;">
+          <i class="ti ti-truck text-white text-lg"></i>
+        </div>
+      </div>
+
+      <!-- Map Controls -->
+      <div class="absolute bottom-[430px] left-3 flex flex-col gap-1">
+        <button class="w-8 h-8 bg-white rounded-lg shadow flex items-center justify-center text-gray-600">
+          <i class="ti ti-plus text-sm"></i>
+        </button>
+        <button class="w-8 h-8 bg-white rounded-lg shadow flex items-center justify-center text-gray-600">
+          <i class="ti ti-minus text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Header (floating over map) -->
+    <div class="absolute top-0 left-0 right-0 z-10" style="background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,255,255,0.5);">
+      <!-- Status bar -->
+      <div class="px-5 pt-3 pb-2 flex items-center justify-between">
+        <span class="text-gray-800 text-xs font-semibold">9:41</span>
+        <div class="flex items-center gap-1">
+          <i class="ti ti-wifi text-gray-600 text-xs"></i>
+          <i class="ti ti-battery-3 text-gray-600 text-xs"></i>
+        </div>
+      </div>
+      <div class="px-4 pb-3 flex items-center justify-between">
+        <button class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-lg" data-link="home.html">
+          <i class="ti ti-chevron-right text-xl"></i>
+        </button>
+        <div class="text-center">
+          <p class="font-semibold text-gray-800 text-sm">تتبع الشحنة</p>
+          <p class="text-xs font-mono text-gray-500">EDH-2026-0142</p>
+        </div>
+        <button class="w-8 h-8 flex items-center justify-center text-primary-600 hover:bg-primary-50 rounded-lg">
+          <i class="ti ti-refresh text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Status Badge -->
+      <div class="px-4 pb-3 flex justify-center">
+        <span id="statusBadge" class="text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 bg-amber-100 text-amber-700">
+          <i class="ti ti-clock text-xs"></i>
+          بانتظار تحديد السعر من المشرف
+        </span>
+      </div>
+    </div>
+
+    <!-- Overlay for non-transit states -->
+    <div id="mapOverlay" class="absolute inset-0 z-5 flex items-start justify-center pt-24" style="background:rgba(0,0,0,0.35); backdrop-filter:blur(2px); display:none !important;">
+    </div>
+
+    <!-- Bottom Sheet -->
+    <div class="bottom-sheet z-10">
+      <!-- Drag Handle -->
+      <div class="flex justify-center pt-3 pb-1">
+        <div class="w-10 h-1 bg-gray-200 rounded-full"></div>
+      </div>
+
+      <!-- ======== حالة: بانتظار التسعير ======== -->
+      <div id="sheet-pending" class="px-4 pt-3 pb-6">
+        <div class="text-center mb-5">
+          <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="ti ti-clock text-amber-500 text-3xl"></i>
+          </div>
+          <h3 class="font-bold text-gray-900 text-base">طلبك قيد المراجعة</h3>
+          <p class="text-sm text-gray-500 mt-1">رقم الطلب: <span class="font-mono font-bold">EDH-2026-0147</span></p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4">
+          <p class="text-sm font-semibold text-amber-800 mb-1 flex items-center gap-2">
+            <i class="ti ti-hourglass text-amber-600"></i>
+            المشرف يُراجع طلبك الآن
+          </p>
+          <p class="text-xs text-amber-700 leading-relaxed">سيُحدد المشرف تكلفة الشحن ويُرسلها إلى إيميل شركتك للموافقة.</p>
+        </div>
+        <!-- Progress Steps -->
+        <div class="space-y-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="ti ti-check text-white text-xs"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">تم إرسال الطلب</p>
+              <p class="text-xs text-gray-400">الجمعة 27 يونيو، 9:15 ص</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 bg-amber-400 rounded-full flex items-center justify-center flex-shrink-0 ring-4 ring-amber-100">
+              <i class="ti ti-clock text-white text-xs"></i>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-amber-700">بانتظار تسعير المشرف</p>
+              <p class="text-xs text-amber-500">الآن...</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 opacity-40">
+            <div class="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="ti ti-mail text-gray-400 text-xs"></i>
+            </div>
+            <p class="text-sm text-gray-500">إرسال السعر لإيميلك</p>
+          </div>
+          <div class="flex items-center gap-3 opacity-40">
+            <div class="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="ti ti-truck text-gray-400 text-xs"></i>
+            </div>
+            <p class="text-sm text-gray-500">تنفيذ الشحنة</p>
+          </div>
+        </div>
+        <button class="w-full bg-gray-100 text-gray-500 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+          <i class="ti ti-bell text-base"></i>
+          سنُنبهك فور وصول السعر
+        </button>
+      </div>
+
+      <!-- ======== حالة: تم تحديد السعر ======== -->
+      <div id="sheet-priced" class="px-4 pt-3 pb-6 hidden">
+        <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-4 flex items-start gap-3">
+          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <i class="ti ti-currency-dollar text-green-600 text-lg"></i>
+          </div>
+          <div>
+            <p class="font-bold text-green-800 text-sm">تم تحديد سعر شحنتك!</p>
+            <p class="text-xs text-green-700 mt-0.5">وصلك إيميل بالتفاصيل على orders@شركتك.com.sa</p>
+          </div>
+        </div>
+        <!-- Price Card -->
+        <div class="bg-white border-2 border-primary-200 rounded-2xl p-5 mb-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-sm text-gray-500">الرياض ← جدة · 950 كم · مجمد</p>
+            <span class="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full font-semibold">
+              <i class="ti ti-snowflake text-xs"></i> Cold Chain
+            </span>
+          </div>
+          <div class="border-t border-gray-100 pt-3 space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">تكلفة الشحن</span>
+              <span class="text-sm font-semibold text-gray-700">3,200.00 ر.س</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">VAT 15%</span>
+              <span class="text-sm text-gray-500">480.00 ر.س</span>
+            </div>
+            <div class="flex justify-between items-center border-t border-gray-100 pt-2 mt-2">
+              <span class="text-sm font-bold text-gray-800">الإجمالي</span>
+              <span class="text-xl font-bold text-gray-900">3,680.00 <span class="text-sm">ر.س</span></span>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-center text-gray-400 mb-3">بالموافقة، سيُسند المشرف سائقاً لشحنتك فوراً</p>
+        <button onclick="acceptPrice()" class="w-full text-white font-bold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 mb-2" style="background:#16A34A">
+          <i class="ti ti-circle-check text-base"></i>
+          قبول السعر والمتابعة
+        </button>
+        <button onclick="rejectPrice()" class="w-full border-2 border-red-200 text-red-600 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-red-50 transition-colors">
+          <i class="ti ti-x text-base"></i>
+          رفض السعر وإلغاء الطلب
+        </button>
+      </div>
+
+      <!-- ======== حالة: في الطريق ======== -->
+      <div id="sheet-transit" class="px-4 pt-3 pb-6 hidden">
+        <!-- Timeline -->
+        <div class="flex items-center gap-2 mb-4">
+          <div class="flex items-center gap-1">
+            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+              <i class="ti ti-check text-white text-xs"></i>
+            </div>
+            <div class="w-8 h-0.5 bg-green-400"></div>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center">
+              <i class="ti ti-truck text-white text-xs"></i>
+            </div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+          </div>
+          <div class="flex items-center">
+            <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
+              <i class="ti ti-map-pin text-gray-400 text-xs"></i>
+            </div>
+          </div>
+          <div class="mr-auto text-right">
+            <p class="text-xs text-gray-500">التحميل <span class="text-green-500">✓</span> · في الطريق 🔵 · التسليم ○</p>
+          </div>
+        </div>
+        <!-- ETA -->
+        <div class="bg-primary-50 rounded-2xl p-4 mb-4 border border-primary-100">
+          <p class="text-xs text-gray-500 mb-1">وقت الوصول المتوقع</p>
+          <p class="text-lg font-bold text-gray-900">الأحد 28 يونيو، 4:00 م</p>
+          <p class="text-sm text-primary-600 font-semibold mt-0.5">متبقي: ساعتان و 15 دقيقة</p>
+        </div>
+        <!-- Driver Info -->
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0 border-2 border-primary-200">
+            <span class="text-primary-700 font-bold text-sm">م ع</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800 text-sm">محمد العتيبي</p>
+            <div class="flex items-center gap-2 mt-0.5">
+              <i class="ti ti-star-filled text-amber-400 text-xs"></i>
+              <i class="ti ti-star-filled text-amber-400 text-xs"></i>
+              <i class="ti ti-star-filled text-amber-400 text-xs"></i>
+              <i class="ti ti-star-filled text-amber-400 text-xs"></i>
+              <i class="ti ti-star text-gray-200 text-xs"></i>
+              <span class="text-xs text-gray-400">4.7</span>
+            </div>
+          </div>
+          <button class="w-9 h-9 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 border border-primary-100">
+            <i class="ti ti-phone text-sm"></i>
+          </button>
+        </div>
+        <!-- Cold Chain Strip -->
+        <div class="bg-blue-50 rounded-xl p-3 border border-blue-100 flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <i class="ti ti-snowflake text-primary-500 text-base"></i>
+            <span class="text-sm font-semibold text-gray-700">درجة الحرارة</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold font-mono text-green-600">4.2°C</span>
+            <span class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-semibold">طبيعي</span>
+          </div>
+        </div>
+        <button class="w-full bg-white border-2 border-primary-600 text-primary-600 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-primary-50 transition-colors">
+          <i class="ti ti-phone text-base"></i>
+          اتصال بالسائق
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Bottom Navigation (مخفي في حالات غير الطريق لأن الـ sheet يغطيه) -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg" style="height:64px; z-index:20;">
+      <div class="flex items-stretch h-full">
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="home.html">
+          <i class="ti ti-home text-xl"></i>
+          <span class="text-[10px]">الرئيسية</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="new-order-1.html">
+          <i class="ti ti-plus text-xl"></i>
+          <span class="text-[10px]">طلب جديد</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-primary-600">
+          <i class="ti ti-map-pin text-xl"></i>
+          <span class="text-[10px] font-medium">تتبع</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="history.html">
+          <i class="ti ti-history text-xl"></i>
+          <span class="text-[10px]">طلباتي</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400">
+          <i class="ti ti-user text-xl"></i>
+          <span class="text-[10px]">حسابي</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = el.dataset.link;
+      });
+    });
+
+    const states = {
+      pending: {
+        badge: 'bg-amber-100 text-amber-700',
+        badgeIcon: 'ti-clock',
+        badgeText: 'بانتظار تحديد السعر من المشرف',
+        sheet: 'sheet-pending',
+        mapBlur: true,
+        btnClass: 'border-amber-400 bg-amber-100 text-amber-800'
+      },
+      priced: {
+        badge: 'bg-green-100 text-green-700',
+        badgeIcon: 'ti-currency-dollar',
+        badgeText: 'تم تحديد السعر — انتظار موافقتك',
+        sheet: 'sheet-priced',
+        mapBlur: true,
+        btnClass: 'border-green-400 bg-green-100 text-green-800'
+      },
+      transit: {
+        badge: 'bg-blue-100 text-blue-700',
+        badgeIcon: 'ti-truck',
+        badgeText: 'في الطريق — الرياض ← جدة',
+        sheet: 'sheet-transit',
+        mapBlur: false,
+        btnClass: 'border-blue-400 bg-blue-100 text-blue-800'
+      }
+    };
+
+    function setState(key) {
+      const s = states[key];
+      // Update badge
+      const badge = document.getElementById('statusBadge');
+      badge.className = `text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 ${s.badge}`;
+      badge.innerHTML = `<i class="ti ${s.badgeIcon} text-xs"></i> ${s.badgeText}`;
+      // Show correct sheet
+      ['sheet-pending', 'sheet-priced', 'sheet-transit'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(s.sheet).classList.remove('hidden');
+      // Map overlay
+      const overlay = document.getElementById('mapOverlay');
+      overlay.style.display = s.mapBlur ? 'flex' : 'none';
+      // Update buttons
+      document.querySelectorAll('.state-btn').forEach(btn => {
+        btn.className = 'state-btn px-4 py-2 rounded-full text-xs font-bold border-2 border-gray-300 bg-white text-gray-600';
+      });
+      document.getElementById(`btn-${key}`).className = `state-btn px-4 py-2 rounded-full text-xs font-bold border-2 ${s.btnClass}`;
+    }
+
+    function acceptPrice() {
+      const toast = document.createElement('div');
+      toast.innerHTML = `<div class="fixed top-6 left-1/2 -translate-x-1/2 bg-green-600 text-white text-sm font-semibold px-6 py-3 rounded-xl shadow-xl z-50 flex items-center gap-2">
+        <i class="ti ti-circle-check text-lg"></i>
+        تم قبول السعر — سيُسند المشرف سائقاً قريباً
+      </div>`;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.remove(); setState('transit'); }, 2000);
+    }
+
+    function rejectPrice() {
+      if (confirm('هل أنت متأكد من رفض السعر؟ سيُلغى الطلب نهائياً.')) {
+        window.location.href = 'home.html';
+      }
+    }
+
+    // Default state: pending
+    setState('pending');
+  </script>
+</body>
+</html>
+

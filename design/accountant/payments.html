@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — المدفوعات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 16px; border-radius:8px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; transition:all 0.15s; cursor:pointer; }
+    .sidebar-link:hover { background:rgba(255,255,255,0.08); color:white; }
+    .sidebar-link.active { background:#DC2626 !important; color:white; border-right:3px solid #ff6b6b; }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50; display:flex; align-items:center; justify-content:center; }
+    .modal-overlay.hidden { display:none; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex" style="direction:rtl;">
+
+  <!-- Sidebar -->
+  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:#0D0D0D; direction:rtl;">
+    <div class="px-4 py-5 border-b border-white/10">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2" onerror="this.style.display='none'">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-lg"></i>
+        <div><p class="text-white font-bold text-sm">إدهام</p><p class="text-xs" style="color:#DC2626">للنقل المبرد</p></div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1">
+      <div class="sidebar-link" data-link="dashboard.html"><i class="ti ti-chart-bar text-lg"></i><span>لوحة المالية</span></div>
+      <div class="sidebar-link" data-link="invoices.html"><i class="ti ti-file-invoice text-lg"></i><span>الفواتير</span></div>
+      <div class="sidebar-link active" data-link="payments.html"><i class="ti ti-credit-card text-lg"></i><span>المدفوعات</span></div>
+      <div class="sidebar-link" style="margin-top:16px;opacity:0.5" data-link="../index.html"><i class="ti ti-arrow-right text-lg"></i><span>الرئيسية</span></div>
+    </nav>
+    <div class="px-3 py-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-3 py-2">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:#DC2626"><i class="ti ti-user text-white text-base"></i></div>
+        <div><p class="text-white text-sm font-semibold">سارة المطيري</p><p class="text-gray-400 text-[11px]">محاسبة</p></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col overflow-auto">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div>
+        <h1 class="text-xl font-bold text-gray-900">المدفوعات</h1>
+        <p class="text-sm text-gray-500 mt-0.5">تتبع وتسجيل مدفوعات الفواتير</p>
+      </div>
+      <button onclick="document.getElementById('paymentModal').classList.remove('hidden')"
+              class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-white font-medium" style="background:#DC2626">
+        <i class="ti ti-plus text-base"></i> تسجيل دفعة
+      </button>
+    </header>
+
+    <div class="p-8 space-y-6">
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-3 gap-5">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:#FEF2F2">
+              <i class="ti ti-wallet text-lg" style="color:#DC2626"></i>
+            </div>
+            <p class="text-sm text-gray-500 font-medium">مدفوعات هذا الشهر</p>
+          </div>
+          <p class="text-2xl font-bold text-gray-900">٣١٢,٥٠٠ <span class="text-base font-medium text-gray-400">ريال</span></p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50">
+              <i class="ti ti-receipt text-lg text-blue-600"></i>
+            </div>
+            <p class="text-sm text-gray-500 font-medium">عدد العمليات</p>
+          </div>
+          <p class="text-2xl font-bold text-gray-900">28 <span class="text-base font-medium text-gray-400">عملية</span></p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-purple-50">
+              <i class="ti ti-chart-line text-lg text-purple-600"></i>
+            </div>
+            <p class="text-sm text-gray-500 font-medium">متوسط قيمة الدفعة</p>
+          </div>
+          <p class="text-2xl font-bold text-gray-900">١١,١٦١ <span class="text-base font-medium text-gray-400">ريال</span></p>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-3 flex-wrap">
+        <div class="flex items-center gap-2 flex-1 min-w-48 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5">
+          <i class="ti ti-search text-gray-400"></i>
+          <input type="text" placeholder="بحث برقم فاتورة أو اسم عميل..." class="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none flex-1">
+        </div>
+        <select class="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 outline-none cursor-pointer">
+          <option>جميع طرق الدفع</option>
+          <option>تحويل بنكي</option>
+          <option>مدى</option>
+          <option>آجل</option>
+        </select>
+        <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5">
+          <i class="ti ti-calendar text-gray-400 text-sm"></i>
+          <input type="date" class="bg-transparent text-sm text-gray-700 outline-none cursor-pointer">
+        </div>
+        <button class="flex items-center gap-2 px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">
+          <i class="ti ti-filter text-base"></i> تصفية
+        </button>
+      </div>
+
+      <!-- Payments Table -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="font-bold text-gray-800 text-base">سجل المدفوعات</h2>
+          <button class="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5">
+            <i class="ti ti-download text-base"></i> تصدير CSV
+          </button>
+        </div>
+        <table class="w-full">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="text-right text-xs font-semibold text-gray-500 px-6 py-3">رقم الفاتورة</th>
+              <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">العميل</th>
+              <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">المبلغ</th>
+              <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">طريقة الدفع</th>
+              <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">تاريخ الدفع</th>
+              <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">مسجّل بواسطة</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm font-mono font-semibold text-gray-700">FAT-2026-0089</td>
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-indigo-500">ن</div>
+                  <span class="text-sm text-gray-700">شركة النخيل</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-bold text-gray-800">٣٢,٢٠٠ ريال</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                  <i class="ti ti-building-bank text-xs"></i> تحويل بنكي
+                </span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-500">25 يونيو 2026</td>
+              <td class="px-4 py-4 text-sm text-gray-500">سارة المطيري</td>
+            </tr>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm font-mono font-semibold text-gray-700">FAT-2026-0087</td>
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-red-500">ف</div>
+                  <span class="text-sm text-gray-700">شركة الفهد</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-bold text-gray-800">٤٥,٠٠٠ ريال</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700">
+                  <i class="ti ti-clock text-xs"></i> آجل 30 يوم
+                </span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-500">22 يونيو 2026</td>
+              <td class="px-4 py-4 text-sm text-gray-500">سارة المطيري</td>
+            </tr>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm font-mono font-semibold text-gray-700">FAT-2026-0083</td>
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-green-600">و</div>
+                  <span class="text-sm text-gray-700">مصنع الوطني</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-bold text-gray-800">٢٧,٥٠٠ ريال</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                  <i class="ti ti-credit-card text-xs"></i> مدى
+                </span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-500">18 يونيو 2026</td>
+              <td class="px-4 py-4 text-sm text-gray-500">سارة المطيري</td>
+            </tr>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm font-mono font-semibold text-gray-700">FAT-2026-0081</td>
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-cyan-600">خ</div>
+                  <span class="text-sm text-gray-700">توزيع الخليج</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-bold text-gray-800">١٩,٨٠٠ ريال</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                  <i class="ti ti-building-bank text-xs"></i> تحويل بنكي
+                </span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-500">15 يونيو 2026</td>
+              <td class="px-4 py-4 text-sm text-gray-500">سارة المطيري</td>
+            </tr>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm font-mono font-semibold text-gray-700">FAT-2026-0079</td>
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-purple-600">م</div>
+                  <span class="text-sm text-gray-700">الشركة المتحدة</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-bold text-gray-800">٣٣,١٥٠ ريال</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                  <i class="ti ti-credit-card text-xs"></i> مدى
+                </span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-500">12 يونيو 2026</td>
+              <td class="px-4 py-4 text-sm text-gray-500">سارة المطيري</td>
+            </tr>
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 text-sm font-mono font-semibold text-gray-700">FAT-2026-0075</td>
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white bg-indigo-500">ن</div>
+                  <span class="text-sm text-gray-700">شركة النخيل</span>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-sm font-bold text-gray-800">٢٢,٤٠٠ ريال</td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                  <i class="ti ti-building-bank text-xs"></i> تحويل بنكي
+                </span>
+              </td>
+              <td class="px-4 py-4 text-sm text-gray-500">8 يونيو 2026</td>
+              <td class="px-4 py-4 text-sm text-gray-500">سارة المطيري</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+          <p class="text-xs text-gray-500">عرض 6 من أصل 28 عملية</p>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">السابق</button>
+            <button class="px-3 py-1.5 rounded-lg text-xs text-white font-semibold" style="background:#DC2626">1</button>
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">2</button>
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">3</button>
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">التالي</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal: تسجيل دفعة -->
+  <div id="paymentModal" class="modal-overlay hidden">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <h3 class="font-bold text-gray-900 text-base">تسجيل دفعة جديدة</h3>
+        <button onclick="document.getElementById('paymentModal').classList.add('hidden')"
+                class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500">
+          <i class="ti ti-x text-base"></i>
+        </button>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <!-- اختيار الفاتورة -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 mb-1.5 block">رقم الفاتورة</label>
+          <div class="relative">
+            <input type="text" placeholder="ابحث عن الفاتورة..." class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+            <i class="ti ti-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+        <!-- المبلغ -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 mb-1.5 block">المبلغ المدفوع</label>
+          <div class="relative">
+            <input type="number" placeholder="0.00" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 font-semibold">ريال</span>
+          </div>
+        </div>
+        <!-- طريقة الدفع -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 mb-1.5 block">طريقة الدفع</label>
+          <select class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50 cursor-pointer">
+            <option value="">اختر طريقة الدفع...</option>
+            <option>تحويل بنكي</option>
+            <option>مدى</option>
+            <option>آجل 30 يوم</option>
+            <option>نقداً</option>
+          </select>
+        </div>
+        <!-- رقم المرجع -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 mb-1.5 block">رقم المرجع / الحوالة</label>
+          <input type="text" placeholder="مثال: TRF-20260628-001" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+        </div>
+        <!-- تاريخ الدفع -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 mb-1.5 block">تاريخ الدفع</label>
+          <input type="date" value="2026-06-28" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50">
+        </div>
+        <!-- ملاحظات -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 mb-1.5 block">ملاحظات <span class="text-gray-400 font-normal">(اختياري)</span></label>
+          <textarea rows="2" placeholder="أي ملاحظات إضافية..." class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50 resize-none"></textarea>
+        </div>
+      </div>
+      <div class="px-6 py-4 border-t border-gray-100 flex gap-3">
+        <button onclick="document.getElementById('paymentModal').classList.add('hidden')"
+                class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 font-medium">
+          إلغاء
+        </button>
+        <button class="flex-1 px-4 py-2.5 rounded-xl text-sm text-white font-semibold" style="background:#DC2626">
+          <i class="ti ti-device-floppy ml-1"></i> حفظ الدفعة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.sidebar-link[data-link]').forEach(link => {
+      link.addEventListener('click', () => {
+        window.location.href = link.dataset.link;
+      });
+    });
+    // Close modal on overlay click
+    document.getElementById('paymentModal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

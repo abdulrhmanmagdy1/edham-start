@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — الإبلاغ عن مشكلة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame { width:390px; min-height:844px; margin:0 auto; background:white; box-shadow:0 0 0 1px #E4E4E7, 0 25px 50px rgba(0,0,0,0.15); border-radius:40px; overflow:hidden; display:flex; flex-direction:column; }
+    .problem-card { border:2px solid #E4E4E7; border-radius:16px; padding:16px 12px; cursor:pointer; transition:all 0.15s; text-align:center; background:white; }
+    .problem-card:hover { border-color:#DC2626; background:#FEF2F2; }
+    .problem-card.selected { border-color:#DC2626; background:#FEF2F2; box-shadow:0 0 0 3px rgba(220,38,38,0.1); }
+    .toggle-track { width:44px; height:24px; border-radius:12px; position:relative; cursor:pointer; display:inline-flex; align-items:center; padding:2px; transition:background 0.2s; background:#DC2626; }
+    .toggle-thumb { width:20px; height:20px; background:white; border-radius:10px; transition:transform 0.2s; transform:translateX(20px); }
+    .toggle-track.off { background:#E4E4E7; }
+    .toggle-track.off .toggle-thumb { transform:translateX(0); }
+    .detail-section { display:none; }
+    .detail-section.visible { display:block; }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen flex items-center justify-center p-8" style="direction:rtl;">
+
+  <div class="mobile-frame">
+
+    <!-- Status Bar -->
+    <div class="flex items-center justify-between px-6 pt-3 pb-1 bg-white border-b border-gray-100">
+      <span class="text-gray-800 text-xs font-semibold">9:41</span>
+      <div class="flex items-center gap-1.5">
+        <i class="ti ti-wifi text-gray-600 text-xs"></i>
+        <i class="ti ti-battery-3 text-gray-600 text-xs"></i>
+      </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="px-5 py-4 flex items-center gap-3 bg-white border-b border-gray-100">
+      <button class="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50">
+        <i class="ti ti-arrow-right text-gray-600 text-base"></i>
+      </button>
+      <div>
+        <h1 class="font-bold text-gray-900 text-base">الإبلاغ عن مشكلة</h1>
+        <p class="text-xs text-gray-400">رحلة #TRP-2026-0412</p>
+      </div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto bg-gray-50 pb-28">
+      <div class="px-5 py-5 space-y-5">
+
+        <!-- Instruction -->
+        <p class="text-sm text-gray-600 text-center leading-relaxed">
+          اختر نوع المشكلة التي تواجهها ثم أدخل التفاصيل
+        </p>
+
+        <!-- Problem Type Cards: 2x2 grid + 1 below -->
+        <div>
+          <p class="text-xs font-bold text-gray-500 mb-3">نوع المشكلة</p>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <!-- عطل ميكانيكي -->
+            <div class="problem-card" onclick="selectProblem(this, 'عطل ميكانيكي')">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-2" style="background:#FEF2F2">
+                <i class="ti ti-tool text-2xl" style="color:#DC2626"></i>
+              </div>
+              <p class="text-sm font-semibold text-gray-800">عطل ميكانيكي</p>
+              <p class="text-xs text-gray-400 mt-0.5">محرك، ناقل حركة</p>
+            </div>
+            <!-- مشكلة في التبريد -->
+            <div class="problem-card" onclick="selectProblem(this, 'مشكلة في التبريد')">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-2 bg-blue-50">
+                <i class="ti ti-snowflake text-2xl text-blue-500"></i>
+              </div>
+              <p class="text-sm font-semibold text-gray-800">مشكلة في التبريد</p>
+              <p class="text-xs text-gray-400 mt-0.5">فريون، ضاغط</p>
+            </div>
+            <!-- حادث مروري -->
+            <div class="problem-card" onclick="selectProblem(this, 'حادث مروري')">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-2 bg-orange-50">
+                <i class="ti ti-alert-triangle text-2xl text-orange-500"></i>
+              </div>
+              <p class="text-sm font-semibold text-gray-800">حادث مروري</p>
+              <p class="text-xs text-gray-400 mt-0.5">اصطدام، خسائر</p>
+            </div>
+            <!-- إطار ممزق -->
+            <div class="problem-card" onclick="selectProblem(this, 'إطار ممزق')">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-2 bg-red-50">
+                <i class="ti ti-circle-x text-2xl text-red-500"></i>
+              </div>
+              <p class="text-sm font-semibold text-gray-800">إطار ممزق</p>
+              <p class="text-xs text-gray-400 mt-0.5">ثقب، انفجار</p>
+            </div>
+          </div>
+          <!-- مشكلة أخرى -->
+          <div class="problem-card flex items-center gap-3 text-right" style="text-align:right; display:flex;" onclick="selectProblem(this, 'مشكلة أخرى')">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gray-100">
+              <i class="ti ti-clipboard-list text-2xl text-gray-500"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">مشكلة أخرى</p>
+              <p class="text-xs text-gray-400">أذكر التفاصيل يدوياً</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail Section (shown after selection) -->
+        <div id="detailSection" class="detail-section space-y-4">
+          <div class="h-px bg-gray-200"></div>
+
+          <!-- Selected Type Badge -->
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold text-white" style="background:#DC2626">
+              <i class="ti ti-circle-check text-xs"></i>
+              <span id="selectedTypeBadge">عطل ميكانيكي</span>
+            </div>
+            <span class="text-xs text-gray-400">تم الاختيار</span>
+          </div>
+
+          <!-- Textarea -->
+          <div>
+            <label class="text-xs font-bold text-gray-600 mb-2 block">وصف المشكلة</label>
+            <textarea rows="3" placeholder="وصف المشكلة بالتفصيل... ماذا حدث؟ متى؟ كيف؟"
+                      class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm text-gray-700 placeholder-gray-400 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-50 resize-none"></textarea>
+          </div>
+
+          <!-- Can vehicle continue? -->
+          <div class="bg-white rounded-2xl p-4 border border-gray-100">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-gray-800">هل المركبة قادرة على الاستمرار؟</p>
+                <p class="text-xs text-gray-400 mt-0.5">هل يمكن إكمال الرحلة؟</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-400" id="toggleLabel">نعم</span>
+                <div class="toggle-track" id="vehicleToggle" onclick="toggleVehicle()">
+                  <div class="toggle-thumb"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Photo -->
+          <div>
+            <label class="text-xs font-bold text-gray-600 mb-2 block">إضافة صورة <span class="text-gray-400 font-normal">(اختياري)</span></label>
+            <button class="w-full border-2 border-dashed border-gray-300 rounded-2xl py-6 flex flex-col items-center gap-2 hover:border-red-400 hover:bg-red-50 transition-colors">
+              <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="ti ti-camera text-gray-400 text-lg"></i>
+              </div>
+              <p class="text-sm text-gray-500 font-medium">التقط صورة أو اختر من المعرض</p>
+              <p class="text-xs text-gray-400">PNG, JPG حتى 10 ميجابايت</p>
+            </button>
+          </div>
+
+          <!-- Current Location -->
+          <div class="bg-white rounded-2xl p-4 border border-gray-100">
+            <p class="text-xs font-bold text-gray-500 mb-2">الموقع الحالي (تلقائي)</p>
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:#FEF2F2">
+                <i class="ti ti-map-pin text-red-500 text-base"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-800">الرياض — طريق الملك فهد</p>
+                <p class="text-xs text-gray-400">تحديث تلقائي — الآن</p>
+              </div>
+              <button class="mr-auto text-xs text-red-600 font-semibold">تحديث</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Submit Button (Fixed Bottom) -->
+    <div class="bg-white border-t border-gray-100 px-5 py-4">
+      <button id="submitBtn" onclick="submitReport()"
+              class="w-full py-4 rounded-2xl text-white font-bold text-base flex items-center justify-center gap-2 transition-all"
+              style="background:linear-gradient(135deg,#DC2626,#b91c1c); box-shadow:0 4px 15px rgba(220,38,38,0.4);">
+        <i class="ti ti-send text-lg"></i> إرسال البلاغ
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    let selectedCard = null;
+
+    function selectProblem(card, type) {
+      if (selectedCard) selectedCard.classList.remove('selected');
+      card.classList.add('selected');
+      selectedCard = card;
+      document.getElementById('selectedTypeBadge').textContent = type;
+      const detail = document.getElementById('detailSection');
+      detail.classList.add('visible');
+      detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function toggleVehicle() {
+      const track = document.getElementById('vehicleToggle');
+      const label = document.getElementById('toggleLabel');
+      track.classList.toggle('off');
+      label.textContent = track.classList.contains('off') ? 'لا' : 'نعم';
+    }
+
+    function submitReport() {
+      if (!selectedCard) {
+        alert('الرجاء اختيار نوع المشكلة أولاً');
+        return;
+      }
+      const btn = document.getElementById('submitBtn');
+      btn.innerHTML = '<i class="ti ti-circle-check text-lg"></i> تم إرسال البلاغ';
+      btn.style.background = 'linear-gradient(135deg,#16a34a,#15803d)';
+      btn.style.boxShadow = '0 4px 15px rgba(22,163,74,0.4)';
+    }
+  </script>
+</body>
+</html>

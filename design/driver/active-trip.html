@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — الرحلة الجارية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',500:'#F59E0B',600:'#D97706',700:'#B45309' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame { width:390px; min-height:844px; margin:0 auto; background:white; box-shadow:0 0 0 1px #E4E4E7,0 25px 50px rgba(0,0,0,0.15); border-radius:40px; overflow:hidden; position:relative; }
+    @keyframes pulse-truck { 0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.4)} 50%{box-shadow:0 0 0 10px rgba(37,99,235,0)} }
+    .truck-pulse { animation: pulse-truck 2s ease-in-out infinite; }
+    @keyframes road-move { 0%{stroke-dashoffset:0} 100%{stroke-dashoffset:-40} }
+    .road-anim { animation: road-move 0.8s linear infinite; }
+  </style>
+</head>
+<body class="bg-slate-200 min-h-screen p-8 flex items-center justify-center font-arabic">
+
+  <div class="mobile-frame">
+    <!-- Status Bar -->
+    <div class="bg-gray-800 px-5 pt-3 pb-2 flex items-center justify-between">
+      <span class="text-white text-xs font-semibold">11:32</span>
+      <div class="flex items-center gap-1">
+        <i class="ti ti-wifi text-white text-xs"></i>
+        <i class="ti ti-battery-3 text-white text-xs"></i>
+      </div>
+    </div>
+
+    <!-- Map Area (60% of screen) -->
+    <div class="relative bg-slate-300 overflow-hidden" style="height:460px;">
+      <!-- Map Background Simulation -->
+      <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50">
+        <!-- Grid lines (roads) -->
+        <svg class="absolute inset-0 w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#94a3b8" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+
+        <!-- Highway Route Line -->
+        <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <!-- Route completed (green) -->
+          <polyline points="300,380 280,340 250,300 200,240 160,190 130,150 110,120 90,90"
+            fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+          <!-- Route remaining (blue dashed) -->
+          <polyline points="90,90 70,60 50,30"
+            fill="none" stroke="#2563EB" stroke-width="4" stroke-linecap="round" stroke-dasharray="8,4"/>
+        </svg>
+
+        <!-- Destination Pin (top) -->
+        <div class="absolute top-6 right-8">
+          <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center shadow-lg">
+            <i class="ti ti-map-pin-filled text-white text-sm"></i>
+          </div>
+          <div class="bg-white rounded-lg px-2 py-1 shadow-md mt-1 text-[10px] font-semibold text-gray-700 whitespace-nowrap">
+            جدة — الفهد للتجارة
+          </div>
+        </div>
+
+        <!-- Origin Pin (bottom right) -->
+        <div class="absolute bottom-16 right-16">
+          <div class="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center shadow-md">
+            <i class="ti ti-package text-white text-xs"></i>
+          </div>
+          <div class="bg-white rounded-lg px-1.5 py-0.5 shadow mt-1 text-[9px] text-gray-600 whitespace-nowrap">
+            الرياض (انطلق)
+          </div>
+        </div>
+
+        <!-- Current Position - Truck -->
+        <div class="absolute truck-pulse" style="top:50%; left:35%; transform:translate(-50%,-50%);">
+          <div class="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center shadow-xl border-2 border-white">
+            <i class="ti ti-truck text-white text-xl"></i>
+          </div>
+          <div class="bg-primary-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 text-center whitespace-nowrap shadow">
+            أنت هنا
+          </div>
+        </div>
+
+        <!-- Map Controls -->
+        <div class="absolute top-4 left-4 flex flex-col gap-2">
+          <button class="w-9 h-9 bg-white rounded-xl shadow-md flex items-center justify-center">
+            <i class="ti ti-plus text-gray-700 text-base"></i>
+          </button>
+          <button class="w-9 h-9 bg-white rounded-xl shadow-md flex items-center justify-center">
+            <i class="ti ti-minus text-gray-700 text-base"></i>
+          </button>
+        </div>
+
+        <!-- Speed indicator -->
+        <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl px-3 py-2 shadow-md">
+          <p class="text-[10px] text-gray-500">السرعة</p>
+          <p class="text-lg font-bold text-gray-800 font-mono">87 <span class="text-xs font-normal">كم/س</span></p>
+        </div>
+
+        <!-- Back button -->
+        <div class="absolute top-4 right-4">
+          <button class="w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center" data-link="tasks.html">
+            <i class="ti ti-chevron-right text-gray-700 text-base"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Info Card -->
+    <div class="bg-white shadow-xl" style="height:320px; overflow-y:auto;">
+      <!-- Drag Handle -->
+      <div class="flex justify-center pt-3 pb-2">
+        <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+      </div>
+
+      <div class="px-4 pb-4">
+        <!-- Status & Trip Number -->
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <span class="bg-primary-100 text-primary-700 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+              <i class="ti ti-truck text-xs"></i>
+              في الطريق
+            </span>
+          </div>
+          <span class="text-xs font-mono text-gray-500 font-semibold">EDH-2026-0147</span>
+        </div>
+
+        <!-- ETA -->
+        <div class="bg-gray-50 rounded-2xl p-3 mb-3">
+          <p class="text-xs text-gray-500 mb-1">وقت الوصول المتوقع إلى جدة</p>
+          <p class="text-xl font-bold text-gray-800">٣ ساعات ٢٠ دقيقة</p>
+          <p class="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
+            <i class="ti ti-map-pin text-xs"></i>
+            المتبقي: 568 كم من 950 كم
+          </p>
+        </div>
+
+        <!-- Next Instruction -->
+        <div class="bg-primary-50 border border-primary-100 rounded-xl p-3 mb-3 flex items-center gap-3">
+          <div class="w-8 h-8 bg-primary-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="ti ti-arrow-up text-white text-sm"></i>
+          </div>
+          <div>
+            <p class="text-[10px] text-gray-500">الخطوة التالية</p>
+            <p class="text-sm font-semibold text-gray-800">استمر على طريق الملك عبدالعزيز</p>
+            <p class="text-xs text-gray-500">لمدة 45 كم</p>
+          </div>
+        </div>
+
+        <!-- Cold Chain Temp -->
+        <div class="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4">
+          <div class="flex items-center gap-2">
+            <i class="ti ti-snowflake text-primary-600 text-lg"></i>
+            <div>
+              <p class="text-xs text-gray-500">درجة الحرارة</p>
+              <p class="text-base font-bold text-gray-800 font-mono">-19.3°C</p>
+            </div>
+          </div>
+          <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+            <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            طبيعي
+          </span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 gap-3">
+          <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 font-semibold py-3 rounded-xl text-sm border border-primary-200 flex items-center justify-center gap-2 transition-colors" data-link="cold-chain.html">
+            <i class="ti ti-thermometer text-sm"></i>
+            سجّل درجة الحرارة
+          </button>
+          <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors" data-link="delivery-confirm.html">
+            <i class="ti ti-map-pin-check text-sm"></i>
+            وصلت للتسليم
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg" style="height:64px;">
+      <div class="flex items-stretch h-full">
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="tasks.html">
+          <i class="ti ti-home text-xl"></i>
+          <span class="text-[10px]">الرئيسية</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-primary-600" data-link="active-trip.html">
+          <i class="ti ti-steering-wheel text-xl"></i>
+          <span class="text-[10px] font-medium">رحلتي</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="history.html">
+          <i class="ti ti-history text-xl"></i>
+          <span class="text-[10px]">السجل</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400">
+          <i class="ti ti-user text-xl"></i>
+          <span class="text-[10px]">حسابي</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', () => { window.location.href = el.dataset.link; });
+    });
+  </script>
+</body>
+</html>

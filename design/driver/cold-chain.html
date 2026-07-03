@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — سلسلة التبريد</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',500:'#F59E0B',600:'#D97706',700:'#B45309' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame { width:390px; min-height:844px; margin:0 auto; background:white; box-shadow:0 0 0 1px #E4E4E7,0 25px 50px rgba(0,0,0,0.15); border-radius:40px; overflow:hidden; position:relative; }
+    .screen-content { height:844px; overflow-y:auto; overflow-x:hidden; padding-bottom:100px; }
+    .screen-content::-webkit-scrollbar { display:none; }
+    .gauge-ring { transform: rotate(-90deg); transform-origin: center; }
+    @keyframes pulse-glow { 0%,100%{box-shadow:0 0 20px rgba(16,185,129,0.3)} 50%{box-shadow:0 0 40px rgba(16,185,129,0.6)} }
+    .gauge-glow { animation: pulse-glow 3s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-slate-200 min-h-screen p-8 flex items-center justify-center font-arabic">
+
+  <div class="mobile-frame">
+    <div class="screen-content">
+
+      <!-- Status Bar -->
+      <div class="bg-primary-900 px-5 pt-3 pb-2 flex items-center justify-between">
+        <span class="text-white text-xs font-semibold">11:45</span>
+        <div class="flex items-center gap-1">
+          <i class="ti ti-wifi text-white text-xs"></i>
+          <i class="ti ti-battery-3 text-white text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="bg-primary-900 px-5 pb-5 pt-2">
+        <div class="flex items-center gap-3">
+          <button class="w-9 h-9 bg-white/10 rounded-full flex items-center justify-center" data-link="active-trip.html">
+            <i class="ti ti-chevron-right text-white text-lg"></i>
+          </button>
+          <div>
+            <h1 class="text-white font-bold text-lg">سجّل درجة الحرارة</h1>
+            <p class="text-blue-300 text-xs">EDH-2026-0147 · Isuzu مبردة</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 px-4 pt-5 space-y-4">
+
+        <!-- Gauge Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <!-- Circular Gauge -->
+          <div class="flex flex-col items-center mb-4">
+            <!-- Gauge Circle -->
+            <div class="relative flex items-center justify-center gauge-glow rounded-full" style="width:200px; height:200px; background: conic-gradient(#10B981 0% 65%, #E5E7EB 65% 100%); border-radius:50%;">
+              <!-- Inner circle mask -->
+              <div class="absolute bg-white rounded-full flex flex-col items-center justify-center" style="width:160px; height:160px;">
+                <i class="ti ti-snowflake text-primary-600 text-2xl mb-1"></i>
+                <p class="text-3xl font-bold text-green-600 font-mono leading-none">-18.7</p>
+                <p class="text-lg font-bold text-green-600 font-mono">°C</p>
+                <div class="w-12 h-0.5 bg-gray-200 my-2"></div>
+                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                  طبيعي
+                </span>
+              </div>
+            </div>
+
+            <!-- Range Label -->
+            <p class="text-sm text-gray-500 mt-4 text-center">
+              النطاق المسموح: <span class="font-semibold text-gray-700">أقل من -18°C (مجمد)</span>
+            </p>
+          </div>
+
+          <!-- Reading Time -->
+          <div class="bg-gray-50 rounded-xl p-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i class="ti ti-clock text-gray-400 text-sm"></i>
+              <span class="text-xs text-gray-500">تاريخ ووقت التسجيل</span>
+            </div>
+            <span class="text-xs font-mono font-semibold text-gray-700">الجمعة 27/06، 11:45 ص</span>
+          </div>
+        </div>
+
+        <!-- Manual Input -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <h3 class="text-sm font-bold text-gray-800 mb-3">أدخل قراءة يدوية</h3>
+          <div class="relative">
+            <input type="number" step="0.1" placeholder="مثال: -18.5"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg font-mono text-gray-800 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 pr-4 pl-16"
+              style="direction:ltr; text-align:center;">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">°C</span>
+          </div>
+          <p class="text-xs text-gray-400 mt-2 text-center">أدخل القراءة من مقياس الحرارة في الشاحنة</p>
+        </div>
+
+        <!-- Today's Readings Log -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-gray-800">سجل قراءات اليوم</h3>
+            <span class="bg-primary-50 text-primary-600 text-[10px] font-bold px-2 py-0.5 rounded-full">3 قراءات</span>
+          </div>
+
+          <!-- Readings Table -->
+          <div class="space-y-2">
+            <!-- Reading Row Header -->
+            <div class="grid grid-cols-4 text-[10px] text-gray-400 font-semibold pb-1 border-b border-gray-100">
+              <span>الوقت</span>
+              <span class="text-center">القراءة</span>
+              <span class="text-center">الحالة</span>
+              <span class="text-center">الموقع</span>
+            </div>
+
+            <!-- Row 1 -->
+            <div class="grid grid-cols-4 items-center py-2 border-b border-gray-50">
+              <span class="text-xs font-mono text-gray-600">9:30 ص</span>
+              <span class="text-xs font-bold font-mono text-green-600 text-center">-19.1°C</span>
+              <span class="text-center">
+                <span class="bg-green-100 text-green-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">طبيعي</span>
+              </span>
+              <span class="text-[10px] text-gray-400 text-center">الرياض</span>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="grid grid-cols-4 items-center py-2 border-b border-gray-50">
+              <span class="text-xs font-mono text-gray-600">10:15 ص</span>
+              <span class="text-xs font-bold font-mono text-green-600 text-center">-18.9°C</span>
+              <span class="text-center">
+                <span class="bg-green-100 text-green-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">طبيعي</span>
+              </span>
+              <span class="text-[10px] text-gray-400 text-center">الطريق</span>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="grid grid-cols-4 items-center py-2">
+              <span class="text-xs font-mono text-gray-600">11:00 ص</span>
+              <span class="text-xs font-bold font-mono text-green-600 text-center">-18.7°C</span>
+              <span class="text-center">
+                <span class="bg-green-100 text-green-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full">طبيعي</span>
+              </span>
+              <span class="text-[10px] text-gray-400 text-center">كم 380</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-4 shadow-xl">
+      <button class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2">
+        <i class="ti ti-device-floppy text-base"></i>
+        حفظ القراءة
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', () => { window.location.href = el.dataset.link; });
+    });
+  </script>
+</body>
+</html>

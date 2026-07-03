@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — الفواتير</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',500:'#F59E0B',600:'#D97706',700:'#B45309' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50 font-arabic">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-60 text-white flex flex-col flex-shrink-0" style="background:#0D0D0D;">
+    <div class="px-4 py-5 border-b border-white/10">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2"
+           onerror="this.style.display='none'">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-lg"></i>
+        <div>
+          <p class="text-white font-bold text-sm leading-tight">إدهام</p>
+          <p class="text-xs" style="color:#DC2626">للنقل المبرد</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 p-4 space-y-1">
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-colors text-sm">
+        <i class="ti ti-chart-bar text-lg"></i>
+        <span>لوحة التحكم</span>
+      </a>
+      <a href="#" data-link="invoices.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white text-sm" style="background:#DC2626; border-right:3px solid #ff6b6b;">
+        <i class="ti ti-file-invoice text-lg"></i>
+        <span>الفواتير</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-colors text-sm">
+        <i class="ti ti-credit-card text-lg"></i>
+        <span>المدفوعات</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-colors text-sm">
+        <i class="ti ti-report text-lg"></i>
+        <span>التقارير</span>
+      </a>
+    </nav>
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background:#DC2626">سم</div>
+        <div class="text-sm">
+          <div class="font-medium">سارة المطيري</div>
+          <div class="text-gray-400 text-xs">محاسبة</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-auto">
+    <header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <h1 class="text-xl font-bold text-gray-900">الفواتير</h1>
+      <div class="flex items-center gap-4">
+        <button class="relative">
+          <i class="ti ti-bell text-gray-500 text-xl"></i>
+          <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+        </button>
+        <button data-link="create-invoice.html" class="flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-xl transition-colors text-sm cursor-pointer" style="background:#DC2626">
+          <i class="ti ti-plus text-base"></i>
+          فاتورة جديدة
+        </button>
+      </div>
+    </header>
+
+    <div class="p-8">
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-4 gap-5 mb-8">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-sm text-gray-500">إجمالي هذا الشهر</p>
+            <div class="w-9 h-9 bg-primary-100 rounded-lg flex items-center justify-center">
+              <i class="ti ti-report-money text-primary-600 text-lg"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-gray-900">٤٨٥,٣٢٠</p>
+          <p class="text-xs text-gray-400 mt-1">ريال سعودي</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-green-200 shadow-sm p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-sm text-gray-500">مدفوعة</p>
+            <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center">
+              <i class="ti ti-circle-check text-green-600 text-lg"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-green-700">٣١٢,٥٠٠</p>
+          <p class="text-xs text-green-500 mt-1 flex items-center gap-1">
+            <i class="ti ti-arrow-up text-xs"></i> ريال سعودي
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-blue-200 shadow-sm p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-sm text-gray-500">معلقة</p>
+            <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center">
+              <i class="ti ti-clock text-blue-600 text-lg"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-blue-700">١٢٤,٨٢٠</p>
+          <p class="text-xs text-blue-500 mt-1">ريال سعودي</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-red-200 shadow-sm p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-sm text-gray-500">متأخرة</p>
+            <div class="w-9 h-9 bg-red-100 rounded-lg flex items-center justify-center">
+              <i class="ti ti-alert-circle text-red-600 text-lg"></i>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-red-700">٤٨,٠٠٠</p>
+          <p class="text-xs text-red-500 mt-1 flex items-center gap-1">
+            <i class="ti ti-alert-triangle text-xs"></i> ريال سعودي
+          </p>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="font-bold text-gray-900 flex items-center gap-2">
+            <i class="ti ti-file-invoice text-primary-600"></i>
+            قائمة الفواتير
+          </h2>
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <i class="ti ti-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+              <input type="text" placeholder="ابحث..." class="border border-gray-200 rounded-lg pr-8 pl-3 py-1.5 text-sm focus:outline-none focus:border-primary-400 w-48">
+            </div>
+            <select class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-600 focus:outline-none focus:border-primary-400">
+              <option>جميع الحالات</option>
+              <option>مدفوعة</option>
+              <option>مُرسلة</option>
+              <option>معلقة</option>
+              <option>متأخرة</option>
+              <option>مسودة</option>
+            </select>
+          </div>
+        </div>
+
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-gray-100">
+            <tr>
+              <th class="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">رقم الفاتورة</th>
+              <th class="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">العميل</th>
+              <th class="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">تاريخ الإصدار</th>
+              <th class="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">تاريخ الاستحقاق</th>
+              <th class="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">المبلغ (ريال)</th>
+              <th class="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">الحالة</th>
+              <th class="text-right px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+
+            <!-- صف 1 — مدفوعة -->
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <span class="font-mono text-sm font-semibold text-primary-600">FAT-2026-0089</span>
+              </td>
+              <td class="px-6 py-4">
+                <p class="font-medium text-gray-900 text-sm">شركة النخيل للتجارة</p>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">20 يونيو 2026</td>
+              <td class="px-6 py-4 text-sm text-gray-600">20 يوليو 2026</td>
+              <td class="px-6 py-4">
+                <span class="font-bold text-gray-900 text-sm">٣٢,٢٠٠</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+                  <i class="ti ti-circle-check text-sm"></i> مدفوعة
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="عرض"><i class="ti ti-eye"></i></button>
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تحميل"><i class="ti ti-download"></i></button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- صف 2 — مُرسلة -->
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <span class="font-mono text-sm font-semibold text-primary-600">FAT-2026-0090</span>
+              </td>
+              <td class="px-6 py-4">
+                <p class="font-medium text-gray-900 text-sm">مؤسسة الأمل</p>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">22 يونيو 2026</td>
+              <td class="px-6 py-4 text-sm text-gray-600">22 يوليو 2026</td>
+              <td class="px-6 py-4">
+                <span class="font-bold text-gray-900 text-sm">١٨,٥٥٠</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-100 text-primary-700 text-xs font-semibold">
+                  <i class="ti ti-send text-sm"></i> مُرسلة
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="عرض"><i class="ti ti-eye"></i></button>
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تعديل"><i class="ti ti-pencil"></i></button>
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تحميل"><i class="ti ti-download"></i></button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- صف 3 — معلقة -->
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <span class="font-mono text-sm font-semibold text-primary-600">FAT-2026-0091</span>
+              </td>
+              <td class="px-6 py-4">
+                <p class="font-medium text-gray-900 text-sm">شركة الفهد</p>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">23 يونيو 2026</td>
+              <td class="px-6 py-4 text-sm text-gray-600">23 يوليو 2026</td>
+              <td class="px-6 py-4">
+                <span class="font-bold text-gray-900 text-sm">٤٥,٠٠٠</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">
+                  <i class="ti ti-clock text-sm"></i> معلقة
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="عرض"><i class="ti ti-eye"></i></button>
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تعديل"><i class="ti ti-pencil"></i></button>
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تحميل"><i class="ti ti-download"></i></button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- صف 4 — متأخرة -->
+            <tr class="hover:bg-red-50 transition-colors bg-red-50/30">
+              <td class="px-6 py-4">
+                <span class="font-mono text-sm font-semibold text-primary-600">FAT-2026-0085</span>
+              </td>
+              <td class="px-6 py-4">
+                <p class="font-medium text-gray-900 text-sm">مصنع الوطني</p>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">5 يونيو 2026</td>
+              <td class="px-6 py-4">
+                <span class="text-red-600 text-sm font-medium">5 يوليو 2026</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="font-bold text-red-700 text-sm">٤٨,٠٠٠</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                  <i class="ti ti-alert-triangle text-sm"></i> متأخرة
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="عرض"><i class="ti ti-eye"></i></button>
+                  <button class="text-red-400 hover:text-red-600 transition-colors" title="تذكير"><i class="ti ti-bell-ringing"></i></button>
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تحميل"><i class="ti ti-download"></i></button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- صف 5 — مسودة -->
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <span class="font-mono text-sm font-semibold text-gray-400">FAT-2026-0092</span>
+              </td>
+              <td class="px-6 py-4">
+                <p class="font-medium text-gray-900 text-sm">الشركة المتحدة</p>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">25 يونيو 2026</td>
+              <td class="px-6 py-4 text-sm text-gray-600">25 يوليو 2026</td>
+              <td class="px-6 py-4">
+                <span class="font-bold text-gray-900 text-sm">٢٩,٧٥٠</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold">
+                  <i class="ti ti-file text-sm"></i> مسودة
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تعديل"><i class="ti ti-pencil"></i></button>
+                  <button class="text-gray-400 hover:text-green-600 transition-colors" title="إرسال"><i class="ti ti-send"></i></button>
+                  <button class="text-gray-400 hover:text-red-500 transition-colors" title="حذف"><i class="ti ti-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- صف 6 — مسودة -->
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <span class="font-mono text-sm font-semibold text-gray-400">FAT-2026-0093</span>
+              </td>
+              <td class="px-6 py-4">
+                <p class="font-medium text-gray-900 text-sm">توزيع الخليج</p>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">27 يونيو 2026</td>
+              <td class="px-6 py-4 text-sm text-gray-600">27 يوليو 2026</td>
+              <td class="px-6 py-4">
+                <span class="font-bold text-gray-900 text-sm">٢٢,١٠٠</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold">
+                  <i class="ti ti-file text-sm"></i> مسودة
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <button class="text-gray-400 hover:text-primary-600 transition-colors" title="تعديل"><i class="ti ti-pencil"></i></button>
+                  <button class="text-gray-400 hover:text-green-600 transition-colors" title="إرسال"><i class="ti ti-send"></i></button>
+                  <button class="text-gray-400 hover:text-red-500 transition-colors" title="حذف"><i class="ti ti-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <!-- Table Footer -->
+        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
+          <p class="text-sm text-gray-500">عرض 6 من 24 فاتورة</p>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-white transition-colors">السابق</button>
+            <button class="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium">1</button>
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-white transition-colors">2</button>
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-white transition-colors">3</button>
+            <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-white transition-colors">التالي</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('[data-link]').forEach(el => {
+    el.addEventListener('click', (e) => { e.preventDefault(); window.location.href = el.dataset.link; });
+  });
+</script>
+</body>
+</html>

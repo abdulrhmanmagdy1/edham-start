@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — السائقون</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] }, colors: { brand: { DEFAULT:'#DC2626', hover:'#B91C1C' } } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 16px; border-radius:8px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; transition:all 0.15s; cursor:pointer; }
+    .sidebar-link:hover { background:rgba(255,255,255,0.08); color:white; }
+    .sidebar-link.active { background:#DC2626 !important; color:white; border-right:3px solid #ff6b6b; }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+  </style>
+</head>
+<body class="bg-gray-50 font-arabic">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:#0D0D0D; direction:rtl;">
+    <div class="px-4 py-5 border-b border-white/10">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2" onerror="this.style.display='none'">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-lg"></i>
+        <div>
+          <p class="text-white font-bold text-sm leading-tight">إدهام</p>
+          <p class="text-xs" style="color:#DC2626">للنقل المبرد</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <div class="sidebar-link" data-link="dashboard.html"><i class="ti ti-layout-dashboard text-lg"></i><span>لوحة التحكم</span></div>
+      <div class="sidebar-link" data-link="orders.html"><i class="ti ti-package text-lg"></i><span>إدارة الطلبات</span></div>
+      <div class="sidebar-link" data-link="live-map.html"><i class="ti ti-map text-lg"></i><span>خريطة الأسطول</span></div>
+      <div class="sidebar-link" data-link="fleet.html"><i class="ti ti-truck text-lg"></i><span>إدارة الأسطول</span></div>
+      <div class="sidebar-link active" data-link="drivers.html"><i class="ti ti-steering-wheel text-lg"></i><span>السائقون</span></div>
+      <div class="sidebar-link" data-link="users.html"><i class="ti ti-users text-lg"></i><span>المستخدمون</span></div>
+      <div class="sidebar-link" data-link="cold-chain-monitor.html"><i class="ti ti-snowflake text-lg"></i><span>مراقبة التبريد</span></div>
+      <div class="sidebar-link" data-link="reports.html"><i class="ti ti-report-analytics text-lg"></i><span>التقارير</span></div>
+      <div class="sidebar-link" data-link="notifications.html"><i class="ti ti-bell text-lg"></i><span>الإشعارات</span></div>
+      <div class="sidebar-link" style="margin-top:16px; opacity:0.5" data-link="../index.html"><i class="ti ti-arrow-right text-lg"></i><span>الرئيسية</span></div>
+    </nav>
+    <div class="px-3 py-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-3 py-2">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#DC2626">
+          <i class="ti ti-user text-white text-base"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-white text-sm font-semibold truncate">أحمد المنصور</p>
+          <p class="text-gray-400 text-[11px]">مشرف عمليات</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <h1 class="text-xl font-bold text-gray-800">السائقون</h1>
+      <button onclick="document.getElementById('addDriverModal').classList.add('open')"
+              class="flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-semibold transition-colors"
+              style="background:#DC2626">
+        <i class="ti ti-plus"></i>
+        إضافة سائق
+      </button>
+    </div>
+
+    <div class="p-8">
+
+      <!-- KPI Row -->
+      <div class="grid grid-cols-4 gap-5 mb-8">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">إجمالي السائقين</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:#FEF2F2">
+              <i class="ti ti-steering-wheel text-lg" style="color:#DC2626"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-gray-800">24</p>
+          <p class="text-xs text-gray-400 mt-1">مسجّل في النظام</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">متاحون الآن</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-green-50">
+              <i class="ti ti-circle-check text-lg text-green-600"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-green-600">9</p>
+          <p class="text-xs text-gray-400 mt-1">جاهز للتكليف</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">في رحلة</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-50">
+              <i class="ti ti-truck text-lg text-blue-600"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-blue-600">8</p>
+          <p class="text-xs text-gray-400 mt-1">نشط الآن</p>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-gray-500 font-medium">غير متاحون</span>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-gray-100">
+              <i class="ti ti-user-off text-lg text-gray-500"></i>
+            </div>
+          </div>
+          <p class="text-3xl font-bold text-gray-500">7</p>
+          <p class="text-xs text-gray-400 mt-1">إجازة أو موقوف</p>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex items-center gap-4 flex-wrap">
+        <div class="relative flex-1 min-w-48">
+          <i class="ti ti-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input type="text" placeholder="البحث بالاسم أو رقم الموظف..."
+                 class="w-full border border-gray-200 rounded-lg py-2 pr-9 pl-3 text-sm text-gray-700 focus:outline-none focus:border-red-400 transition-colors">
+        </div>
+        <select class="border border-gray-200 rounded-lg py-2 px-3 text-sm text-gray-700 focus:outline-none focus:border-red-400 min-w-36">
+          <option>الكل</option>
+          <option>متاح</option>
+          <option>في رحلة</option>
+          <option>غير متاح</option>
+        </select>
+        <select class="border border-gray-200 rounded-lg py-2 px-3 text-sm text-gray-700 focus:outline-none focus:border-red-400 min-w-44">
+          <option>كل أنواع الرخص</option>
+          <option>رخصة نقل ثقيل</option>
+          <option>رخصة نقل خفيف</option>
+          <option>رخصة مركبات مبردة</option>
+        </select>
+        <button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+          <i class="ti ti-adjustments-horizontal"></i>
+          تصفية متقدمة
+        </button>
+      </div>
+
+      <!-- Drivers Table -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="font-bold text-gray-800">قائمة السائقين</h2>
+          <span class="text-sm text-gray-400">6 من 24 سائق</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-100">
+                <th class="text-right text-xs font-semibold text-gray-500 px-6 py-3">الاسم</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">رقم الموظف</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">الجوال</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">المركبة المعيّنة</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">الحالة</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">آخر رحلة</th>
+                <th class="text-right text-xs font-semibold text-gray-500 px-4 py-3">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              <!-- Row 1 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:#DC2626">م</div>
+                    <span class="font-semibold text-gray-800 text-sm">محمد العتيبي</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-600 font-mono">DRV-001</td>
+                <td class="px-4 py-4 text-sm text-gray-600 dir-ltr text-left">0512345678</td>
+                <td class="px-4 py-4 text-sm text-gray-700">Isuzu أ ب ت ١٢٣</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>متاح
+                  </span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-500">أمس 14:30</td>
+                <td class="px-4 py-4">
+                  <div class="flex items-center gap-2">
+                    <button onclick="openDriverModal('محمد العتيبي','DRV-001','0512345678','Isuzu أ ب ت ١٢٣','متاح','نقل مبرد ثقيل','2027/03/15',42)" class="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">عرض</button>
+                    <span class="text-gray-300">|</span>
+                    <button class="text-xs text-gray-600 hover:text-gray-800 font-medium px-2 py-1 rounded hover:bg-gray-100 transition-colors">تعديل</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:#2563EB">خ</div>
+                    <span class="font-semibold text-gray-800 text-sm">خالد السهلي</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-600 font-mono">DRV-002</td>
+                <td class="px-4 py-4 text-sm text-gray-600">0523456789</td>
+                <td class="px-4 py-4 text-sm text-gray-700">Volvo د هـ ٤٥٦</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>في رحلة
+                  </span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-500">اليوم 09:00</td>
+                <td class="px-4 py-4">
+                  <div class="flex items-center gap-2">
+                    <button onclick="openDriverModal('خالد السهلي','DRV-002','0523456789','Volvo د هـ ٤٥٦','في رحلة','نقل ثقيل','2026/11/20',38)" class="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">عرض</button>
+                    <span class="text-gray-300">|</span>
+                    <button class="text-xs text-green-600 hover:text-green-800 font-medium px-2 py-1 rounded hover:bg-green-50 transition-colors">تتبع</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:#059669">ع</div>
+                    <span class="font-semibold text-gray-800 text-sm">عبدالله الزهراني</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-600 font-mono">DRV-003</td>
+                <td class="px-4 py-4 text-sm text-gray-600">0534567890</td>
+                <td class="px-4 py-4 text-sm text-gray-700">HiAce و ز ٧٨٩</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>متاح
+                  </span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-500">أمس 18:00</td>
+                <td class="px-4 py-4">
+                  <div class="flex items-center gap-2">
+                    <button onclick="openDriverModal('عبدالله الزهراني','DRV-003','0534567890','HiAce و ز ٧٨٩','متاح','نقل خفيف','2028/07/10',35)" class="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">عرض</button>
+                    <span class="text-gray-300">|</span>
+                    <button class="text-xs text-gray-600 hover:text-gray-800 font-medium px-2 py-1 rounded hover:bg-gray-100 transition-colors">تعديل</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:#7C3AED">ف</div>
+                    <span class="font-semibold text-gray-800 text-sm">فيصل الحربي</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-600 font-mono">DRV-004</td>
+                <td class="px-4 py-4 text-sm text-gray-600">0545678901</td>
+                <td class="px-4 py-4 text-sm text-gray-700">Isuzu ح ط ٠١٢</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>في رحلة
+                  </span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-500">اليوم 11:30</td>
+                <td class="px-4 py-4">
+                  <div class="flex items-center gap-2">
+                    <button onclick="openDriverModal('فيصل الحربي','DRV-004','0545678901','Isuzu ح ط ٠١٢','في رحلة','نقل مبرد ثقيل','2027/09/05',28)" class="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">عرض</button>
+                    <span class="text-gray-300">|</span>
+                    <button class="text-xs text-green-600 hover:text-green-800 font-medium px-2 py-1 rounded hover:bg-green-50 transition-colors">تتبع</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 5 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:#D97706">س</div>
+                    <span class="font-semibold text-gray-800 text-sm">سلطان الرشيد</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-600 font-mono">DRV-005</td>
+                <td class="px-4 py-4 text-sm text-gray-600">0556789012</td>
+                <td class="px-4 py-4 text-sm text-gray-400">—</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>إجازة
+                  </span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-500">قبل 3 أيام</td>
+                <td class="px-4 py-4">
+                  <div class="flex items-center gap-2">
+                    <button onclick="openDriverModal('سلطان الرشيد','DRV-005','0556789012','—','إجازة','نقل ثقيل','2026/12/30',20)" class="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">عرض</button>
+                    <span class="text-gray-300">|</span>
+                    <button class="text-xs text-gray-600 hover:text-gray-800 font-medium px-2 py-1 rounded hover:bg-gray-100 transition-colors">تعديل</button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 6 -->
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:#6B7280">أ</div>
+                    <span class="font-semibold text-gray-800 text-sm">أحمد البقمي</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-600 font-mono">DRV-006</td>
+                <td class="px-4 py-4 text-sm text-gray-600">0567890123</td>
+                <td class="px-4 py-4 text-sm text-gray-400">—</td>
+                <td class="px-4 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>موقوف
+                  </span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-500">قبل أسبوع</td>
+                <td class="px-4 py-4">
+                  <div class="flex items-center gap-2">
+                    <button onclick="openDriverModal('أحمد البقمي','DRV-006','0567890123','—','موقوف','نقل مبرد خفيف','2027/05/22',15)" class="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">عرض</button>
+                    <span class="text-gray-300">|</span>
+                    <button class="text-xs text-green-600 hover:text-green-800 font-medium px-2 py-1 rounded hover:bg-green-50 transition-colors">تفعيل</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+          <span class="text-sm text-gray-500">عرض 1-6 من 24 سائق</span>
+          <div class="flex items-center gap-1">
+            <button class="px-3 py-1.5 rounded border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">السابق</button>
+            <button class="px-3 py-1.5 rounded text-sm text-white font-semibold" style="background:#DC2626">1</button>
+            <button class="px-3 py-1.5 rounded border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">2</button>
+            <button class="px-3 py-1.5 rounded border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">3</button>
+            <button class="px-3 py-1.5 rounded border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">4</button>
+            <button class="px-3 py-1.5 rounded border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">التالي</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Driver Details Modal -->
+<div id="driverModal" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <h3 class="font-bold text-gray-800 text-lg">تفاصيل السائق</h3>
+      <button onclick="document.getElementById('driverModal').classList.remove('open')" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+    <div class="p-6">
+      <!-- Avatar & Basic Info -->
+      <div class="flex items-center gap-4 mb-6">
+        <div id="modalAvatar" class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0" style="background:#DC2626">م</div>
+        <div>
+          <h4 id="modalName" class="text-xl font-bold text-gray-800">محمد العتيبي</h4>
+          <p id="modalId" class="text-sm text-gray-500 font-mono">DRV-001</p>
+          <p id="modalPhone" class="text-sm text-gray-600 mt-0.5">0512345678</p>
+        </div>
+      </div>
+      <!-- Info Grid -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-gray-50 rounded-xl p-4">
+          <p class="text-xs text-gray-400 mb-1">نوع الرخصة</p>
+          <p id="modalLicense" class="text-sm font-semibold text-gray-800">نقل مبرد ثقيل</p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-4">
+          <p class="text-xs text-gray-400 mb-1">تاريخ انتهاء الرخصة</p>
+          <div class="flex items-center gap-2">
+            <p id="modalLicenseExp" class="text-sm font-semibold text-gray-800">2027/03/15</p>
+            <span id="modalExpBadge" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-yellow-100 text-yellow-700 font-semibold">قريباً</span>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-4">
+          <p class="text-xs text-gray-400 mb-1">المركبة المعيّنة</p>
+          <p id="modalVehicle" class="text-sm font-semibold text-gray-800">Isuzu أ ب ت ١٢٣</p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-4">
+          <p class="text-xs text-gray-400 mb-1">الرحلات هذا الشهر</p>
+          <p id="modalTrips" class="text-sm font-semibold text-gray-800">42 رحلة</p>
+        </div>
+      </div>
+      <!-- Recent Trips -->
+      <div>
+        <h5 class="text-sm font-bold text-gray-700 mb-3">آخر 3 رحلات</h5>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <i class="ti ti-circle-check text-green-500 text-base"></i>
+              <span class="text-sm text-gray-700">EDH-2026-0143</span>
+            </div>
+            <div class="text-left">
+              <p class="text-xs text-gray-500">الرياض ← جدة</p>
+              <p class="text-xs text-gray-400">أمس 14:30</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <i class="ti ti-circle-check text-green-500 text-base"></i>
+              <span class="text-sm text-gray-700">EDH-2026-0138</span>
+            </div>
+            <div class="text-left">
+              <p class="text-xs text-gray-500">جدة ← الدمام</p>
+              <p class="text-xs text-gray-400">قبل 3 أيام</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <i class="ti ti-circle-check text-green-500 text-base"></i>
+              <span class="text-sm text-gray-700">EDH-2026-0132</span>
+            </div>
+            <div class="text-left">
+              <p class="text-xs text-gray-500">الدمام ← الرياض</p>
+              <p class="text-xs text-gray-400">قبل 5 أيام</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+      <button onclick="document.getElementById('driverModal').classList.remove('open')" class="px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors">إغلاق</button>
+      <button class="px-4 py-2 rounded-lg text-white text-sm font-semibold transition-colors" style="background:#DC2626">تعديل البيانات</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Driver Modal -->
+<div id="addDriverModal" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <h3 class="font-bold text-gray-800 text-lg">إضافة سائق جديد</h3>
+      <button onclick="document.getElementById('addDriverModal').classList.remove('open')" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+    <div class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">الاسم الكامل</label>
+        <input type="text" placeholder="أدخل اسم السائق" class="w-full border border-gray-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:border-red-400 transition-colors">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">رقم الجوال</label>
+          <input type="text" placeholder="05xxxxxxxx" class="w-full border border-gray-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:border-red-400 transition-colors">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">رقم الهوية</label>
+          <input type="text" placeholder="1xxxxxxxxx" class="w-full border border-gray-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:border-red-400 transition-colors">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">نوع رخصة القيادة</label>
+        <select class="w-full border border-gray-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:border-red-400 transition-colors">
+          <option>اختر نوع الرخصة</option>
+          <option>نقل مبرد ثقيل</option>
+          <option>نقل ثقيل</option>
+          <option>نقل خفيف</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">تاريخ انتهاء الرخصة</label>
+        <input type="date" class="w-full border border-gray-200 rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:border-red-400 transition-colors">
+      </div>
+    </div>
+    <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+      <button onclick="document.getElementById('addDriverModal').classList.remove('open')" class="px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors">إلغاء</button>
+      <button class="px-4 py-2 rounded-lg text-white text-sm font-semibold" style="background:#DC2626">إضافة السائق</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-link]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); window.location.href = el.dataset.link; });
+  });
+
+  function openDriverModal(name, id, phone, vehicle, status, license, licenseExp, trips) {
+    document.getElementById('modalAvatar').textContent = name.charAt(0);
+    document.getElementById('modalName').textContent = name;
+    document.getElementById('modalId').textContent = id;
+    document.getElementById('modalPhone').textContent = phone;
+    document.getElementById('modalVehicle').textContent = vehicle;
+    document.getElementById('modalLicense').textContent = license;
+    document.getElementById('modalLicenseExp').textContent = licenseExp;
+    document.getElementById('modalTrips').textContent = trips + ' رحلة';
+    document.getElementById('driverModal').classList.add('open');
+  }
+</script>
+</body>
+</html>

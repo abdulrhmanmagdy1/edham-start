@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خطة التنفيذ — إدهام للنقل المبرد</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: #F9FAFB; }
+    @media print { body { background: white; } .no-print { display: none; } }
+    .week-card { border-radius: 16px; padding: 24px; margin-bottom: 16px; border: 1px solid transparent; }
+    .week-1 { background: #FEF2F2; border-color: #FECACA; }
+    .week-2 { background: #FFF7ED; border-color: #FED7AA; }
+    .week-3 { background: #ECFDF5; border-color: #A7F3D0; }
+    .week-4 { background: #EFF6FF; border-color: #BFDBFE; }
+    .week-5 { background: #F3F4F6; border-color: #E5E7EB; }
+    .week-num { font-size: 48px; font-weight: 700; opacity: 0.15; font-family: 'JetBrains Mono', monospace; }
+    .task-row { display: flex; gap: 8px; align-items: start; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .task-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+    .tag-api { background: #FEE2E2; color: #B91C1C; }
+    .tag-mobile { background: #FEF3C7; color: #92400E; }
+    .tag-web { background: #EDE9FE; color: #5B21B6; }
+    .tag-design { background: #D1FAE5; color: #065F46; }
+    .tag-devops { background: #E0F2FE; color: #075985; }
+    .stack-row { display: grid; grid-template-columns: 140px 1fr 1fr 1fr; gap: 12px; padding: 14px; border-bottom: 1px solid #F3F4F6; align-items: start; }
+    .stack-row:hover { background: #FAFAFA; }
+    .stack-label { font-size: 13px; font-weight: 600; color: #374151; }
+    .stack-val { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #1D4ED8; background: #EFF6FF; padding: 4px 8px; border-radius: 6px; display: inline-block; }
+    .decision-row { display: grid; grid-template-columns: 180px 1fr 1fr; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #F3F4F6; align-items: start; font-size: 13px; }
+    .decision-row:hover { background: #FAFAFA; }
+    .badge-confirmed { display: inline-flex; align-items: center; gap: 4px; background: #DCFCE7; color: #166534; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div style="background:#0D0D0D" class="text-white py-10 px-8">
+    <div class="max-w-4xl mx-auto">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-14 mb-5"
+           onerror="this.style.display='none'">
+      <h1 class="text-2xl font-bold mb-1">خطة التنفيذ التقني</h1>
+      <p style="color:#DC2626" class="text-sm font-semibold">إدهام للنقل المبرد — بناءً على متطلبات العميل المؤكدة</p>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-6 py-10">
+
+    <!-- ======================================= -->
+    <!-- SECTION 0: Architecture                 -->
+    <!-- ======================================= -->
+    <h2 class="text-xl font-bold text-gray-900 mb-2">0. معمارية النظام — 3 منتجات مستقلة</h2>
+    <p class="text-sm text-gray-400 mb-6">النظام مكوّن من 3 منتجات مستقلة — كل منتج له تقنيته ومنصته الخاصة.</p>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-10">
+
+      <!-- 3 Products Row -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+
+        <!-- Mobile App -->
+        <div class="rounded-xl border-2 border-amber-200 bg-amber-50 p-4 text-center">
+          <div class="text-3xl mb-3">📱</div>
+          <div class="font-bold text-gray-900 mb-1">تطبيق الجوال</div>
+          <div class="text-xs text-amber-700 font-semibold bg-amber-100 rounded px-2 py-1 mb-3 inline-block">Mobile App</div>
+          <div class="space-y-1.5 text-right">
+            <div class="text-xs text-gray-600">📌 Flutter + Dart</div>
+            <div class="text-xs text-gray-600">📌 Android + iOS</div>
+            <div class="text-xs text-gray-600">📌 عميل (شركة B2B)</div>
+            <div class="text-xs text-gray-600">📌 سائق</div>
+          </div>
+        </div>
+
+        <!-- Backend API -->
+        <div class="rounded-xl border-2 border-red-200 bg-red-50 p-4 text-center">
+          <div class="text-3xl mb-3">⚙️</div>
+          <div class="font-bold text-gray-900 mb-1">الـ Backend API</div>
+          <div class="text-xs text-red-700 font-semibold bg-red-100 rounded px-2 py-1 mb-3 inline-block">REST + WebSocket</div>
+          <div class="space-y-1.5 text-right">
+            <div class="text-xs text-gray-600">📌 NestJS + TypeScript</div>
+            <div class="text-xs text-gray-600">📌 PostgreSQL + Prisma</div>
+            <div class="text-xs text-gray-600">📌 Socket.io (GPS realtime)</div>
+            <div class="text-xs text-gray-600">📌 يخدم الموبايل والـ Web</div>
+          </div>
+        </div>
+
+        <!-- Web Dashboard -->
+        <div class="rounded-xl border-2 border-purple-200 bg-purple-50 p-4 text-center">
+          <div class="text-3xl mb-3">🖥️</div>
+          <div class="font-bold text-gray-900 mb-1">لوحة التحكم</div>
+          <div class="text-xs text-purple-700 font-semibold bg-purple-100 rounded px-2 py-1 mb-3 inline-block">تطبيق ويب مستقل</div>
+          <div class="space-y-1.5 text-right">
+            <div class="text-xs text-gray-600">📌 Next.js 14 + TypeScript</div>
+            <div class="text-xs text-gray-600">📌 يُفتح في أي متصفح</div>
+            <div class="text-xs text-gray-600">📌 مشرف + محاسب + ورشة</div>
+            <div class="text-xs text-gray-600">📌 ليس panel داخل الموبايل</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection arrows explanation -->
+      <div class="bg-gray-50 rounded-xl p-4 text-sm text-gray-600 text-center">
+        <span class="font-semibold text-gray-800">كيف تتواصل؟</span>
+        — التطبيق والـ Dashboard يتكلموا مع الـ API عبر HTTPS + WebSocket — الـ API يتكلم مع قاعدة البيانات —
+        <span class="font-semibold text-red-600">لا علاقة مباشرة بين الموبايل والـ Dashboard</span>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SECTION 1: Client Decisions             -->
+    <!-- ======================================= -->
+    <h2 class="text-xl font-bold text-gray-900 mb-2">1. قرارات المشروع — بناءً على إجابات العميل</h2>
+    <p class="text-sm text-gray-400 mb-6">كل سطر هنا مربوط بإجابة مؤكدة من العميل — ليس افتراضاً.</p>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-10">
+
+      <!-- Header -->
+      <div class="grid bg-gray-50 border-b border-gray-200 font-bold text-xs text-gray-500 uppercase" style="grid-template-columns:180px 1fr 1fr; gap:12px; padding:12px 16px;">
+        <div>السؤال</div>
+        <div>إجابة العميل</div>
+        <div>القرار التقني</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">التغطية الجغرافية</div>
+        <div><span class="badge-confirmed">✓ المملكة كاملة</span></div>
+        <div class="text-gray-600">Google Maps يغطي كل المدن السعودية — دعم مسارات المسافات الطويلة بين المدن</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">GPS في الشاحنات</div>
+        <div><span class="badge-confirmed">✓ موبايل السائق فقط</span></div>
+        <div class="text-gray-600">لا أجهزة GPS في الشاحنات — Flutter Geolocator يبث الموقع من هاتف السائق عبر Socket.io</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">نوع العملاء</div>
+        <div><span class="badge-confirmed">✓ شركات فقط (B2B)</span></div>
+        <div class="text-gray-600">تسجيل الشركة: اسم + سجل تجاري + رقم ضريبي + جهة اتصال — فواتير ZATCA بصيغة B2B دائماً</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">تسعير الشحن</div>
+        <div><span class="badge-confirmed">✓ يدوي من المشرف</span></div>
+        <div class="text-gray-600">العميل يُرسل الطلب بدون سعر → المشرف يراجع ويحدد السعر يدوياً → يُرسله بالإيميل للعميل → العميل يوافق أو يرفض — جدول التعريفة (pricing_tiers) يُستخدم كمرجع استرشادي للمشرف فقط</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">نظام قديم</div>
+        <div><span class="badge-confirmed">✓ هنبدأ من صفر</span></div>
+        <div class="text-gray-600">لا data migration — لا scripts لاستيراد بيانات — فقط seed data أولية (مستخدمين + تعريفة + أنواع مركبات)</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">مستخدمين متزامنين</div>
+        <div><span class="badge-confirmed">✓ 50–100 في الذروة</span></div>
+        <div class="text-gray-600">Railway Developer plan كافي — PostgreSQL instance واحد — Socket.io بدون clustering</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">ترقيم المركبات</div>
+        <div><span class="badge-confirmed">✓ لوحة سعودية</span></div>
+        <div class="text-gray-600">المركبة تُعرَّف برقم اللوحة السعودية (3 أحرف + 4 أرقام) — validation في الـ API والـ Dashboard</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">من يدخل الطلبات</div>
+        <div><span class="badge-confirmed">✓ الاثنين</span></div>
+        <div class="text-gray-600">العميل عبر التطبيق أو المشرف عبر الـ Dashboard نيابةً عنه — نفس الـ API، صلاحيات RBAC</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">أنواع الشحنات</div>
+        <div><span class="badge-confirmed">✓ مبردة ومجمدة</span></div>
+        <div class="text-gray-600">ENUM: REFRIGERATED (2–8°C) أو FROZEN (أقل من -18°C) — المركبة تُصنَّف بقدرتها الحرارية — الإسناد يراعي التطابق</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">السائق يرفض الرحلة</div>
+        <div><span class="badge-confirmed">✓ لا — إسناد مباشر</span></div>
+        <div class="text-gray-600">لا accept/reject في التطبيق — الرحلة تبدأ بحالة ASSIGNED — السائق يضغط "بدء الرحلة" مباشرة</div>
+      </div>
+
+      <div class="decision-row">
+        <div class="font-semibold text-gray-700">متعدد المحطات</div>
+        <div><span class="badge-confirmed">✓ نعم، مطلوب</span></div>
+        <div class="text-gray-600">جدول trip_stops — كل محطة: عنوان + جهة اتصال + وقت — السائق يوقّع ويصوّر في كل محطة — الرحلة تكتمل بعد كل المحطات</div>
+      </div>
+
+      <div class="decision-row" style="border-bottom:none">
+        <div class="font-semibold text-gray-700">شروط الدفع</div>
+        <div><span class="badge-confirmed">✓ مختلف حسب العميل</span></div>
+        <div class="text-gray-600">payment_terms_days في كل عميل — due_date في الفاتورة = تاريخ الإصدار + الأيام — تنبيه للمحاسب عند التأخر</div>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SECTION 2: Tech Stack                   -->
+    <!-- ======================================= -->
+    <h2 class="text-xl font-bold text-gray-900 mb-2">2. التقنيات المستخدمة في بناء النظام</h2>
+    <p class="text-sm text-gray-400 mb-6">كل قرار تقني اخترناه بناءً على متطلب محدد في المشروع — مش عشان مشهور.</p>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-10">
+
+      <!-- Header Row -->
+      <div class="grid bg-gray-50 border-b border-gray-200" style="grid-template-columns:140px 1fr 1fr 1fr; gap:12px; padding:12px 14px;">
+        <div class="text-xs font-bold text-gray-500 uppercase">الجزء</div>
+        <div class="text-xs font-bold text-gray-500 uppercase">اللغة / الـ Framework</div>
+        <div class="text-xs font-bold text-gray-500 uppercase">سبب الاختيار</div>
+        <div class="text-xs font-bold text-gray-500 uppercase">ما هنستلمه</div>
+      </div>
+
+      <!-- Mobile App -->
+      <div class="stack-row">
+        <div>
+          <div class="stack-label">📱 تطبيق الموبايل</div>
+          <div class="text-xs text-gray-400 mt-1">Android + iOS<br>سائق + عميل شركة</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stack-val">Dart + Flutter</div>
+          <div class="text-xs text-gray-500 mt-1">+ Riverpod (state)</div>
+          <div class="text-xs text-gray-500">+ Hive (offline)</div>
+          <div class="text-xs text-gray-500">+ Geolocator (GPS)</div>
+        </div>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p>▸ Android + iOS من كود واحد</p>
+          <p>▸ GPS native performance</p>
+          <p>▸ RTL ممتاز بدون تعديلات</p>
+          <p>▸ Offline-first للسائق</p>
+        </div>
+        <div class="space-y-2">
+          <div class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-2">
+            <strong>APK</strong> للـ Google Play
+          </div>
+          <div class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-2">
+            <strong>IPA</strong> للـ App Store
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard - WEB APP -->
+      <div class="stack-row" style="background:#FAFFF5; border-right:4px solid #16A34A;">
+        <div>
+          <div class="stack-label">🖥️ لوحة التحكم</div>
+          <div class="text-xs font-bold text-green-700 mt-1 bg-green-100 rounded px-2 py-0.5 inline-block">تطبيق ويب مستقل</div>
+          <div class="text-xs text-gray-400 mt-1">مشرف + محاسب + ورشة</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stack-val">TypeScript + Next.js 14</div>
+          <div class="text-xs text-gray-500 mt-1">+ Tailwind CSS</div>
+          <div class="text-xs text-gray-500">+ TanStack Query</div>
+          <div class="text-xs text-gray-500">+ Socket.io (realtime)</div>
+        </div>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p>▸ يُفتح في أي متصفح (Chrome/Edge/Firefox)</p>
+          <p>▸ ليس admin panel داخل التطبيق</p>
+          <p>▸ SSR → سرعة تحميل</p>
+          <p>▸ RBAC: كل دور شاشاته الخاصة</p>
+        </div>
+        <div class="space-y-2">
+          <div class="text-xs bg-green-50 border border-green-200 rounded-lg p-2">
+            موقع ويب على <strong>دومين الشركة</strong>
+          </div>
+          <div class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-2">
+            Chrome / Edge / Firefox
+          </div>
+        </div>
+      </div>
+
+      <!-- Backend -->
+      <div class="stack-row">
+        <div>
+          <div class="stack-label">⚙️ الـ Backend</div>
+          <div class="text-xs text-gray-400 mt-1">REST API + Realtime<br>كل المنطق التجاري</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stack-val">TypeScript + NestJS</div>
+          <div class="text-xs text-gray-500 mt-1">+ Prisma (ORM)</div>
+          <div class="text-xs text-gray-500">+ Socket.io</div>
+          <div class="text-xs text-gray-500">+ Bull Queue (Redis)</div>
+        </div>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p>▸ NestJS → RBAC جاهز من الصندوق</p>
+          <p>▸ Prisma → type-safe queries</p>
+          <p>▸ Socket.io → GPS realtime للخريطة</p>
+          <p>▸ Bull → SMS وإيميل في الخلفية</p>
+        </div>
+        <div class="space-y-2">
+          <div class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-2">
+            REST API + Swagger Docs
+          </div>
+          <div class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-2">
+            WebSocket للـ GPS realtime
+          </div>
+        </div>
+      </div>
+
+      <!-- Database -->
+      <div class="stack-row">
+        <div>
+          <div class="stack-label">🗄️ قاعدة البيانات</div>
+          <div class="text-xs text-gray-400 mt-1">كل البيانات — يبدأ من صفر</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stack-val">PostgreSQL 16</div>
+          <div class="text-xs text-gray-500 mt-1">+ Redis (cache + queues)</div>
+        </div>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p>▸ ACID → ضروري للفواتير والمالية</p>
+          <p>▸ JSON support للمحطات المتعددة</p>
+          <p>▸ PostGIS للمسافات والاستعلامات الجغرافية</p>
+          <p>▸ Redis للـ sessions والـ queues</p>
+        </div>
+        <div class="space-y-2">
+          <div class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-2">
+            نسخ احتياطية يومية تلقائية
+          </div>
+          <div class="text-xs bg-amber-50 border border-amber-200 rounded-lg p-2">
+            بيانات جديدة من صفر — لا migration
+          </div>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div class="stack-row">
+        <div>
+          <div class="stack-label">🔌 الخدمات الخارجية</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stack-val">Google Maps API</div>
+          <div class="text-xs text-gray-500 mt-1">Firebase FCM (إشعارات)</div>
+          <div class="text-xs text-gray-500">Unifonic (SMS OTP)</div>
+          <div class="text-xs text-gray-500">ZATCA API (فواتير B2B)</div>
+        </div>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p>▸ Google Maps → الأفضل تغطيةً في السعودية</p>
+          <p>▸ FCM → push notifications مجاناً</p>
+          <p>▸ Unifonic → SMS OTP للشركات السعودية</p>
+          <p>▸ ZATCA → فوترة B2B إلزامية قانوناً</p>
+        </div>
+        <div>
+          <div class="text-xs text-gray-400">تكلفة شهرية — MVP:</div>
+          <div class="text-2xl font-bold text-gray-900 mt-1">~$30</div>
+          <div class="text-xs text-gray-400">Google يعطي $200 رصيد شهري مجاني للخرائط</div>
+        </div>
+      </div>
+
+      <!-- Hosting -->
+      <div class="stack-row" style="border-bottom:none">
+        <div>
+          <div class="stack-label">☁️ الاستضافة</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stack-val">Railway (API + DB)</div>
+          <div class="text-xs text-gray-500 mt-1">Vercel (Dashboard)</div>
+        </div>
+        <div class="text-sm text-gray-600 space-y-1">
+          <p>▸ Railway → أسهل deployment لـ NestJS</p>
+          <p>▸ Vercel → الخيار الأمثل لـ Next.js</p>
+          <p>▸ Developer plan يكفي لـ 50-100 مستخدم</p>
+          <p>▸ عند النمو → ننتقل لـ AWS</p>
+        </div>
+        <div>
+          <div class="text-xs bg-gray-50 border border-gray-200 rounded-lg p-2">
+            Dashboard على دومين الشركة<br>API على سيرفر مُدار
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SECTION 3: Phases                       -->
+    <!-- ======================================= -->
+    <h2 class="text-xl font-bold text-gray-900 mb-2">3. مراحل المشروع — جدول تفصيلي</h2>
+    <p class="text-sm text-gray-400 mb-6">
+      <span class="inline-flex items-center gap-1 ml-4"><span class="task-tag tag-design">ديزاين</span></span>
+      <span class="inline-flex items-center gap-1 ml-4"><span class="task-tag tag-api">Backend</span></span>
+      <span class="inline-flex items-center gap-1 ml-4"><span class="task-tag tag-mobile">Mobile</span></span>
+      <span class="inline-flex items-center gap-1 ml-4"><span class="task-tag tag-web">Dashboard</span></span>
+      <span class="inline-flex items-center gap-1"><span class="task-tag tag-devops">DevOps</span></span>
+    </p>
+
+    <!-- Week 1 -->
+    <div class="week-card week-1">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-red-500 font-bold text-sm uppercase tracking-wider mb-1">الأسبوع الأول</div>
+          <h3 class="text-xl font-bold text-gray-900">مرحلة الديزاين + توثيق الـ Work Flows</h3>
+          <p class="text-gray-500 text-sm mt-1">إنهاء كل التصميمات وتوثيق كل مسار قبل ما نكتب سطر كود واحد</p>
+        </div>
+        <div class="week-num text-red-200">01</div>
+      </div>
+      <div class="space-y-2">
+        <div class="task-row"><span class="task-tag tag-design">ديزاين</span><p class="text-sm text-gray-700">مراجعة الـ mockups مع العميل + تعديل حسب الملاحظات</p></div>
+        <div class="task-row"><span class="task-tag tag-design">ديزاين</span><p class="text-sm text-gray-700">إنشاء الـ Figma File النهائي من الـ mockups (كل الشاشات — الموبايل + الـ Dashboard الويب)</p></div>
+        <div class="task-row"><span class="task-tag tag-design">ديزاين</span><p class="text-sm text-gray-700">توثيق كل الـ Work Flows (عميل B2B / سائق / مشرف / محاسب / ورشة)</p></div>
+        <div class="task-row"><span class="task-tag tag-design">ديزاين</span><p class="text-sm text-gray-700">تأكيد الـ Design System مع العميل (ألوان إدهام، خطوط، مكونات)</p></div>
+        <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">إعداد Monorepo (Turborepo) + GitHub repo + CI/CD skeleton</p></div>
+        <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">إعداد بيئات التطوير (local, dev, staging)</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">تصميم Database Schema النهائي + Prisma migrations (يشمل: trip_stops، pricing_tiers، client_pricing_overrides)</p></div>
+      </div>
+      <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+        🏁 <strong>نهاية الأسبوع الأول:</strong> Figma file مكتمل موافَق عليه + Database Schema جاهز + CI/CD يعمل
+      </div>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="week-card week-2">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-amber-600 font-bold text-sm uppercase tracking-wider mb-1">الأسبوع الثاني</div>
+          <h3 class="text-xl font-bold text-gray-900">البنية الأساسية — Auth + تسجيل الشركات + إدارة المستخدمين</h3>
+          <p class="text-gray-500 text-sm mt-1">الهيكل الأساسي لكل التطبيقات + نظام تسجيل الدخول</p>
+        </div>
+        <div class="week-num text-amber-200">02</div>
+      </div>
+      <div class="space-y-2">
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Phone OTP authentication للشركات (Unifonic SMS) + Employee Login (سائق/مشرف/محاسب/ورشة)</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Company Registration API — اسم شركة + سجل تجاري + رقم ضريبي + جهة اتصال</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">RBAC — صلاحيات كل دور على كل endpoint</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">User Management API + Vehicle Management API (ترقيم بلوحة سعودية + تصنيف حراري)</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">Flutter app skeleton (navigation + theming + RTL)</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">شاشات تسجيل الشركة + OTP + بيانات الشركة (B2B onboarding)</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">شاشة Login السائق (password) + navigation أساسية</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">Next.js skeleton — App Router + Sidebar layout + Auth middleware</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">Login page للـ Dashboard (مشرف/محاسب/ورشة) + routing حسب الدور</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">صفحات إدارة المستخدمين + المركبات (اللوحة السعودية + القدرة الحرارية)</p></div>
+      </div>
+      <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+        🏁 <strong>نهاية الأسبوع الثاني:</strong> كل الأدوار تقدر تسجّل دخول + تسجيل شركة يعمل + المشرف يقدر يضيف موظفين ومركبات
+      </div>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="week-card week-3">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-emerald-600 font-bold text-sm uppercase tracking-wider mb-1">الأسبوع الثالث</div>
+          <h3 class="text-xl font-bold text-gray-900">القلب الأساسي — الطلبات + GPS + رحلة متعددة المحطات</h3>
+          <p class="text-gray-500 text-sm mt-1">من طلب الشحن لتسليم كل محطة — الرحلة الكاملة تعمل</p>
+        </div>
+        <div class="week-num text-emerald-200">03</div>
+      </div>
+      <div class="space-y-2">
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Order API — إنشاء طلب بدون سعر: محطات متعددة + نوع التبريد (مبردة/مجمدة) → الحالة: PENDING_PRICING + endpoints التسعير: PATCH set-price (المشرف) / POST accept-price / POST reject-price (العميل)</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Trip API — إسناد مباشر للسائق (بدون قبول/رفض) + تحديث حالة كل محطة + إثبات التسليم بصورة وتوقيع</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Location API + Socket.io — GPS يُبث من هاتف السائق (Geolocator) → backend → الخريطة الحية</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Push Notifications (FCM) + SMS Unifonic — إشعار الإسناد للسائق + تحديثات الحالة للشركة</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">تطبيق الشركة — إنشاء طلب (اختيار درجة حرارة + محطات متعددة) + تتبع الشحنة + سجل الطلبات</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">تطبيق السائق — بدء الرحلة مباشرة + GPS يبدأ تلقائياً + التنقل بين المحطات + توقيع وصورة في كل محطة</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">Offline Mode — Hive storage + sync queue لو الإنترنت انقطع أثناء الرحلة</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">إدارة الطلبات — قائمة + فلترة + إسناد سائق + إنشاء طلب نيابةً عن عميل</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">الخريطة الحية — تتبع كل المركبات النشطة في الوقت الفعلي (GPS من هواتف السائقين)</p></div>
+      </div>
+      <div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-700">
+        🏁 <strong>نهاية الأسبوع الثالث:</strong> فلو الطلب الكامل يعمل: الشركة تطلب (بدون سعر) → المشرف يسعّر يدوياً → العميل يوافق → السائق يُسند ويسلّم كل المحطات
+      </div>
+    </div>
+
+    <!-- Week 4 -->
+    <div class="week-card week-4">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-blue-600 font-bold text-sm uppercase tracking-wider mb-1">الأسبوع الرابع</div>
+          <h3 class="text-xl font-bold text-gray-900">الميزات الداعمة — Cold Chain + فواتير B2B + ورشة</h3>
+          <p class="text-gray-500 text-sm mt-1">دورة النظام الكاملة — مراقبة الحرارة، فوترة ZATCA للشركات، صيانة الأسطول</p>
+        </div>
+        <div class="week-num text-blue-200">04</div>
+      </div>
+      <div class="space-y-2">
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Cold Chain API — تسجيل درجات الحرارة (مبردة: 2-8°C / مجمدة: أقل من -18°C) + تنبيه الانتهاك + تقرير PDF</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Invoice API — فاتورة ZATCA B2B مع رقم السجل التجاري + PDF + إرسال بالإيميل + due_date حسب شروط الدفع</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Pricing Flow — واجهة المشرف لإدخال السعر يدوياً + إرسال عرض السعر بالإيميل للعميل + تتبع قرار العميل (CUSTOMER_CONFIRMED / CANCELLED) — جدول التعريفة مرجع استرشادي للمشرف</p></div>
+        <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Maintenance API — طلبات صيانة + حالة المركبات + تنبيهات الفحص الدوري</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">Cold Chain Monitor في تطبيق السائق — إدخال قراءات الحرارة + تنبيه لو خرجت عن النطاق</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">الفاتورة + تقييم الخدمة في تطبيق الشركة بعد اكتمال الرحلة</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">Cold Chain Monitor — مراقبة الحرارة لكل الشحنات النشطة (مبردة ومجمدة)</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">وحدة المحاسب — قائمة الفواتير + إنشاء فاتورة ZATCA + تتبع المدفوعات + تنبيه المتأخرة</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">وحدة الورشة — طلبات الصيانة + سجل المركبات + جدول الفحص الدوري</p></div>
+        <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">التقارير — رحلات / إيرادات / أداء الأسطول / حالة المبردة والمجمدة</p></div>
+      </div>
+      <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
+        🏁 <strong>نهاية الأسبوع الرابع:</strong> كل features في SPEC.md مكتملة ومختبرة داخلياً
+      </div>
+    </div>
+
+    <!-- Week 5 -->
+    <div class="week-card week-5">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-gray-600 font-bold text-sm uppercase tracking-wider mb-1">الأسبوع الخامس</div>
+          <h3 class="text-xl font-bold text-gray-900">الاختبار + التحسين + الإطلاق على Production</h3>
+          <p class="text-gray-500 text-sm mt-1">اختبار شامل + بناء الـ apps + رفع على الـ stores + تسليم للعميل</p>
+        </div>
+        <div class="week-num text-gray-200">05</div>
+      </div>
+      <div class="space-y-2">
+        <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Deploy API على Railway Production + PostgreSQL production instance</p></div>
+        <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Deploy Dashboard على Vercel + ربط دومين الشركة (dashboard.edham.sa)</p></div>
+        <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Monitoring + Sentry + Health checks + Alerts</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">بناء APK signed (EAS Build) → Google Play Console</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">بناء IPA signed → App Store Connect</p></div>
+        <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">تجهيز Store assets (screenshots، icon، description بالعربي)</p></div>
+        <div class="task-row"><span class="task-tag tag-design">QA</span><p class="text-sm text-gray-700">اختبار كل الـ flows على أجهزة حقيقية Android + iOS</p></div>
+        <div class="task-row"><span class="task-tag tag-design">QA</span><p class="text-sm text-gray-700">User Acceptance Testing (UAT) مع العميل — رحلة كاملة على production</p></div>
+        <div class="task-row"><span class="task-tag tag-design">QA</span><p class="text-sm text-gray-700">إصلاح الـ bugs من الـ UAT + تحسين الأداء</p></div>
+        <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">رفع التطبيقات على Google Play + App Store (مراجعة 1-7 أيام)</p></div>
+      </div>
+      <div class="mt-4 p-3 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-700">
+        🚀 <strong>نهاية الأسبوع الخامس:</strong> Dashboard live على production + APK و IPA مرفوعان للمراجعة + العميل يستلم النظام
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SECTION 4: Client Needs                 -->
+    <!-- ======================================= -->
+    <h2 class="text-xl font-bold text-gray-900 mb-5 mt-10">4. ما يحتاجه العميل قبل الإطلاق</h2>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-gray-100">
+        <p class="text-sm text-gray-500">هذه الأشياء لازم يفتحها العميل بنفسه — لا يمكننا فتحها نيابةً عنه.</p>
+      </div>
+      <div class="divide-y divide-gray-50">
+        <div class="flex items-center gap-4 p-4">
+          <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0"><span class="text-lg">🤖</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-800">Google Play Console</div>
+            <div class="text-xs text-gray-400">لرفع تطبيق Android</div>
+          </div>
+          <div class="text-sm font-bold text-gray-700">$25 (مرة واحدة)</div>
+        </div>
+        <div class="flex items-center gap-4 p-4">
+          <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0"><span class="text-lg">🍎</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-800">Apple Developer Program</div>
+            <div class="text-xs text-gray-400">لرفع تطبيق iOS</div>
+          </div>
+          <div class="text-sm font-bold text-gray-700">$99 / سنة</div>
+        </div>
+        <div class="flex items-center gap-4 p-4">
+          <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0"><span class="text-lg">🗺️</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-800">Google Cloud Account (Maps API)</div>
+            <div class="text-xs text-gray-400">للخرائط وتتبع GPS — $200 رصيد مجاني شهرياً</div>
+          </div>
+          <div class="text-sm font-bold text-gray-700">مجاني في البداية</div>
+        </div>
+        <div class="flex items-center gap-4 p-4">
+          <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0"><span class="text-lg">🌐</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-800">دومين مسجل</div>
+            <div class="text-xs text-gray-400">مثلاً: edham.sa أو edhamtrans.com — للـ Dashboard</div>
+          </div>
+          <div class="text-sm font-bold text-gray-700">~$15 / سنة</div>
+        </div>
+        <div class="flex items-center gap-4 p-4">
+          <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0"><span class="text-lg">📋</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-800">الرقم الضريبي ZATCA</div>
+            <div class="text-xs text-gray-400">للفوترة الإلكترونية B2B الإلزامية — رقم الشركة: 7003941213</div>
+          </div>
+          <div class="text-sm font-bold text-gray-700">إلزامي</div>
+        </div>
+        <div class="flex items-center gap-4 p-4">
+          <div class="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center flex-shrink-0"><span class="text-lg">⚖️</span></div>
+          <div class="flex-1">
+            <div class="font-semibold text-sm text-gray-800">Privacy Policy + Terms of Service</div>
+            <div class="text-xs text-gray-400">وثيقة قانونية مطلوبة لـ Apple و Google</div>
+          </div>
+          <div class="text-sm font-bold text-gray-700">محامي</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-10 pt-6 border-t border-gray-200 text-xs text-gray-400">
+      <p>إدهام للنقل المبرد | السجل التجاري: 7003941213 | آخر تحديث: يوليو 2026</p>
+    </div>
+
+  </div>
+</body>
+</html>

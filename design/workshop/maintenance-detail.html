@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — طلب صيانة WT-2026-031</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',500:'#F59E0B',600:'#D97706',700:'#B45309' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50 font-arabic">
+<div class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-60 text-white flex flex-col flex-shrink-0" style="background:#0D0D0D;">
+    <div class="px-4 py-5 border-b border-white/10">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2"
+           onerror="this.style.display='none'">
+      <div class="flex items-center gap-2">
+        <i class="ti ti-snowflake text-red-500 text-lg"></i>
+        <div>
+          <p class="text-white font-bold text-sm leading-tight">إدهام</p>
+          <p class="text-xs" style="color:#DC2626">للنقل المبرد</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 p-4 space-y-1">
+      <a href="#" data-link="maintenance.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-colors text-sm">
+        <i class="ti ti-layout-dashboard text-lg"></i>
+        <span>لوحة التحكم</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white text-sm" style="background:#DC2626; border-right:3px solid #ff6b6b;">
+        <i class="ti ti-tools text-lg"></i>
+        <span>طلبات الصيانة</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-colors text-sm">
+        <i class="ti ti-calendar text-lg"></i>
+        <span>جدول الفحص</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-white/10 hover:text-white transition-colors text-sm">
+        <i class="ti ti-history text-lg"></i>
+        <span>سجل المركبات</span>
+      </a>
+    </nav>
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background:#DC2626">فح</div>
+        <div class="text-sm">
+          <div class="font-medium">فهد الحربي</div>
+          <div class="text-gray-400 text-xs">مشرف الورشة</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-auto">
+    <header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div class="flex items-center gap-3">
+        <button data-link="maintenance.html" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
+          <i class="ti ti-arrow-right text-xl"></i>
+        </button>
+        <div>
+          <h1 class="text-xl font-bold text-gray-900">طلب صيانة WT-2026-031</h1>
+          <p class="text-xs text-gray-400 mt-0.5">أُنشئ في 27 يونيو 2026 - 14:45</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-100 text-red-700 text-sm font-bold">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          عاجلة — مفتوح
+        </span>
+        <button class="relative">
+          <i class="ti ti-bell text-gray-500 text-xl"></i>
+          <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="p-8">
+      <div class="grid grid-cols-12 gap-6">
+
+        <!-- عمود يمين — التفاصيل -->
+        <div class="col-span-7 space-y-6">
+
+          <!-- بطاقة بيانات المركبة -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 class="font-bold text-gray-900 mb-5 flex items-center gap-2">
+              <i class="ti ti-truck text-primary-600 text-lg"></i>
+              بيانات المركبة
+            </h2>
+            <div class="grid grid-cols-2 gap-5">
+              <div class="bg-gray-50 rounded-xl p-4 text-center">
+                <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <i class="ti ti-truck text-primary-600 text-2xl"></i>
+                </div>
+                <p class="text-xl font-bold text-gray-900 font-mono tracking-wider">أ ب ج ٤٥٦</p>
+                <p class="text-xs text-gray-500 mt-1">رقم اللوحة</p>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-500">النوع</span>
+                  <span class="font-semibold text-gray-900 flex items-center gap-1.5">
+                    Isuzu مبردة
+                    <span class="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full">
+                      <i class="ti ti-snowflake text-xs"></i>
+                    </span>
+                  </span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-500">سنة الصنع</span>
+                  <span class="font-semibold text-gray-900">2023</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span class="text-sm text-gray-500">السائق</span>
+                  <span class="font-semibold text-gray-900">محمد العتيبي</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="text-sm text-gray-500">آخر صيانة</span>
+                  <span class="font-semibold text-gray-900">15 مارس 2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- بطاقة المشكلة -->
+          <div class="bg-white rounded-xl border border-red-200 shadow-sm p-6">
+            <h2 class="font-bold text-red-800 mb-5 flex items-center gap-2">
+              <i class="ti ti-alert-triangle text-red-600 text-lg"></i>
+              المشكلة المُبلَّغ عنها
+            </h2>
+
+            <!-- معلومات البلاغ -->
+            <div class="flex items-center gap-3 bg-red-50 rounded-xl p-4 mb-5">
+              <div class="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="ti ti-user text-red-700"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-900 text-sm">محمد العتيبي (السائق)</p>
+                <p class="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5">
+                  <i class="ti ti-calendar text-xs"></i>
+                  27 يونيو 2026 — الساعة 14:32
+                </p>
+              </div>
+              <div class="mr-auto">
+                <span class="text-xs bg-red-100 text-red-700 px-2.5 py-1 rounded-full font-semibold">تبليغ السائق</span>
+              </div>
+            </div>
+
+            <!-- وصف المشكلة -->
+            <div class="bg-gray-50 rounded-xl p-4 mb-5 border-r-4 border-red-400">
+              <p class="text-sm text-gray-700 leading-relaxed">
+                "ارتفعت درجة الحرارة داخل مقصورة التبريد إلى <strong class="text-red-600">-12°C</strong> بدلاً من -18°C المطلوبة. النظام يصدر صوتاً غير اعتيادي من وحدة الضاغط. البضاعة (أغذية مجمدة) قد تتعرض للتلف إذا استمر الوضع."
+              </p>
+            </div>
+
+            <!-- صورة -->
+            <div>
+              <p class="text-sm font-medium text-gray-700 mb-3 flex items-center gap-1.5">
+                <i class="ti ti-photo text-gray-400"></i>
+                صور المشكلة
+              </p>
+              <div class="flex gap-3">
+                <div class="w-44 h-32 bg-gray-200 rounded-xl flex flex-col items-center justify-center text-gray-400 border-2 border-dashed border-gray-300">
+                  <i class="ti ti-camera text-2xl mb-1"></i>
+                  <p class="text-xs">صورة المقصورة</p>
+                </div>
+                <div class="w-44 h-32 bg-gray-200 rounded-xl flex flex-col items-center justify-center text-gray-400 border-2 border-dashed border-gray-300">
+                  <i class="ti ti-camera text-2xl mb-1"></i>
+                  <p class="text-xs">صورة الضاغط</p>
+                </div>
+                <div class="w-32 h-32 bg-gray-100 rounded-xl flex flex-col items-center justify-center text-gray-300 border-2 border-dashed border-gray-200 cursor-pointer hover:border-primary-300 hover:bg-primary-50 hover:text-primary-400 transition-colors">
+                  <i class="ti ti-plus text-xl mb-1"></i>
+                  <p class="text-xs">إضافة</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- بطاقة تفاصيل الإصلاح -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 class="font-bold text-gray-900 mb-5 flex items-center gap-2">
+              <i class="ti ti-tool text-primary-600 text-lg"></i>
+              تفاصيل الإصلاح
+            </h2>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">وصف الإصلاح المقترح</label>
+                <textarea rows="3" placeholder="اكتب وصفاً تفصيلياً للإصلاح..." class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary-400 resize-none">فحص الضاغط ووحدة التبريد. تنظيف المبخر واختبار ضغط الغاز المبرد.</textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">قطع الغيار المطلوبة</label>
+                  <input type="text" placeholder="مثال: فلتر تبريد، أنابيب..." value="فلتر تبريد — كود TR-4421" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-400">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">التكلفة التقديرية (ريال)</label>
+                  <input type="number" placeholder="0" value="1500" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-400">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">الفني المسؤول</label>
+                  <select class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-400 bg-white">
+                    <option>اختر الفني</option>
+                    <option selected>فهد الحربي (مشرف الورشة)</option>
+                    <option>علي القرشي (فني تبريد)</option>
+                    <option>سعد البلوي (فني ميكانيكا)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">موعد الإصلاح</label>
+                  <input type="datetime-local" value="2026-06-27T15:30" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-400">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- عمود يسار — الحالة والنشاط -->
+        <div class="col-span-5 space-y-5">
+
+          <!-- بطاقة تحديث الحالة -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 class="font-bold text-gray-900 mb-5 flex items-center gap-2">
+              <i class="ti ti-progress text-primary-600 text-lg"></i>
+              تحديث الحالة
+            </h2>
+
+            <!-- Stepper رأسي -->
+            <div class="space-y-1 mb-6">
+
+              <!-- الخطوة 1 — مكتملة -->
+              <div class="flex items-start gap-4">
+                <div class="flex flex-col items-center">
+                  <div class="w-9 h-9 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                    <i class="ti ti-check text-white text-sm font-bold"></i>
+                  </div>
+                  <div class="w-0.5 h-8 bg-green-300 my-1"></div>
+                </div>
+                <div class="pt-1.5">
+                  <p class="font-semibold text-green-700 text-sm">مفتوح</p>
+                  <p class="text-xs text-gray-400">تم إنشاء الطلب — 27 يونيو 14:45</p>
+                </div>
+              </div>
+
+              <!-- الخطوة 2 — حالي -->
+              <div class="flex items-start gap-4">
+                <div class="flex flex-col items-center">
+                  <div class="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0 ring-4 ring-primary-100">
+                    <i class="ti ti-tool text-white text-sm"></i>
+                  </div>
+                  <div class="w-0.5 h-8 bg-gray-200 my-1"></div>
+                </div>
+                <div class="pt-1.5">
+                  <p class="font-bold text-primary-700 text-sm">جارٍ التنفيذ</p>
+                  <p class="text-xs text-primary-400 font-medium">الحالة الحالية</p>
+                </div>
+              </div>
+
+              <!-- الخطوة 3 — مستقبلية -->
+              <div class="flex items-start gap-4">
+                <div class="flex flex-col items-center">
+                  <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                    <i class="ti ti-circle-check text-gray-400 text-sm"></i>
+                  </div>
+                </div>
+                <div class="pt-1.5">
+                  <p class="font-medium text-gray-400 text-sm">مكتمل</p>
+                  <p class="text-xs text-gray-300">في انتظار الانتهاء</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Select الحالة -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">تغيير الحالة إلى</label>
+              <select class="w-full border border-primary-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 bg-primary-50 text-primary-700 font-medium">
+                <option>جارٍ التنفيذ</option>
+                <option>مكتمل</option>
+                <option>مؤجل</option>
+              </select>
+            </div>
+
+            <button class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2">
+              <i class="ti ti-refresh text-lg"></i>
+              تحديث الحالة
+            </button>
+          </div>
+
+          <!-- بطاقة سجل النشاط -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 class="font-bold text-gray-900 mb-5 flex items-center gap-2">
+              <i class="ti ti-history text-primary-600 text-lg"></i>
+              سجل النشاط
+            </h2>
+
+            <!-- Timeline -->
+            <div class="space-y-0">
+
+              <div class="flex gap-3 relative pb-5">
+                <div class="flex flex-col items-center">
+                  <div class="w-3 h-3 rounded-full bg-red-500 mt-0.5 flex-shrink-0 z-10"></div>
+                  <div class="w-0.5 flex-1 bg-gray-200 mt-1"></div>
+                </div>
+                <div class="flex-1 pb-1">
+                  <div class="flex items-center justify-between mb-0.5">
+                    <p class="text-sm font-semibold text-gray-900">بلّغ السائق عن العطل</p>
+                    <span class="text-xs text-gray-400">14:32</span>
+                  </div>
+                  <p class="text-xs text-gray-500">محمد العتيبي — عبر تطبيق السائق</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 relative pb-5">
+                <div class="flex flex-col items-center">
+                  <div class="w-3 h-3 rounded-full bg-amber-500 mt-0.5 flex-shrink-0 z-10"></div>
+                  <div class="w-0.5 flex-1 bg-gray-200 mt-1"></div>
+                </div>
+                <div class="flex-1 pb-1">
+                  <div class="flex items-center justify-between mb-0.5">
+                    <p class="text-sm font-semibold text-gray-900">تم إنشاء طلب الصيانة</p>
+                    <span class="text-xs text-gray-400">14:45</span>
+                  </div>
+                  <p class="text-xs text-gray-500">النظام — تلقائياً</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 relative pb-5">
+                <div class="flex flex-col items-center">
+                  <div class="w-3 h-3 rounded-full bg-primary-500 mt-0.5 flex-shrink-0 z-10"></div>
+                  <div class="w-0.5 flex-1 bg-gray-200 mt-1"></div>
+                </div>
+                <div class="flex-1 pb-1">
+                  <div class="flex items-center justify-between mb-0.5">
+                    <p class="text-sm font-semibold text-gray-900">تعيين فهد الحربي للمعالجة</p>
+                    <span class="text-xs text-gray-400">15:10</span>
+                  </div>
+                  <p class="text-xs text-gray-500">أحمد المنصور — مشرف العمليات</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 relative">
+                <div class="flex flex-col items-center">
+                  <div class="w-3 h-3 rounded-full bg-blue-500 mt-0.5 flex-shrink-0 z-10 ring-2 ring-blue-200"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between mb-0.5">
+                    <p class="text-sm font-semibold text-blue-700">جارٍ الفحص الآن</p>
+                    <span class="text-xs text-gray-400">15:30</span>
+                  </div>
+                  <p class="text-xs text-primary-500">فهد الحربي — في الورشة</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- إضافة ملاحظة -->
+            <div class="mt-5 pt-5 border-t border-gray-100">
+              <label class="block text-xs font-medium text-gray-500 mb-2">إضافة ملاحظة</label>
+              <div class="flex gap-2">
+                <input type="text" placeholder="اكتب ملاحظة..." class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-400">
+                <button class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-lg transition-colors">
+                  <i class="ti ti-send text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- بطاقة معلومات الرحلة المتأثرة -->
+          <div class="bg-amber-50 rounded-xl border border-amber-200 p-5">
+            <h2 class="font-bold text-amber-800 mb-4 flex items-center gap-2 text-sm">
+              <i class="ti ti-alert-circle text-amber-600 text-base"></i>
+              الرحلة المتأثرة
+            </h2>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-amber-700">رقم الطلب</span>
+                <span class="font-mono font-bold text-amber-900">EDH-2026-0147</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-amber-700">المسار</span>
+                <span class="font-medium text-amber-900">الرياض ← جدة</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-amber-700">العميل</span>
+                <span class="font-medium text-amber-900">شركة النخيل</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-amber-700">موعد التسليم</span>
+                <span class="font-bold text-red-700">السبت 28 يونيو 8:00 ص</span>
+              </div>
+            </div>
+            <button class="mt-4 w-full border border-amber-300 bg-white hover:bg-amber-50 text-amber-700 text-xs font-semibold py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5">
+              <i class="ti ti-refresh-dot text-sm"></i>
+              إعادة إسناد الطلب لسائق آخر
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('[data-link]').forEach(el => {
+    el.addEventListener('click', (e) => { e.preventDefault(); window.location.href = el.dataset.link; });
+  });
+</script>
+</body>
+</html>

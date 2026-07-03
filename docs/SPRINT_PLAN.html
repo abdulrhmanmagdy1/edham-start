@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خطة السبرنتات — إدهام للنقل المبرد</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: #F9FAFB; }
+    .sprint-card { border-radius: 20px; background: white; border: 1px solid #E5E7EB; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .sprint-header { padding: 20px 24px; border-bottom: 1px solid #F3F4F6; display: flex; align-items: center; gap: 16px; }
+    .sprint-num { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+    .sprint-body { padding: 20px 24px; }
+    .task-row { display: flex; gap: 8px; align-items: start; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .task-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; letter-spacing: 0.3px; }
+    .tag-api { background: #FEE2E2; color: #B91C1C; }
+    .tag-mobile { background: #FEF3C7; color: #92400E; }
+    .tag-web { background: #EDE9FE; color: #5B21B6; }
+    .tag-devops { background: #E0F2FE; color: #075985; }
+    .tag-qa { background: #D1FAE5; color: #065F46; }
+    .verify-box { background: #F0FFF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 12px 16px; margin-top: 14px; }
+    .output-box { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 12px 16px; margin-top: 8px; }
+    .dep-tag { display: inline-flex; align-items: center; gap-3px; background: #F3F4F6; border: 1px solid #E5E7EB; color: #6B7280; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; }
+    .timeline-bar { display: flex; gap: 4px; margin-bottom: 32px; }
+    .timeline-step { flex: 1; height: 6px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div style="background:#0D0D0D" class="text-white py-10 px-8">
+    <div class="max-w-4xl mx-auto">
+      <img src="../logo-edham-logistics.png" alt="إدهام" class="h-14 mb-5"
+           onerror="this.style.display='none'">
+      <h1 class="text-2xl font-bold mb-1">خطة السبرنتات التفصيلية</h1>
+      <p style="color:#DC2626" class="text-sm font-semibold">إدهام للنقل المبرد — من الكود الأول لتسليم العميل</p>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-6 py-10">
+
+    <!-- Overview -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-8">
+      <h2 class="font-bold text-gray-900 mb-4">نظرة عامة — 9 سبرنتات | ~11 أسبوع</h2>
+
+      <!-- Timeline bar -->
+      <div class="timeline-bar">
+        <div class="timeline-step" style="background:#6B7280" title="S0"></div>
+        <div class="timeline-step" style="background:#DC2626" title="S1"></div>
+        <div class="timeline-step" style="background:#F59E0B;flex:2" title="S2"></div>
+        <div class="timeline-step" style="background:#10B981;flex:2" title="S3"></div>
+        <div class="timeline-step" style="background:#3B82F6;flex:2" title="S4"></div>
+        <div class="timeline-step" style="background:#8B5CF6" title="S5"></div>
+        <div class="timeline-step" style="background:#06B6D4" title="S6"></div>
+        <div class="timeline-step" style="background:#F97316" title="S7"></div>
+        <div class="timeline-step" style="background:#0D0D0D;flex:2" title="S8"></div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 text-sm">
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <div class="text-2xl font-bold text-gray-900">9</div>
+          <div class="text-gray-500 text-xs">سبرنتات</div>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <div class="text-2xl font-bold text-gray-900">~11</div>
+          <div class="text-gray-500 text-xs">أسبوع</div>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <div class="text-2xl font-bold" style="color:#DC2626">3</div>
+          <div class="text-gray-500 text-xs">منتجات مستقلة</div>
+        </div>
+      </div>
+
+      <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>S0-S1: Foundation + Auth (أسبوعين)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>S2-S3: Mobile App (أسبوعين)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>S4-S5: Web Dashboard (أسبوعين)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyan-500 inline-block"></span>S6: Integrations (أسبوع)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block"></span>S7: QA + Bug Fixes (أسبوع)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-gray-900 inline-block"></span>S8: Production + Delivery (أسبوعين)</div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 0: Foundation          -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #6B7280">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#F3F4F6;color:#374151">S0</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Foundation — البنية التحتية</div>
+          <div class="text-sm text-gray-500">أسبوع 1 — يوم 1-5</div>
+        </div>
+        <div class="mr-auto text-xs font-semibold bg-gray-100 text-gray-600 rounded-full px-3 py-1">لا يعتمد على شيء</div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> الـ repo جاهز، CI/CD يعمل، البيئات شغّالة، قاعدة البيانات متعرّفة.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">إنشاء Monorepo (Turborepo) — packages: api, web, mobile</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">GitHub repo + branch strategy (main, develop, feature/*)</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Railway: deploy NestJS skeleton + PostgreSQL instance (dev)</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Vercel: deploy Next.js skeleton (dev)</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">CI/CD: GitHub Actions → test → deploy to dev on push</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Database Schema كامل في Prisma (users, clients, vehicles, orders, trips, trip_stops, pricing_tiers, invoices)</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Initial migrations + seed data (admin user + vehicle types + base pricing)</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">ENV variables جاهزة (dev + staging + prod)</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق (Definition of Done)</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• GET /health يرجع 200 على railway.app</div>
+            <div>• Dashboard يفتح على vercel.app</div>
+            <div>• prisma migrate deploy يشتغل بدون errors</div>
+            <div>• push على develop → CI يبني ويعمل deploy تلقائياً</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: Repo جاهز + DB Schema + CI/CD شغّال</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 1: Auth                -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #DC2626">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#FEE2E2;color:#DC2626">S1</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Auth — تسجيل الدخول لكل الأدوار</div>
+          <div class="text-sm text-gray-500">أسبوع 1 — يوم 6-10</div>
+        </div>
+        <div class="mr-auto"><span class="dep-tag">يعتمد على S0</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> كل دور يقدر يسجّل دخوله — الشركات بـ OTP، الموظفين بـ Password.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">SMS OTP flow (Unifonic) للشركات: أرسل OTP → تحقق → JWT</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Password Login للموظفين (مشرف / سائق / محاسب / ورشة) + JWT</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">تسجيل شركة جديدة: رقم هاتف + OTP + اسم شركة + سجل تجاري + رقم ضريبي + جهة اتصال</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">RBAC middleware — كل endpoint يعرف مين يقدر يوصله</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Refresh token + Logout</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">شاشة إدخال رقم الهاتف + OTP timer</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">شاشة تسجيل الشركة (B2B onboarding) — 3 خطوات</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">شاشة Login السائق + password</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">صفحة Login للـ Dashboard + routing لكل دور</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• شركة جديدة تتسجل بـ OTP + بيانات الشركة → تدخل على التطبيق</div>
+            <div>• سائق يسجّل دخوله بـ password → يشوف شاشته فقط</div>
+            <div>• مشرف يدخل على Dashboard → يشوف شاشته فقط</div>
+            <div>• شركة لا تقدر تصل لـ endpoints المشرف</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: نظام Auth كامل لكل الأدوار</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 2: Customer Mobile     -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #F59E0B">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#FEF3C7;color:#92400E">S2</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Customer Mobile — تطبيق الشركة العميلة</div>
+          <div class="text-sm text-gray-500">أسبوع 2 — يوم 11-17</div>
+        </div>
+        <div class="mr-auto"><span class="dep-tag">يعتمد على S1</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> الشركة العميلة تقدر تطلب شحن (بمحطات متعددة + درجة حرارة) وتتابع الشحنة.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Orders API — إنشاء طلب بدون سعر: نقطة استلام + محطات تسليم متعددة + temperature_type (REFRIGERATED/FROZEN) + تاريخ → الطلب يُرسَل تلقائياً بحالة PENDING_PRICING للمشرف</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">PATCH /orders/:id/set-price (SUPERVISOR) — المشرف يدخل السعر يدوياً + يُرسَل بالإيميل للعميل → الحالة: PRICED</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">POST /orders/:id/accept-price (CUSTOMER) — العميل يوافق على السعر → الحالة: CUSTOMER_CONFIRMED → الطلب جاهز للإسناد</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">POST /orders/:id/reject-price (CUSTOMER) — العميل يرفض السعر → الحالة: CANCELLED</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Order Status API — حالة الطلب + حالة كل محطة + تحديث realtime</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Notifications API — إشعار تأكيد الطلب + تحديث الحالة للشركة</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">الصفحة الرئيسية — إحصائيات الشحنات + آخر الطلبات</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">إنشاء طلب — اختيار درجة الحرارة (مبردة 2-8°C / مجمدة -18°C) + إضافة محطات متعددة</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">تتبع الشحنة — خريطة مع موقع السائق + حالة كل محطة</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">سجل الطلبات + تفاصيل كل طلب + إثبات التسليم (POD)</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">الإشعارات + الملف الشخصي للشركة</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• شركة تطلب شحن مجمد بمحطتين → الطلب يُرسَل بحالة PENDING_PRICING للمشرف</div>
+            <div>• المشرف يراجع الطلب ويحدد السعر يدوياً → العميل يستلم عرض السعر بالإيميل</div>
+            <div>• العميل يوافق (CUSTOMER_CONFIRMED) أو يرفض (CANCELLED)</div>
+            <div>• الشركة تشوف الطلب في القائمة مع حالته الحالية</div>
+            <div>• إشعار push يوصل عند تغيّر الحالة</div>
+          </div>
+        </div>
+        <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:10px; padding:12px 16px; margin-top:8px;">
+          <div class="text-xs font-bold" style="color:#0369A1; margin-bottom:6px;">🔄 Order Status Flow الجديد</div>
+          <div class="text-xs" style="color:#0369A1; font-family:'JetBrains Mono',monospace; direction:ltr; text-align:left;">
+            DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → IN_TRANSIT → DELIVERED
+          </div>
+          <div class="text-xs mt-1" style="color:#0369A1;">مسار الرفض: PRICED → CANCELLED (عند رفض العميل للسعر)</div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: تطبيق Flutter جانب العميل يعمل بالكامل</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 3: Driver Mobile       -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #10B981">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#D1FAE5;color:#065F46">S3</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Driver Mobile — تطبيق السائق + GPS</div>
+          <div class="text-sm text-gray-500">أسبوع 3 — يوم 18-24</div>
+        </div>
+        <div class="mr-auto flex gap-2"><span class="dep-tag">يعتمد على S1</span><span class="dep-tag">S2</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> السائق يبدأ الرحلة مباشرة (بدون قبول)، GPS يبث من هاتفه، يوقّع في كل محطة.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Trip Assignment API — إسناد مباشر للسائق بعد موافقة العميل على السعر (CUSTOMER_CONFIRMED → ASSIGNED)</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Location WebSocket — استقبال GPS من Flutter وبثّه للـ Dashboard + تطبيق العميل</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Stop Confirmation API — تحديث حالة المحطة + حفظ صورة التسليم + التوقيع</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Trip Complete API — الرحلة تكتمل بعد تأكيد كل المحطات</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">قائمة الرحلات المُسندة — بدون accept/reject — فقط "ابدأ الرحلة"</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">GPS يبدأ تلقائياً عند بدء الرحلة — Geolocator + background_locator</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">شاشة التنقل — قائمة المحطات بالترتيب + Google Maps navigation</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">تأكيد التسليم في كل محطة — التقاط صورة + توقيع العميل</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">Offline Mode — Hive يحفظ البيانات لو انقطع الإنترنت أثناء الرحلة</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">Cold Chain Monitor — إدخال قراءات درجة الحرارة + تنبيه لو خرجت عن النطاق</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• مشرف يُسند رحلة → سائق يشوفها فوراً (push notification)</div>
+            <div>• السائق يضغط "ابدأ" → GPS يظهر على الخريطة الحية</div>
+            <div>• السائق يوصل محطة 1 → يصوّر + يوقّع → الحالة تتحدث للشركة</div>
+            <div>• السائق يكمل كل المحطات → الرحلة تكتمل → الشركة تحصل إشعار</div>
+            <div>• لو الإنترنت انقطع → يرجع → البيانات تُزامَن</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: رحلة كاملة من إسناد المشرف → تسليم كل المحطات تعمل end-to-end</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 4: Supervisor Web      -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #3B82F6">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#DBEAFE;color:#1D4ED8">S4</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Supervisor Dashboard — لوحة تحكم المشرف</div>
+          <div class="text-sm text-gray-500">أسبوع 4-5 — يوم 25-35</div>
+        </div>
+        <div class="mr-auto flex gap-2"><span class="dep-tag">يعتمد على S1</span><span class="dep-tag">S3</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> تطبيق ويب مستقل على المتصفح — المشرف يدير كل العمليات من مكانه.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">الصفحة الرئيسية (KPIs) — طلبات اليوم + مركبات نشطة + رحلات مكتملة + تنبيهات + طلبات تنتظر التسعير (PENDING_PRICING)</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">إدارة التسعير — مراجعة الطلبات الجديدة (PENDING_PRICING) + إدخال السعر يدوياً + إرسال عرض السعر بالإيميل للعميل + متابعة قرار العميل (قبول / رفض)</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">إدارة الطلبات — قائمة + فلترة + تفاصيل + إسناد سائق (بعد CUSTOMER_CONFIRMED) + إنشاء طلب نيابةً عن عميل</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">الخريطة الحية — كل المركبات النشطة بـ GPS realtime (Socket.io) + filter حسب الحالة</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">إدارة المركبات — إضافة/تعديل + رقم اللوحة السعودية + القدرة الحرارية (مبردة/مجمدة)</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">إدارة المستخدمين — إضافة موظفين + شركات عملاء + تعطيل/تفعيل</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">إدارة السائقين — قائمة + حالة + سجل الرحلات + تقييم</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">مراقبة التبريد — درجات حرارة كل الشحنات النشطة + تنبيهات الانتهاك</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">التقارير — رحلات / إيرادات / أداء / تصدير Excel</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">الإشعارات — قائمة + تمييز الحرج</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• مشرف يدخل من المتصفح → يشوف KPIs لحظية + الطلبات التي تنتظر التسعير</div>
+            <div>• يُنشئ طلب شحن نيابةً عن شركة عميلة أو يستلم طلباً جديداً → يحدد السعر يدوياً → يُرسله للعميل بالإيميل</div>
+            <div>• العميل يوافق على السعر → المشرف يُسند الطلب لسائق → السائق يستلم إشعار</div>
+            <div>• الخريطة تعرض GPS السائق يتحرك بالوقت الفعلي</div>
+            <div>• يضيف مركبة برقم لوحة سعودية + يحدد قدرتها الحرارية</div>
+            <div>• يرى تنبيه لو درجة حرارة شحنة خرجت عن النطاق</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: Web Dashboard المشرف — تطبيق ويب كامل يعمل على أي متصفح</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 5: Accountant+Workshop -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #8B5CF6">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#EDE9FE;color:#5B21B6">S5</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Accountant + Workshop — المالية والورشة</div>
+          <div class="text-sm text-gray-500">أسبوع 6 — يوم 36-42</div>
+        </div>
+        <div class="mr-auto flex gap-2"><span class="dep-tag">يعتمد على S3</span><span class="dep-tag">S4</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> المحاسب يُصدر فواتير ZATCA للشركات ويتابع المدفوعات. الورشة تتابع الصيانة.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Invoice API — إنشاء فاتورة B2B + رقم السجل التجاري + الرقم الضريبي + QR ZATCA + PDF</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Payment API — تسجيل دفعة + تحديث حالة الفاتورة + حساب due_date حسب payment_terms الشركة</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Overdue Alerts — تنبيه تلقائي للمحاسب عند تأخر الدفع</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Maintenance API — طلبات الصيانة + حالة المركبة + مواعيد الفحص الدورية</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">لوحة المحاسب — إحصائيات مالية (إيرادات / فواتير / مدفوعات) شهرية</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">قائمة الفواتير — filter: كل / مدفوعة / متأخرة / معلقة + بحث بالشركة</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">إنشاء فاتورة لطلب مكتمل + إرسال PDF بالإيميل</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">المدفوعات — تسجيل دفعة + سجل المعاملات لكل شركة</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">لوحة الورشة — طلبات الصيانة + حالة المركبات + جدول الفحص</p></div>
+          <div class="task-row"><span class="task-tag tag-web">Dashboard</span><p class="text-sm text-gray-700">سجل الصيانة لكل مركبة + إغلاق طلب الصيانة</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• محاسب ينشئ فاتورة لرحلة مكتملة → PDF يُولَّد مع QR ZATCA</div>
+            <div>• الفاتورة تشمل رقم السجل التجاري للشركة العميلة</div>
+            <div>• due_date يُحسب صح (30 يوم / 60 يوم حسب الشركة)</div>
+            <div>• فاتورة متأخرة تظهر في قائمة "المتأخرة" مع تنبيه</div>
+            <div>• ورشة تفتح طلب صيانة لمركبة → تغلقه → السجل يُحدَّث</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: Dashboard المحاسب + الورشة — فوترة ZATCA تعمل</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 6: Integrations        -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #06B6D4">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#CFFAFE;color:#0E7490">S6</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Integrations — ربط الخدمات الخارجية</div>
+          <div class="text-sm text-gray-500">أسبوع 7 — يوم 43-49</div>
+        </div>
+        <div class="mr-auto flex gap-2"><span class="dep-tag">يعتمد على S3</span><span class="dep-tag">S5</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> كل الخدمات الخارجية شغّالة — SMS، إشعارات، خرائط متعددة المحطات، ZATCA كامل.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Unifonic SMS — OTP للشركات الجديدة + إشعارات حالة الشحنة بـ SMS</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Firebase FCM — push notifications لكل الأحداث (إسناد / تأكيد / تسليم / تنبيه)</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Google Maps Directions API — مسار متعدد المحطات (waypoints) + تقدير الوقت</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">ZATCA Phase 2 — التكامل الكامل (invoice XML + QR + digital signature)</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">Email (Nodemailer) — إرسال الفواتير + تأكيد الطلبات بالإيميل</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">Google Maps في التطبيق — navigation بين محطات الرحلة</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">اختبار GPS background على Android + iOS بأجهزة حقيقية</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• SMS OTP يوصل خلال 30 ثانية على رقم سعودي حقيقي</div>
+            <div>• Push notification تظهر على Android + iOS عند تغيير حالة الرحلة</div>
+            <div>• Google Maps يعرض مسار متعدد المحطات صح</div>
+            <div>• فاتورة ZATCA تمر الـ validation (QR يُقرأ بـ Fatoora app)</div>
+            <div>• إيميل الفاتورة يوصل مع PDF مرفق</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: كل الخدمات الخارجية تعمل في بيئة staging</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 7: QA                  -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #F97316">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#FED7AA;color:#C2410C">S7</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">QA + Bug Fixes — الاختبار الشامل</div>
+          <div class="text-sm text-gray-500">أسبوع 8 — يوم 50-56</div>
+        </div>
+        <div class="mr-auto flex gap-2"><span class="dep-tag">يعتمد على S6</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> اختبار كل الـ flows من الأول للآخر على أجهزة حقيقية — صفر bugs حرجة.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">End-to-End test: شركة تسجّل → تطلب شحن مجمد بمحطتين → سائق يبدأ → يسلّم → محاسب يُصدر فاتورة</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">اختبار على أجهزة Android مختلفة (Samsung, Xiaomi, Oppo) + iPhone</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">اختبار GPS في السيارة على الطريق (الرياض) — دقة + استمرارية</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">اختبار Offline → Online sync (إنترنت ضعيف أثناء الرحلة)</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">اختبار حمل: 50 مستخدم متزامن على staging</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">اختبار Dashboard على Chrome + Edge + Firefox + Safari</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">اختبار ZATCA — تحقق من صحة الفواتير مع هيئة الزكاة</p></div>
+          <div class="task-row"><span class="task-tag tag-api">Backend</span><p class="text-sm text-gray-700">إصلاح كل الـ bugs المكتشفة (Critical + High priority)</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">QA</span><p class="text-sm text-gray-700">Regression test بعد كل fix</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• صفر Critical bugs مفتوحة</div>
+            <div>• رحلة كاملة تعمل بدون errors على أجهزة حقيقية</div>
+            <div>• الـ Dashboard يفتح بسرعة ≤ 2 ثانية</div>
+            <div>• 50 مستخدم متزامن → لا يوجد timeout أو crash</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">📦 Output: النظام مستقر — جاهز للـ production</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- Sprint 8: Production+Delivery -->
+    <!-- ============================= -->
+    <div class="sprint-card" style="border-top:4px solid #0D0D0D">
+      <div class="sprint-header">
+        <div class="sprint-num" style="background:#0D0D0D;color:white">S8</div>
+        <div>
+          <div class="font-bold text-gray-900 text-lg">Production + Delivery — الإطلاق والتسليم</div>
+          <div class="text-sm text-gray-500">أسبوع 9-11 — يوم 57-77</div>
+        </div>
+        <div class="mr-auto"><span class="dep-tag">يعتمد على S7</span></div>
+      </div>
+      <div class="sprint-body">
+        <p class="text-sm text-gray-600 mb-4"><strong>الهدف:</strong> كل شيء يعمل على Production — التطبيقات في المتاجر — العميل يستلم النظام.</p>
+        <div class="space-y-1">
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Railway Production — API + PostgreSQL + Redis + domain</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Vercel Production — Dashboard على دومين الشركة (dashboard.edham.sa)</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">SSL certificates + CORS + Rate limiting + Security headers</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">Sentry (error monitoring) + UptimeRobot (health checks)</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">بناء APK Production (EAS Build) → رفع على Google Play Console</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">بناء IPA Production → رفع على App Store Connect</p></div>
+          <div class="task-row"><span class="task-tag tag-mobile">Mobile</span><p class="text-sm text-gray-700">تجهيز Store listings: screenshots + icon + وصف عربي/إنجليزي</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">UAT</span><p class="text-sm text-gray-700">جلسة UAT مع العميل على Production (رحلة كاملة حقيقية)</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">UAT</span><p class="text-sm text-gray-700">إصلاح أي ملاحظات من الـ UAT</p></div>
+          <div class="task-row"><span class="task-tag tag-qa">UAT</span><p class="text-sm text-gray-700">تدريب: مشرف + محاسب + ورشة + سائقين (فيديو + دليل مكتوب)</p></div>
+          <div class="task-row"><span class="task-tag tag-devops">DevOps</span><p class="text-sm text-gray-700">نقل credentials وصلاحيات الـ accounts للعميل</p></div>
+        </div>
+        <div class="verify-box">
+          <div class="text-xs font-bold text-green-700 mb-1">✅ كيف نتحقق (تسليم ناجح)</div>
+          <div class="text-xs text-green-700 space-y-0.5">
+            <div>• Dashboard يفتح على dashboard.edham.sa بدون errors</div>
+            <div>• APK متاح للتحميل من Google Play</div>
+            <div>• IPA في مرحلة مراجعة App Store (أو approved)</div>
+            <div>• العميل أجرى رحلة حقيقية من الأول للآخر على Production</div>
+            <div>• العميل استلم credentials وقادر يدير النظام</div>
+          </div>
+        </div>
+        <div class="output-box">
+          <div class="text-xs font-bold text-amber-700">🚀 Output: النظام حي — العميل يمتلك نظامه الكامل</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="bg-gray-900 text-white rounded-2xl p-6 mt-6">
+      <h3 class="font-bold text-lg mb-4" style="color:#DC2626">ملخص التسليم النهائي</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs text-gray-400 mb-2 font-semibold uppercase">التطبيقات</div>
+          <div class="space-y-1.5 text-sm text-gray-300">
+            <div>📱 تطبيق Flutter على Google Play (Android)</div>
+            <div>📱 تطبيق Flutter على App Store (iOS)</div>
+            <div>🖥️ Web Dashboard على دومين الشركة</div>
+          </div>
+        </div>
+        <div>
+          <div class="text-xs text-gray-400 mb-2 font-semibold uppercase">التوثيق</div>
+          <div class="space-y-1.5 text-sm text-gray-300">
+            <div>📄 Swagger API documentation</div>
+            <div>🎥 فيديوهات تدريبية لكل دور</div>
+            <div>📚 دليل المستخدم المكتوب</div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-gray-700 text-center text-xs text-gray-500">
+        إدهام للنقل المبرد | السجل التجاري: 7003941213 | يوليو 2026
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

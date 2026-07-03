@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — طلب جديد (الخطوة 1)</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#FFF5F5',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#0D0D0D' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame {
+      width: 390px;
+      min-height: 844px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 0 1px #E4E4E7, 0 25px 50px rgba(0,0,0,0.15);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+    .screen-content {
+      height: 844px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 90px;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+    .map-placeholder {
+      background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 50%, #bfd5f9 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .map-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(99,102,241,0.04) 0px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(99,102,241,0.04) 0px, transparent 1px, transparent 40px);
+    }
+    .map-road {
+      position: absolute;
+      background: rgba(255,255,255,0.7);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen p-8 flex items-center justify-center font-arabic">
+
+  <div class="mobile-frame">
+    <div class="screen-content">
+
+      <!-- Status Bar -->
+      <div class="bg-white px-5 pt-3 pb-2 flex items-center justify-between border-b border-gray-100">
+        <span class="text-gray-800 text-xs font-semibold">9:41</span>
+        <div class="flex items-center gap-1">
+          <i class="ti ti-wifi text-gray-600 text-xs"></i>
+          <i class="ti ti-battery-3 text-gray-600 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="bg-white px-4 py-4 border-b border-gray-100">
+        <div class="flex items-center justify-between mb-3">
+          <button class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-lg" data-link="home.html">
+            <i class="ti ti-chevron-right text-xl"></i>
+          </button>
+          <h1 class="font-semibold text-gray-800 text-base">طلب شحن جديد</h1>
+          <span class="text-xs text-gray-400 font-medium">1 من 4</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="flex gap-1.5">
+          <div class="h-1.5 flex-1 bg-primary-600 rounded-full"></div>
+          <div class="h-1.5 flex-1 bg-gray-200 rounded-full"></div>
+          <div class="h-1.5 flex-1 bg-gray-200 rounded-full"></div>
+          <div class="h-1.5 flex-1 bg-gray-200 rounded-full"></div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="bg-gray-50 px-4 pt-5 pb-4">
+        <h2 class="text-xl font-bold text-gray-800 mb-1">من أين نستلم؟</h2>
+        <p class="text-gray-500 text-sm mb-5">حدد موقع الاستلام بدقة</p>
+
+        <!-- Map Placeholder -->
+        <div class="map-placeholder rounded-2xl mb-4 relative" style="height:180px;">
+          <!-- Roads -->
+          <div class="map-road" style="width:120px; height:8px; top:80px; left:20px; transform:rotate(-15deg);"></div>
+          <div class="map-road" style="width:100px; height:8px; top:100px; left:120px; transform:rotate(5deg);"></div>
+          <div class="map-road" style="width:6px; height:80px; top:50px; left:180px;"></div>
+          <div class="map-road" style="width:80px; height:6px; top:130px; left:250px; transform:rotate(-8deg);"></div>
+
+          <!-- Pin -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                <i class="ti ti-map-pin text-white text-lg"></i>
+              </div>
+              <div class="w-0 h-0" style="border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid #22c55e;"></div>
+            </div>
+          </div>
+
+          <!-- Current Location Button -->
+          <button class="absolute top-3 left-3 bg-white shadow-md text-primary-600 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 border border-primary-100">
+            <i class="ti ti-gps text-sm"></i>
+            موقعي الحالي
+          </button>
+
+          <!-- Map Attribution -->
+          <div class="absolute bottom-2 right-2 text-[9px] text-gray-400 bg-white/70 px-1.5 py-0.5 rounded">خريطة وهمية</div>
+        </div>
+
+        <!-- Address Search -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">عنوان الاستلام</label>
+          <div class="relative">
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+              <i class="ti ti-map-pin text-lg"></i>
+            </div>
+            <input
+              type="text"
+              placeholder="ابحث عن العنوان أو اكتبه"
+              class="w-full h-12 bg-white border border-gray-300 rounded-xl pr-10 pl-4 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100"
+              value="مستودع العاصمة الصناعي، طريق الملك عبدالله"
+            />
+          </div>
+
+          <!-- Search Dropdown (shown) -->
+          <div class="bg-white border border-gray-200 rounded-xl shadow-lg mt-1.5 overflow-hidden">
+            <div class="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50">
+              <i class="ti ti-building-warehouse text-gray-400 text-lg flex-shrink-0"></i>
+              <div>
+                <p class="text-sm text-gray-800 font-medium">مستودع العاصمة الصناعي</p>
+                <p class="text-xs text-gray-400">طريق الملك عبدالله، الرياض</p>
+              </div>
+            </div>
+            <div class="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 cursor-pointer border-b border-gray-50">
+              <i class="ti ti-map-pin text-gray-400 text-lg flex-shrink-0"></i>
+              <div>
+                <p class="text-sm text-gray-800 font-medium">مجمع الأندلس اللوجستي</p>
+                <p class="text-xs text-gray-400">حي الدار البيضاء، الرياض</p>
+              </div>
+            </div>
+            <div class="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 cursor-pointer">
+              <i class="ti ti-map-pin text-gray-400 text-lg flex-shrink-0"></i>
+              <div>
+                <p class="text-sm text-gray-800 font-medium">مجمع الرياض اللوجستي</p>
+                <p class="text-xs text-gray-400">المنطقة الصناعية الثانية، الرياض</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">تفاصيل إضافية <span class="text-gray-400 font-normal">(اختياري)</span></label>
+          <textarea
+            placeholder="رقم المستودع، الطابق، اسم المسؤول..."
+            class="w-full h-20 bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-primary-600 resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Saved Addresses -->
+        <div>
+          <p class="text-xs font-semibold text-gray-500 mb-2">العناوين المحفوظة</p>
+          <div class="flex flex-col gap-2">
+            <div class="bg-white border border-primary-200 rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:border-primary-400 transition-colors">
+              <div class="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                <i class="ti ti-building-warehouse text-primary-600 text-sm"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-800">مستودعنا الرئيسي</p>
+                <p class="text-xs text-gray-400">الرياض الصناعية، طريق الملك عبدالله</p>
+              </div>
+              <i class="ti ti-chevron-left text-gray-300 mr-auto text-sm"></i>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:border-primary-200 transition-colors">
+              <div class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                <i class="ti ti-building text-gray-500 text-sm"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-800">شركة الفهد للتجارة</p>
+                <p class="text-xs text-gray-400">طريق العليا، حي الملقا، الرياض</p>
+              </div>
+              <i class="ti ti-chevron-left text-gray-300 mr-auto text-sm"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Button -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-3 shadow-lg">
+      <button class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2" data-link="new-order-2.html">
+        التالي — عنوان التسليم
+        <i class="ti ti-chevron-left text-sm"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = el.dataset.link;
+      });
+    });
+  </script>
+</body>
+</html>
+

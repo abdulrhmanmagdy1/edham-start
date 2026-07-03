@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام للنقل المبرد</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'IBM Plex Sans Arabic',sans-serif; background:#111; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+
+    .phone { width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; box-shadow:0 0 0 2px #333, 0 40px 80px rgba(0,0,0,0.8); background:#000; }
+
+    /* Slider */
+    .slides { position:absolute; inset:0; }
+    .slide { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity 1.2s ease; }
+    .slide.active { opacity:1; }
+
+    /* Overlay */
+    .overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.97) 100%); z-index:1; }
+
+    /* Content */
+    .content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; }
+
+    /* Top */
+    .topbar { padding:52px 24px 0; display:flex; align-items:center; gap:10px; }
+    .logo-img { height:32px; }
+    .logo-text { color:white; font-size:18px; font-weight:700; line-height:1.1; }
+    .logo-sub { color:#DC2626; font-size:10px; font-weight:600; }
+
+    /* Dots */
+    .dots { display:flex; gap:6px; padding:16px 24px 0; }
+    .dot { width:6px; height:6px; border-radius:3px; background:rgba(255,255,255,0.25); transition:all 0.4s; }
+    .dot.active { width:22px; background:#DC2626; }
+
+    /* Hero text */
+    .hero { flex:1; display:flex; flex-direction:column; justify-content:flex-end; padding:0 24px 22px; }
+    .hero h1 { color:white; font-size:30px; font-weight:700; line-height:1.25; margin-bottom:6px; }
+    .hero p { color:rgba(255,255,255,0.55); font-size:13px; }
+
+    /* Bottom Sheet */
+    .sheet { background:white; border-radius:26px 26px 0 0; padding:24px 22px 30px; }
+
+    /* Tabs */
+    .tabs { display:flex; background:#F3F4F6; border-radius:12px; padding:4px; margin-bottom:18px; }
+    .tab { flex:1; text-align:center; padding:9px; border-radius:9px; font-size:14px; font-weight:600; cursor:pointer; color:#6B7280; border:none; background:none; font-family:inherit; transition:all 0.2s; }
+    .tab.active { background:white; color:#111; box-shadow:0 1px 4px rgba(0,0,0,0.1); }
+
+    /* Form */
+    .form { display:none; }
+    .form.active { display:block; }
+    .lbl { font-size:12px; font-weight:600; color:#374151; margin-bottom:5px; display:block; }
+    .field { margin-bottom:13px; }
+    .phone-row { display:flex; gap:8px; }
+    .country-code { background:#F9FAFB; border:1.5px solid #E5E7EB; border-radius:11px; padding:12px 10px; font-size:13px; color:#374151; font-family:inherit; width:84px; text-align:center; flex-shrink:0; }
+    input[type=tel], input[type=text], input[type=password], select {
+      width:100%; border:1.5px solid #E5E7EB; border-radius:11px; padding:12px 14px; font-size:14px; font-family:inherit; color:#111; outline:none; transition:border-color 0.15s; background:white; appearance:none; -webkit-appearance:none;
+    }
+    input:focus, select:focus { border-color:#DC2626; }
+
+    .btn { width:100%; padding:14px; border-radius:13px; font-size:15px; font-weight:700; font-family:inherit; border:none; cursor:pointer; background:#DC2626; color:white; transition:all 0.15s; margin-top:2px; }
+    .btn:hover { background:#B91C1C; }
+    .btn:active { transform:scale(0.98); }
+
+    .hint { text-align:center; font-size:12px; color:#9CA3AF; margin-top:11px; }
+    .hint span { color:#DC2626; font-weight:600; cursor:pointer; }
+
+    /* OTP */
+    .otp-wrap { display:none; }
+    .otp-wrap.show { display:block; }
+    .otp-title { font-size:15px; font-weight:700; color:#111; margin-bottom:3px; }
+    .otp-sub { font-size:12px; color:#9CA3AF; margin-bottom:14px; }
+    .otp-row { display:flex; gap:8px; justify-content:center; margin-bottom:18px; }
+    .otp-box { width:48px; height:54px; border:2px solid #E5E7EB; border-radius:11px; text-align:center; font-size:22px; font-weight:700; color:#111; outline:none; font-family:monospace; }
+    .otp-box:focus { border-color:#DC2626; }
+    .otp-link { text-align:center; font-size:12px; color:#9CA3AF; cursor:pointer; margin-top:10px; }
+    .otp-link:hover { color:#DC2626; }
+
+    /* Role Picker */
+    .roles { display:none; }
+    .roles.show { display:block; }
+    .roles-title { font-size:13px; color:#9CA3AF; text-align:center; margin-bottom:14px; }
+    .role-row {
+      display:flex; align-items:center; gap:12px; padding:13px 14px; border:1.5px solid #F3F4F6; border-radius:14px; margin-bottom:9px; cursor:pointer; background:white; font-family:inherit; width:100%; transition:all 0.15s;
+    }
+    .role-row:hover { border-color:#DC2626; background:#FFF5F5; }
+    .ricon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+    .rname { font-size:14px; font-weight:700; color:#111; text-align:right; }
+    .rdesc { font-size:11px; color:#9CA3AF; text-align:right; }
+    .rchev { margin-right:auto; color:#D1D5DB; font-size:16px; }
+    .logout-link { text-align:center; font-size:12px; color:#9CA3AF; cursor:pointer; margin-top:6px; }
+    .logout-link:hover { color:#DC2626; }
+
+    @keyframes up { from { transform:translateY(24px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    .up { animation:up 0.3s ease; }
+  </style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- Slides -->
+  <div class="slides">
+    <div class="slide active" style="background-image:url('images/WhatsApp Image 2026-06-26 at 9.05.40 PM.jpeg')"></div>
+    <div class="slide" style="background-image:url('images/WhatsApp Image 2026-06-26 at 9.05.56 PM.jpeg')"></div>
+    <div class="slide" style="background-image:url('images/WhatsApp Image 2026-06-26 at 9.05.38 PM.jpeg')"></div>
+    <div class="slide" style="background-image:url('images/WhatsApp Image 2026-06-26 at 9.05.55 PM.jpeg')"></div>
+  </div>
+  <div class="overlay"></div>
+
+  <div class="content">
+
+    <!-- Logo -->
+    <div class="topbar">
+      <img src="logo-edham-logistics.png" alt="" class="logo-img" onerror="this.style.display='none'">
+      <div>
+        <div class="logo-text">إدهام</div>
+        <div class="logo-sub">للنقل المبرد</div>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div class="dots">
+      <div class="dot active" id="d0"></div>
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <h1 id="heroTitle">نقل مبرد<br>آمن وموثوق</h1>
+      <p id="heroSub">أسطول متكامل • تتبع لحظي • Cold Chain مضمون</p>
+    </div>
+
+    <!-- Sheet -->
+    <div class="sheet up" id="sheet">
+
+      <!-- LOGIN SECTION -->
+      <div id="loginWrap">
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('customer')">عميل</button>
+          <button class="tab" onclick="switchTab('staff')">موظف</button>
+        </div>
+
+        <!-- Customer Phone Form -->
+        <div class="form active" id="form-customer">
+          <div class="field">
+            <label class="lbl">رقم الجوال</label>
+            <div class="phone-row">
+              <span class="country-code">🇸🇦 +966</span>
+              <input type="tel" id="phoneInput" placeholder="5X XXX XXXX" maxlength="10">
+            </div>
+          </div>
+          <button class="btn" onclick="showOTP()">إرسال رمز التحقق</button>
+          <p class="hint">عميل جديد؟ <span>إنشاء حساب</span></p>
+        </div>
+
+        <!-- OTP Form -->
+        <div class="otp-wrap" id="otpWrap">
+          <p class="otp-title">أدخل رمز التحقق</p>
+          <p class="otp-sub">أُرسل إلى +966 5X XXX XXXX</p>
+          <div class="otp-row">
+            <input class="otp-box" maxlength="1" type="tel">
+            <input class="otp-box" maxlength="1" type="tel">
+            <input class="otp-box" maxlength="1" type="tel">
+            <input class="otp-box" maxlength="1" type="tel">
+            <input class="otp-box" maxlength="1" type="tel">
+            <input class="otp-box" maxlength="1" type="tel">
+          </div>
+          <button class="btn" onclick="go('customer/home.html')">تأكيد الدخول</button>
+          <p class="otp-link" onclick="backPhone()">← تغيير الرقم</p>
+        </div>
+
+        <!-- Staff Form -->
+        <div class="form" id="form-staff">
+          <div class="field">
+            <label class="lbl">الدور الوظيفي</label>
+            <select id="staffRole">
+              <option value="supervisor">مشرف / مدير عمليات</option>
+              <option value="driver">سائق</option>
+              <option value="accountant">محاسب</option>
+              <option value="workshop">موظف ورشة</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="lbl">البريد الإلكتروني / رقم الموظف</label>
+            <input type="text" placeholder="أدخل بياناتك">
+          </div>
+          <div class="field">
+            <label class="lbl">كلمة المرور</label>
+            <input type="password" placeholder="••••••••">
+          </div>
+          <button class="btn" onclick="staffLogin()">دخول</button>
+        </div>
+      </div>
+
+      <!-- ROLES SECTION (after login) -->
+      <div class="roles" id="rolesWrap">
+        <p class="roles-title">مرحباً! اختر المسار</p>
+
+        <button class="role-row" onclick="go('customer/home.html')">
+          <div class="ricon" style="background:#FEE2E2">📦</div>
+          <div style="flex:1">
+            <div class="rname">العميل</div>
+            <div class="rdesc">طلب شحن • تتبع • فواتير</div>
+          </div>
+          <i class="ti ti-chevron-left rchev"></i>
+        </button>
+
+        <button class="role-row" onclick="go('driver/tasks.html')">
+          <div class="ricon" style="background:#FEF3C7">🚛</div>
+          <div style="flex:1">
+            <div class="rname">السائق</div>
+            <div class="rdesc">الرحلات • Cold Chain • التسليم</div>
+          </div>
+          <i class="ti ti-chevron-left rchev"></i>
+        </button>
+
+        <button class="role-row" onclick="go('supervisor/dashboard.html')">
+          <div class="ricon" style="background:#EDE9FE">📊</div>
+          <div style="flex:1">
+            <div class="rname">المشرف</div>
+            <div class="rdesc">لوحة التحكم • الأسطول • التقارير</div>
+          </div>
+          <i class="ti ti-chevron-left rchev"></i>
+        </button>
+
+        <button class="role-row" onclick="go('accountant/invoices.html')">
+          <div class="ricon" style="background:#D1FAE5">💰</div>
+          <div style="flex:1">
+            <div class="rname">المحاسب</div>
+            <div class="rdesc">الفواتير • المدفوعات</div>
+          </div>
+          <i class="ti ti-chevron-left rchev"></i>
+        </button>
+
+        <button class="role-row" onclick="go('workshop/maintenance.html')">
+          <div class="ricon" style="background:#FEF9C3">🔧</div>
+          <div style="flex:1">
+            <div class="rname">الورشة</div>
+            <div class="rdesc">الصيانة • سجل المركبات</div>
+          </div>
+          <i class="ti ti-chevron-left rchev"></i>
+        </button>
+
+        <p class="logout-link" onclick="resetAll()">تسجيل خروج</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Slider
+  const slides = document.querySelectorAll('.slide');
+  const dots = [0,1,2,3].map(i => document.getElementById('d'+i));
+  const heroes = [
+    { title:'نقل مبرد<br>آمن وموثوق', sub:'أسطول متكامل • تتبع لحظي • Cold Chain مضمون' },
+    { title:'فريق محترف<br>في كل رحلة', sub:'سائقون مدربون • معايير الجودة العالية' },
+    { title:'أسطول ضخم<br>وموثوق', sub:'20+ مركبة جاهزة للتحرك في أي وقت' },
+    { title:'تغطية شاملة<br>داخل المملكة', sub:'الرياض • جدة • الدمام وأكثر' }
+  ];
+  let cur = 0;
+  function nextSlide() {
+    slides[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur = (cur + 1) % slides.length;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    document.getElementById('heroTitle').innerHTML = heroes[cur].title;
+    document.getElementById('heroSub').textContent = heroes[cur].sub;
+  }
+  setInterval(nextSlide, 4000);
+
+  // Tab switch
+  function switchTab(t) {
+    document.querySelectorAll('.tab').forEach((b,i) => b.classList.toggle('active', (t==='customer'&&i===0)||(t==='staff'&&i===1)));
+    document.getElementById('form-customer').classList.toggle('active', t==='customer');
+    document.getElementById('form-staff').classList.toggle('active', t==='staff');
+    document.getElementById('otpWrap').classList.remove('show');
+  }
+
+  // OTP Flow
+  function showOTP() {
+    document.getElementById('form-customer').classList.remove('active');
+    document.getElementById('otpWrap').classList.add('show');
+    setTimeout(() => document.querySelector('.otp-box').focus(), 80);
+  }
+  function backPhone() {
+    document.getElementById('otpWrap').classList.remove('show');
+    document.getElementById('form-customer').classList.add('active');
+  }
+
+  // OTP auto-advance
+  document.querySelectorAll('.otp-box').forEach((box, i, all) => {
+    box.addEventListener('input', () => { if (box.value && i < all.length-1) all[i+1].focus(); });
+    box.addEventListener('keydown', e => { if (e.key==='Backspace' && !box.value && i>0) all[i-1].focus(); });
+  });
+
+  // Show Roles after login
+  function showRoles() {
+    document.getElementById('loginWrap').style.display = 'none';
+    const r = document.getElementById('rolesWrap');
+    r.classList.add('show', 'up');
+  }
+
+  // Staff login
+  function staffLogin() {
+    const dest = { supervisor:'supervisor/dashboard.html', driver:'driver/tasks.html', accountant:'accountant/invoices.html', workshop:'workshop/maintenance.html' };
+    window.location.href = dest[document.getElementById('staffRole').value];
+  }
+
+  // Navigate
+  function go(p) { window.location.href = p; }
+
+  // Reset
+  function resetAll() {
+    document.getElementById('rolesWrap').classList.remove('show');
+    document.getElementById('loginWrap').style.display = 'block';
+    document.getElementById('otpWrap').classList.remove('show');
+    document.getElementById('form-customer').classList.add('active');
+    document.getElementById('form-staff').classList.remove('active');
+    document.querySelectorAll('.tab')[0].classList.add('active');
+    document.querySelectorAll('.tab')[1].classList.remove('active');
+  }
+</script>
+
+</body>
+</html>

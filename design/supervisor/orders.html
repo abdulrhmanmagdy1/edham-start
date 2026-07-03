@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — إدارة الطلبات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#FFF5F5',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#0D0D0D' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',500:'#F59E0B',600:'#D97706',700:'#B45309' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 16px; border-radius:8px; color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; transition:all 0.15s; cursor:pointer; }
+    .sidebar-link:hover { background:rgba(255,255,255,0.08); color:white; }
+    .sidebar-link.active { background:#DC2626 !important; color:white; border-right:3px solid #ff6b6b; }
+    .sidebar-link.active i { color:white; }
+    tr.table-row:hover td { background:#FFF5F5; cursor:pointer; }
+  </style>
+</head>
+<body class="bg-gray-50 font-arabic">
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-60 flex-shrink-0 flex flex-col" style="background:#0D0D0D; direction:rtl;">
+      <div class="px-4 py-5 border-b border-white/10">
+        <img src="../logo-edham-logistics.png" alt="إدهام" class="h-10 mb-2"
+             onerror="this.style.display='none'">
+        <div class="flex items-center gap-2">
+          <i class="ti ti-snowflake text-red-500 text-lg"></i>
+          <div>
+            <p class="text-white font-bold text-sm leading-tight">إدهام</p>
+            <p class="text-xs" style="color:#DC2626">للنقل المبرد</p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <div class="sidebar-link" data-link="dashboard.html"><i class="ti ti-layout-dashboard text-lg"></i><span>لوحة التحكم</span></div>
+        <div class="sidebar-link active" data-link="orders.html"><i class="ti ti-package text-lg"></i><span>إدارة الطلبات</span></div>
+        <div class="sidebar-link" data-link="live-map.html"><i class="ti ti-map text-lg"></i><span>خريطة الأسطول</span></div>
+        <div class="sidebar-link" data-link="fleet.html"><i class="ti ti-truck text-lg"></i><span>إدارة المركبات</span></div>
+        <div class="sidebar-link" data-link="users.html"><i class="ti ti-users text-lg"></i><span>إدارة المستخدمين</span></div>
+        <div class="sidebar-link" data-link="vehicles.html"><i class="ti ti-truck text-lg"></i><span>إدارة المركبات</span></div>
+        <div class="sidebar-link"><i class="ti ti-steering-wheel text-lg"></i><span>السائقون</span></div>
+        <div class="sidebar-link"><i class="ti ti-building text-lg"></i><span>العملاء</span></div>
+        <div class="sidebar-link"><i class="ti ti-snowflake text-lg"></i><span>مراقبة التبريد</span></div>
+        <div class="sidebar-link"><i class="ti ti-report-analytics text-lg"></i><span>التقارير</span></div>
+      </nav>
+      <div class="px-3 py-4 border-t border-white/10">
+        <div class="flex items-center gap-3 px-3 py-2">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#DC2626">
+            <i class="ti ti-user text-white text-base"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-white text-sm font-semibold truncate">أحمد المنصور</p>
+            <p class="text-gray-400 text-[11px]">مشرف عمليات</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto bg-gray-50">
+
+      <!-- Header -->
+      <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+        <div>
+          <h1 class="text-xl font-bold text-gray-800">إدارة الطلبات</h1>
+          <p class="text-sm text-gray-400 mt-0.5">23 طلب اليوم · الجمعة 27 يونيو 2026</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="flex items-center gap-2 bg-white border border-gray-200 text-gray-600 text-sm px-4 py-2 rounded-xl hover:bg-gray-50">
+            <i class="ti ti-table-export text-gray-500"></i>
+            تصدير Excel
+          </button>
+          <button class="flex items-center gap-2 text-white text-sm font-semibold px-4 py-2 rounded-xl" style="background:#DC2626">
+            <i class="ti ti-plus"></i>
+            طلب جديد
+          </button>
+        </div>
+      </div>
+
+      <div class="px-8 py-6">
+
+        <!-- Filter Bar -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-5 flex items-center gap-3 flex-wrap">
+          <div class="relative flex-1 min-w-48">
+            <i class="ti ti-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="text" placeholder="بحث برقم الطلب أو العميل..."
+              class="w-full border border-gray-200 rounded-xl py-2.5 pr-10 pl-4 text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100">
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
+              <i class="ti ti-filter text-gray-400 text-sm"></i>
+              <select class="border border-gray-200 rounded-xl py-2.5 px-3 text-sm text-gray-600 focus:outline-none focus:border-primary-400 bg-white">
+                <option>كل الحالات</option>
+                <option selected>بانتظار التسعير</option>
+                <option>تم التسعير</option>
+                <option>مؤكد من العميل</option>
+                <option>مُسند</option>
+                <option>في الطريق</option>
+                <option>مكتمل</option>
+                <option>ملغى</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <select class="border border-gray-200 rounded-xl py-2.5 px-3 text-sm text-gray-600 focus:outline-none focus:border-primary-400 bg-white">
+                <option>كل المركبات</option>
+                <option>Toyota HiAce</option>
+                <option>Isuzu مبردة</option>
+                <option>Volvo FH</option>
+              </select>
+            </div>
+            <input type="date" value="2026-06-27"
+              class="border border-gray-200 rounded-xl py-2.5 px-3 text-sm text-gray-600 focus:outline-none focus:border-primary-400 bg-white">
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-100">
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500 w-10">
+                  <input type="checkbox" class="rounded border-gray-300">
+                </th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">
+                  <div class="flex items-center gap-1">رقم الطلب <i class="ti ti-arrows-sort text-gray-300 text-xs"></i></div>
+                </th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">العميل</th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">المسار</th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">نوع المركبة</th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">الحالة</th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">
+                  <div class="flex items-center gap-1">السائق <i class="ti ti-arrows-sort text-gray-300 text-xs"></i></div>
+                </th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">
+                  <div class="flex items-center gap-1">التاريخ <i class="ti ti-arrows-sort text-gray-300 text-xs"></i></div>
+                </th>
+                <th class="text-right px-5 py-3.5 text-xs font-bold text-gray-500">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              <!-- Row 1 - Waiting -->
+              <tr class="table-row" data-link="order-details.html">
+                <td class="px-5 py-4"><input type="checkbox" class="rounded border-gray-300"></td>
+                <td class="px-5 py-4"><span class="font-mono font-semibold text-gray-700 text-xs">EDH-2026-0147</span></td>
+                <td class="px-5 py-4">
+                  <p class="font-semibold text-gray-800">شركة النخيل</p>
+                  <p class="text-xs text-gray-400">التجارة العامة</p>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700">الرياض ← جدة</p>
+                  <p class="text-xs text-gray-400">950 كم</p>
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex items-center gap-1.5">
+                    <i class="ti ti-truck text-gray-500 text-sm"></i>
+                    <span class="text-gray-700">Isuzu مبردة</span>
+                    <i class="ti ti-snowflake text-primary-500 text-xs"></i>
+                  </div>
+                </td>
+                <td class="px-5 py-4">
+                  <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 w-fit">
+                    <i class="ti ti-clock text-[10px]"></i> بانتظار التسعير
+                  </span>
+                </td>
+                <td class="px-5 py-4"><span class="text-gray-400 text-sm">—</span></td>
+                <td class="px-5 py-4"><span class="text-gray-600 text-xs font-mono">27/06/2026</span></td>
+                <td class="px-5 py-4">
+                  <button class="text-white text-xs font-bold px-3 py-1.5 rounded-lg" style="background:#DC2626" data-link="order-details.html">⚡ تسعير</button>
+                </td>
+              </tr>
+
+              <!-- Row 2 - Assigned -->
+              <tr class="table-row" data-link="order-details.html">
+                <td class="px-5 py-4"><input type="checkbox" class="rounded border-gray-300"></td>
+                <td class="px-5 py-4"><span class="font-mono font-semibold text-gray-700 text-xs">EDH-2026-0146</span></td>
+                <td class="px-5 py-4">
+                  <p class="font-semibold text-gray-800">مستشفى الملك فهد</p>
+                  <p class="text-xs text-gray-400">الرعاية الصحية</p>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700">جدة ← المدينة</p>
+                  <p class="text-xs text-gray-400">420 كم</p>
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex items-center gap-1.5">
+                    <i class="ti ti-truck text-gray-500 text-sm"></i>
+                    <span class="text-gray-700">Isuzu مبردة</span>
+                    <i class="ti ti-snowflake text-primary-500 text-xs"></i>
+                  </div>
+                </td>
+                <td class="px-5 py-4">
+                  <span class="bg-primary-100 text-primary-700 text-xs font-bold px-2.5 py-1 rounded-full">مُسند</span>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700 text-sm">محمد الزهراني</p>
+                  <p class="text-xs font-mono text-gray-400">DRV-0047</p>
+                </td>
+                <td class="px-5 py-4"><span class="text-gray-600 text-xs font-mono">27/06/2026</span></td>
+                <td class="px-5 py-4">
+                  <button class="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-gray-50" data-link="order-details.html">تفاصيل</button>
+                </td>
+              </tr>
+
+              <!-- Row 3 - In Transit -->
+              <tr class="table-row" data-link="order-details.html">
+                <td class="px-5 py-4"><input type="checkbox" class="rounded border-gray-300"></td>
+                <td class="px-5 py-4"><span class="font-mono font-semibold text-gray-700 text-xs">EDH-2026-0145</span></td>
+                <td class="px-5 py-4">
+                  <p class="font-semibold text-gray-800">شركة الفهد للتجارة</p>
+                  <p class="text-xs text-gray-400">المواد الغذائية</p>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700">الرياض ← أبها</p>
+                  <p class="text-xs text-gray-400">1,040 كم</p>
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex items-center gap-1.5">
+                    <i class="ti ti-truck-delivery text-gray-500 text-sm"></i>
+                    <span class="text-gray-700">Volvo FH</span>
+                  </div>
+                </td>
+                <td class="px-5 py-4">
+                  <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 w-fit">
+                    <i class="ti ti-truck text-[10px]"></i> في الطريق
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700 text-sm">سعد الغامدي</p>
+                  <p class="text-xs font-mono text-gray-400">DRV-0052</p>
+                </td>
+                <td class="px-5 py-4"><span class="text-gray-600 text-xs font-mono">27/06/2026</span></td>
+                <td class="px-5 py-4">
+                  <button class="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-gray-50" data-link="order-details.html">تفاصيل</button>
+                </td>
+              </tr>
+
+              <!-- Row 4 - In Transit (Cold Chain) -->
+              <tr class="table-row bg-blue-50/30" data-link="order-details.html">
+                <td class="px-5 py-4"><input type="checkbox" class="rounded border-gray-300"></td>
+                <td class="px-5 py-4"><span class="font-mono font-semibold text-gray-700 text-xs">EDH-2026-0144</span></td>
+                <td class="px-5 py-4">
+                  <p class="font-semibold text-gray-800">شركة النور الطبية</p>
+                  <p class="text-xs text-gray-400">الأدوية والمستلزمات</p>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700">الرياض ← الدمام</p>
+                  <p class="text-xs text-gray-400">390 كم</p>
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex items-center gap-1.5">
+                    <i class="ti ti-truck text-gray-500 text-sm"></i>
+                    <span class="text-gray-700">Isuzu مبردة</span>
+                    <i class="ti ti-snowflake text-primary-500 text-xs"></i>
+                  </div>
+                </td>
+                <td class="px-5 py-4">
+                  <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 w-fit">
+                    <i class="ti ti-truck text-[10px]"></i> في الطريق
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700 text-sm">فيصل العمري</p>
+                  <p class="text-xs font-mono text-gray-400">DRV-0039</p>
+                </td>
+                <td class="px-5 py-4"><span class="text-gray-600 text-xs font-mono">26/06/2026</span></td>
+                <td class="px-5 py-4">
+                  <button class="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-gray-50" data-link="order-details.html">تفاصيل</button>
+                </td>
+              </tr>
+
+              <!-- Row 5 - Completed -->
+              <tr class="table-row" data-link="order-details.html">
+                <td class="px-5 py-4"><input type="checkbox" class="rounded border-gray-300"></td>
+                <td class="px-5 py-4"><span class="font-mono font-semibold text-gray-700 text-xs">EDH-2026-0143</span></td>
+                <td class="px-5 py-4">
+                  <p class="font-semibold text-gray-800">شركة التميمي التجارية</p>
+                  <p class="text-xs text-gray-400">المواد الغذائية</p>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700">الرياض ← جدة</p>
+                  <p class="text-xs text-gray-400">950 كم</p>
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex items-center gap-1.5">
+                    <i class="ti ti-van text-gray-500 text-sm"></i>
+                    <span class="text-gray-700">Toyota HiAce</span>
+                  </div>
+                </td>
+                <td class="px-5 py-4">
+                  <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full">مكتمل</span>
+                </td>
+                <td class="px-5 py-4">
+                  <p class="text-gray-700 text-sm">علي الحربي</p>
+                  <p class="text-xs font-mono text-gray-400">DRV-0061</p>
+                </td>
+                <td class="px-5 py-4"><span class="text-gray-600 text-xs font-mono">26/06/2026</span></td>
+                <td class="px-5 py-4">
+                  <button class="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-gray-50" data-link="order-details.html">تفاصيل</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="px-5 py-4 border-t border-gray-100 flex items-center justify-between">
+            <p class="text-sm text-gray-500">عرض 1–5 من 23 نتيجة</p>
+            <div class="flex items-center gap-2">
+              <select class="border border-gray-200 rounded-lg py-1.5 px-2 text-xs text-gray-600 bg-white">
+                <option>20 لكل صفحة</option>
+                <option>50 لكل صفحة</option>
+                <option>100 لكل صفحة</option>
+              </select>
+              <div class="flex items-center gap-1">
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50">
+                  <i class="ti ti-chevron-right text-sm"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary-600 text-white text-sm font-bold">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">2</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50 text-sm">...</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50">
+                  <i class="ti ti-chevron-left text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', () => { window.location.href = el.dataset.link; });
+    });
+    document.querySelectorAll('tr.table-row').forEach(row => {
+      row.addEventListener('click', (e) => {
+        if(!e.target.closest('button') && !e.target.closest('input')) {
+          window.location.href = 'order-details.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

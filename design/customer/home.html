@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدهام — الرئيسية</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 'arabic': ['IBM Plex Sans Arabic', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#FFF5F5',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#0D0D0D' },
+            amber: { 50:'#FFFBEB',100:'#FEF3C7',400:'#FBBF24',500:'#F59E0B',600:'#D97706' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'IBM Plex Sans Arabic', sans-serif; }
+    .mobile-frame {
+      width: 390px;
+      min-height: 844px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 0 1px #E4E4E7, 0 25px 50px rgba(0,0,0,0.15);
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+    .screen-content {
+      height: 844px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen p-8 flex items-center justify-center font-arabic">
+
+  <div class="mobile-frame">
+    <div class="screen-content">
+
+      <!-- Status Bar -->
+      <div class="bg-primary-900 px-5 pt-3 pb-2 flex items-center justify-between">
+        <span class="text-white text-xs font-semibold">9:41</span>
+        <div class="flex items-center gap-1">
+          <i class="ti ti-wifi text-white text-xs"></i>
+          <i class="ti ti-signal-5g text-white text-xs"></i>
+          <i class="ti ti-battery-3 text-white text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="bg-primary-900 px-5 pb-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-white font-semibold text-base">مرحباً، مصطفى العمري</p>
+            <p class="text-blue-300 text-xs mt-0.5">السبت، 27 يونيو 2026</p>
+          </div>
+          <button class="relative w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+            <i class="ti ti-bell-ringing text-white text-xl"></i>
+            <span class="absolute top-1 left-1 w-4 h-4 bg-red-500 rounded-full text-white text-[9px] flex items-center justify-center font-bold">3</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Order Banner -->
+      <div class="bg-primary-600 px-4 py-3 border-r-4 border-amber-400">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="text-white text-xs font-mono font-semibold">EDH-2026-0142</span>
+            <span class="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">
+              <i class="ti ti-truck text-[10px]"></i> في الطريق
+            </span>
+          </div>
+        </div>
+        <p class="text-blue-100 text-xs mb-2">شاحنتك في الطريق — الوصول خلال ساعتين</p>
+        <div class="flex items-center gap-2">
+          <span class="text-white/70 text-xs">الرياض ← جدة</span>
+          <span class="text-white/40 text-xs">|</span>
+          <span class="text-white/70 text-xs">محمد العتيبي</span>
+          <button class="mr-auto bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-1 rounded-lg border border-white/30 transition-colors" data-link="tracking.html">
+            تتبع الآن
+          </button>
+        </div>
+      </div>
+
+      <!-- Page Background -->
+      <div class="bg-gray-50 px-4 pt-4">
+
+        <!-- New Order Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-4">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="ti ti-package text-primary-600 text-2xl"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-gray-800 text-base">إنشاء طلب شحن جديد</h3>
+              <p class="text-gray-500 text-xs mt-0.5 leading-relaxed">حدد المواقع ونوع البضاعة في خطوات بسيطة</p>
+            </div>
+          </div>
+          <button class="mt-4 w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2" data-link="new-order-1.html">
+            <i class="ti ti-plus text-sm"></i>
+            طلب جديد
+          </button>
+        </div>
+
+        <!-- Active Orders Section -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-semibold text-gray-800 text-sm">الطلبات النشطة (1)</h4>
+            <button class="text-primary-600 text-xs font-medium">عرض الكل</button>
+          </div>
+
+          <!-- Active Order Card -->
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="tracking.html">
+            <div class="border-r-4 border-primary-500 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono text-gray-600 font-semibold">EDH-2026-0142</span>
+                <span class="bg-blue-100 text-blue-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i class="ti ti-truck text-[10px]"></i> في الطريق
+                </span>
+              </div>
+              <div class="flex items-start gap-2 mb-2">
+                <div class="flex flex-col items-center mt-1">
+                  <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                  <div class="w-px h-6 bg-gray-200 my-0.5"></div>
+                  <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-700 font-medium">الرياض — مستودع الملك عبدالله</p>
+                  <p class="text-xs text-gray-700 font-medium mt-2">جدة — المنطقة الصناعية</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 text-xs text-gray-400 pt-2 border-t border-gray-50">
+                <span class="flex items-center gap-1"><i class="ti ti-user text-xs"></i> محمد العتيبي</span>
+                <span class="flex items-center gap-1"><i class="ti ti-clock text-xs"></i> ETA: ساعتان</span>
+                <span class="flex items-center gap-1 text-primary-500 mr-auto font-semibold">
+                  <i class="ti ti-snowflake text-xs"></i> 4.2°C
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-semibold text-gray-800 text-sm">آخر الطلبات</h4>
+            <button class="text-primary-600 text-xs font-medium" data-link="history.html">عرض الكل</button>
+          </div>
+
+          <!-- Order 1 - Completed -->
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="history.html">
+            <div class="border-r-4 border-green-500 p-4">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-mono text-gray-600 font-semibold">EDH-2026-0138</span>
+                <span class="bg-green-100 text-green-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">مكتمل</span>
+              </div>
+              <p class="text-xs text-gray-600">الرياض ← الدمام</p>
+              <div class="flex items-center justify-between mt-2 text-xs text-gray-400">
+                <span>25 يونيو 2026</span>
+                <span class="font-semibold text-gray-700">٨٥٠ ريال</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order 2 - Completed -->
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="history.html">
+            <div class="border-r-4 border-green-500 p-4">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-mono text-gray-600 font-semibold">EDH-2026-0131</span>
+                <span class="bg-green-100 text-green-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">مكتمل</span>
+              </div>
+              <p class="text-xs text-gray-600">الرياض ← جدة</p>
+              <div class="flex items-center justify-between mt-2 text-xs text-gray-400">
+                <span>20 يونيو 2026</span>
+                <span class="font-semibold text-gray-700">٣٩٠٣ ريال</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order 3 - Cancelled -->
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-3 cursor-pointer" data-link="history.html">
+            <div class="border-r-4 border-red-400 p-4">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-mono text-gray-600 font-semibold">EDH-2026-0125</span>
+                <span class="bg-red-100 text-red-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">ملغى</span>
+              </div>
+              <p class="text-xs text-gray-600">الرياض ← المدينة المنورة</p>
+              <div class="flex items-center justify-between mt-2 text-xs text-gray-400">
+                <span>15 يونيو 2026</span>
+                <span class="font-semibold text-gray-400">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg" style="height:64px;">
+      <div class="flex items-stretch h-full">
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-primary-600" data-link="home.html">
+          <i class="ti ti-home text-xl"></i>
+          <span class="text-[10px] font-medium">الرئيسية</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="new-order-1.html">
+          <i class="ti ti-plus text-xl"></i>
+          <span class="text-[10px]">طلب جديد</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="tracking.html">
+          <i class="ti ti-map-pin text-xl"></i>
+          <span class="text-[10px]">تتبع</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400" data-link="history.html">
+          <i class="ti ti-history text-xl"></i>
+          <span class="text-[10px]">طلباتي</span>
+        </button>
+        <button class="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400">
+          <i class="ti ti-user text-xl"></i>
+          <span class="text-[10px]">حسابي</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-link]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = el.dataset.link;
+      });
+    });
+  </script>
+</body>
+</html>
+
