@@ -10,6 +10,9 @@ node_modules/
 !.env.example
 CREDENTIALS.env
 
+# ── Testing credentials (dev-only) ──
+docs/testing/credentials.md
+
 # ── Firebase — Client configs (contain API keys) ──
 **/google-services.json
 **/GoogleService-Info.plist
