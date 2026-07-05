@@ -3,12 +3,12 @@
 import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { api } from '@/lib/api';
+import { api, type Paged } from '@/lib/api';
 import { useQuery } from '@/hooks/use-query';
 import { useRealtime, SOCKET_EVENTS } from '@/lib/realtime';
 import { Card, Spinner, ErrorText, PageHeader, Badge, EmptyState } from '@/components/ui';
 import { orderStatusArabic, vehicleTypeArabic } from '@/lib/labels';
-import type { Order, PaginationMeta } from '@edham/shared-types';
+import type { Order } from '@edham/shared-types';
 
 function LiveIndicator({ connected }: { connected: boolean }): React.ReactElement {
   return (
@@ -23,11 +23,6 @@ function LiveIndicator({ connected }: { connected: boolean }): React.ReactElemen
       {connected ? 'مباشر' : 'غير متصل'}
     </span>
   );
-}
-
-interface OrdersResponse {
-  data: Order[];
-  meta: PaginationMeta;
 }
 
 interface Filter {
@@ -53,8 +48,8 @@ function OrdersContent(): React.ReactElement {
   const current = FILTERS.find((f) => f.key === active) ?? FILTERS[0];
   const statusQuery = current?.status ? `status=${current.status}&` : '';
 
-  const { data, loading, error, refetch } = useQuery<OrdersResponse>(
-    () => api.get<OrdersResponse>(`/orders?${statusQuery}page=1&limit=50`),
+  const { data, loading, error, refetch } = useQuery<Paged<Order>>(
+    () => api.getPaged<Order>(`/orders?${statusQuery}page=1&limit=50`),
     [active],
   );
 

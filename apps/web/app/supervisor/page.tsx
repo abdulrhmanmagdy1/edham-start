@@ -7,7 +7,7 @@ import { useQuery } from '@/hooks/use-query';
 import { useRealtime, SOCKET_EVENTS } from '@/lib/realtime';
 import { Card, Spinner, ErrorText, PageHeader, Badge, EmptyState } from '@/components/ui';
 import { orderStatusArabic } from '@/lib/labels';
-import type { Order, PaginationMeta } from '@edham/shared-types';
+import type { Order } from '@edham/shared-types';
 
 function LiveIndicator({ connected }: { connected: boolean }): React.ReactElement {
   return (
@@ -24,11 +24,6 @@ function LiveIndicator({ connected }: { connected: boolean }): React.ReactElemen
   );
 }
 
-interface OrdersResponse {
-  data: Order[];
-  meta: PaginationMeta;
-}
-
 interface DashboardData {
   pendingPricing: number;
   confirmed: number;
@@ -38,10 +33,10 @@ interface DashboardData {
 
 async function loadDashboard(): Promise<DashboardData> {
   const [pending, confirmed, transit, recent] = await Promise.all([
-    api.get<OrdersResponse>('/orders?status=PENDING_PRICING&page=1&limit=1'),
-    api.get<OrdersResponse>('/orders?status=CUSTOMER_CONFIRMED&page=1&limit=1'),
-    api.get<OrdersResponse>('/orders?status=IN_TRANSIT&page=1&limit=1'),
-    api.get<OrdersResponse>('/orders?page=1&limit=8'),
+    api.getPaged<Order>('/orders?status=PENDING_PRICING&page=1&limit=1'),
+    api.getPaged<Order>('/orders?status=CUSTOMER_CONFIRMED&page=1&limit=1'),
+    api.getPaged<Order>('/orders?status=IN_TRANSIT&page=1&limit=1'),
+    api.getPaged<Order>('/orders?page=1&limit=8'),
   ]);
   return {
     pendingPricing: pending.meta.total,
