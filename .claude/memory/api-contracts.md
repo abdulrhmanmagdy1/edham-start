@@ -151,12 +151,28 @@ DELIVERED        — عميل يُبلَّغ بالتسليم
 
 **الإسناد:** `POST /orders/:id/assign` (SUPERVISOR) — body `{ driverId, vehicleId }`. فقط من CUSTOMER_CONFIRMED. يتحقق: السائق/المركبة متاحان + توافق التبريد (Q9). ينشئ Trip(ASSIGNED) + ينسخ order_stops→trip_stops + driver/vehicle→ON_TRIP + order→ASSIGNED + إشعار TRIP_ASSIGNED للسائق.
 
+**Trips** (`/api/v1/trips`, DRIVER تنفيذ):
+- `GET /` (SUPERVISOR) · `GET /my` (DRIVER) · `GET /:id`.
+- `POST /:id/confirm-loading` (order→LOADING) · `POST /:id/start` (trip IN_PROGRESS، order→IN_TRANSIT).
+- `POST /:id/stops/:stopId/deliver` (+POD؛ آخر محطة→ trip COMPLETED + order COMPLETED + driver/vehicle AVAILABLE).
+- `POST /:id/report-issue` (إشعار المشرفين).
+
+**Cold Chain** (`/api/v1/temperature-logs`): `POST /` (DRIVER، كشف انتهاك+تنبيه) · `GET /trip/:id`.
+**Locations** (`/api/v1/locations`): `POST /` (DRIVER batch offline) · `GET /trip/:id` · `GET /fleet` (SUPERVISOR).
+
+**Socket.io** (`ws://host`, auth: {token} في handshake):
+- غرف: `user:{id}` لكل مستخدم، `supervisors`.
+- Server→Client: `order:status-changed`، `order:price-received`، `driver:location-updated`، `cold-chain:alert`.
+- Client→Server: `driver:location` (DRIVER فقط).
+
+**Invoices** (`/api/v1/invoices`):
+- `POST /` (ACCOUNTANT، من طلب COMPLETED، VAT 15% تلقائي، INV-YYYY-NNNNNN) · `GET /` · `GET /my` (CUSTOMER) · `GET /:id`.
+- `POST /:id/send` (DRAFT→SENT، dueAt=issuedAt+payment_terms) · `POST /:id/mark-paid` (→PAID).
+
 ### ✅ مُتحقَّق E2E على PostgreSQL 16.4 حقيقي (port 5433)
-- فلو التسعير 21/21 · الإسناد + قاعدة التبريد 19/19. سكربتات: `apps/api/scripts/e2e-*.mjs`.
+تسعير 21/21 · إسناد 19/19 · رحلة+socket 21/21 · فوترة 17/17. سكربتات: `apps/api/scripts/e2e-*.mjs`.
 
-### stubs / مؤجَّل
+### stubs / مؤجَّل (Phase 4-5)
 - Unifonic SMS + SendGrid Email + FCM — stubs تسجّل في اللوج (المفاتيح فارغة).
-- Refresh store in-memory (يُستبدَل بـ Redis في Phase 4).
-
-### لم يُبنَ بعد (Phase 1 متبقٍّ)
-- Socket.io GPS (locations/tracking) + Trips endpoints للسائق + Invoices.
+- Refresh store + Socket.io adapter in-memory (→ Redis للـ multi-instance).
+- ZATCA فعلي (حقول zatca_* جاهزة) + PDF عبر MinIO.

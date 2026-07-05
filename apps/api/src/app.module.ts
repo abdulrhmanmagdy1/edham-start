@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ColdChainModule } from './modules/cold-chain/cold-chain.module';
 import { DriversModule } from './modules/drivers/drivers.module';
 import { HealthModule } from './modules/health/health.module';
+import { InvoicesModule } from './modules/invoices/invoices.module';
 import { LocationsModule } from './modules/locations/locations.module';
 import { MessagingModule } from './modules/messaging/messaging.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
@@ -37,6 +38,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     TripsModule,
     ColdChainModule,
     LocationsModule,
+    InvoicesModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

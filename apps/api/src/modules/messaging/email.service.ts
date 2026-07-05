@@ -32,4 +32,19 @@ export class EmailService {
     // TODO(Phase 4): تكامل SendGrid الفعلي + قالب HTML عربي + أزرار قبول/رفض.
     this.logger.log(`📧 إرسال بريد التسعير إلى ${input.to} — ${summary}`);
   }
+
+  async sendInvoiceEmail(input: {
+    to: string;
+    invoiceNumber: string;
+    totalAmount: number;
+    currency: string;
+  }): Promise<void> {
+    const summary = `فاتورة ${input.invoiceNumber}: ${input.totalAmount} ${input.currency}`;
+    if (!this.isConfigured) {
+      this.logger.warn(`📭 SendGrid غير مُهيّأ — فاتورة إلى ${input.to} — ${summary} (تطوير)`);
+      return;
+    }
+    // TODO(Phase 4-5): إرفاق PDF ضريبي متوافق ZATCA.
+    this.logger.log(`📧 إرسال فاتورة إلى ${input.to} — ${summary}`);
+  }
 }

@@ -4,8 +4,8 @@
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 1 (Core Backend) — قيد التنفيذ (متبقٍّ: Socket.io + Invoices)
-- **الاكتمال العام:** ~30% (Phase 0 ≈ 90% بعد DB · Phase 1 ≈ 75%)
+- **Phase الحالية:** Phase 1 (Core Backend) — ✅ شبه مكتملة (المتبقي: FCM/SMS فعلي + Redis + ZATCA فعلي)
+- **الاكتمال العام:** ~38% (Phase 0 ≈ 90% · Phase 1 ≈ 92%)
 
 ---
 
@@ -46,15 +46,28 @@
 - [x] Drivers (list/get/status) + إنشاء عبر POST /users
 - [x] Assignment logic — POST /orders/:id/assign (Trip + نسخ stops + Q9 + إشعار السائق)
 
-### Real-time
-- [ ] Socket.io setup / GPS broadcast / status updates
+### Trips (تنفيذ الرحلة) ✅ (E2E)
+- [x] GET /trips /my /:id + confirm-loading/start/deliver-stop/report-issue
+- [x] Trip state machine + مزامنة حالة الطلب + تسليم متعدد المحطات + POD
+
+### Real-time ✅ (E2E — socket فعلي)
+- [x] Socket.io Gateway (JWT auth + غرف) — order:status-changed / price-received / driver:location / cold-chain:alert
+- [x] GPS: POST /locations (batch) + /trip/:id + /fleet
+- [ ] (فعلي prod: Redis adapter لـ multi-instance — Phase 4)
+
+### Cold Chain ✅ (E2E)
+- [x] POST /temperature-logs + كشف الانتهاك + تنبيه + /trip/:id
+
+### Invoices ✅ (E2E)
+- [x] create (VAT 15%) / list / my / get / send (dueAt=+terms) / mark-paid
+- [x] رقم فاتورة تسلسلي INV-YYYY-NNNNNN | حقول ZATCA جاهزة (تكامل فعلي Phase 5)
 
 ### Notifications
-- [x] Email (pricing) — SendGrid stub | [x] In-app notifications (جدول)
+- [x] Email (pricing/invoice) — SendGrid stub | [x] In-app notifications (جدول)
 - [ ] FCM push | [ ] SMS alerts (فعلي — ينتظر مفاتيح)
 
-**Quality Gate:** ✅ 16 unit tests + **E2E حقيقي على PostgreSQL 16.4**: فلو التسعير 21/21، الإسناد 19/19.
-DB محلية على port 5433 (Postgres محمول — BLK-001 تم تجاوزه).
+**Quality Gate:** ✅ 24 unit tests + **E2E حقيقي على PostgreSQL 16.4**:
+تسعير 21/21 · إسناد 19/19 · رحلة+socket 21/21 · فوترة 17/17. DB على port 5433.
 
 ---
 
@@ -150,3 +163,5 @@ DB محلية على port 5433 (Postgres محمول — BLK-001 تم تجاوز�
 | 2026-07-05 | Phase 1 (Auth+Orders+Pricing) | order_stops + Auth كامل + RBAC + Orders + فلو التسعير. build ✅ boot ✅ 13 unit tests ✅. E2E ينتظر DB |
 | 2026-07-05 | DB حقيقية (Postgres محمول 5433) | migrate 17 جدول + seed. **E2E التسعير 21/21 ✅** على DB فعلية |
 | 2026-07-05 | Phase 1 (Vehicles+Drivers+Assign) | Vehicles/Drivers + الإسناد + قاعدة التبريد Q9. 16 unit ✅ + **E2E الإسناد 19/19 ✅** |
+| 2026-07-05 | Phase 1 (Trips+Socket.io+ColdChain+GPS) | تنفيذ الرحلة + Socket.io حي + حرارة + GPS. **E2E 21/21 ✅** (socket فعلي) |
+| 2026-07-05 | Phase 1 (Invoices) | فوترة VAT 15% + send + mark-paid. **E2E 17/17 ✅**. Phase 1 ≈ 92% |

@@ -59,7 +59,7 @@ DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → LOA
 
 ## حالة المشروع
 - Phase 0 (Bootstrap): ✅ مكتمل جزئياً (2026-07-05) — Monorepo + Backend + Web + shared-types + scaffolds. المتبقي (migrate + flutter build + docker up) محجوب بـ Docker/Flutter غير المثبّتين.
-- Phase 1 (Backend): 🔵 قيد التنفيذ (~75%، 2026-07-05) — Auth+RBAC + Orders + فلو التسعير + Vehicles/Drivers + الإسناد (Q9). **مُتحقَّق E2E على PostgreSQL حقيقي**: تسعير 21/21، إسناد 19/19 + 16 unit. المتبقي: Socket.io GPS + Trips (تنفيذ الرحلة) + Invoices.
+- Phase 1 (Backend): 🟢 ~92% (2026-07-05) — Auth+RBAC + Orders + التسعير + Vehicles/Drivers + الإسناد + Trips + Socket.io + Cold Chain + GPS + Invoices. **مُتحقَّق E2E على PostgreSQL حقيقي**: تسعير 21/21، إسناد 19/19، رحلة+socket 21/21، فوترة 17/17 + 24 unit. المتبقي: FCM/SMS/ZATCA فعلي + Redis (Phase 4-5).
 - Phase 2 (Mobile Flutter): لم يبدأ
 - Phase 3 (Web Application): لم يبدأ
 - Phase 4 (Integration): لم يبدأ
