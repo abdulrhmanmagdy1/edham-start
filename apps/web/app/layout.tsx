@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans_Arabic } from 'next/font/google';
 import './globals.css';
+import { Providers } from './providers';
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   subsets: ['arabic', 'latin'],
@@ -21,7 +22,9 @@ export default function RootLayout({
 }>): React.ReactElement {
   return (
     <html lang="ar" dir="rtl" className={ibmPlexArabic.variable}>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

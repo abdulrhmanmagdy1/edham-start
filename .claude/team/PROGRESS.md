@@ -4,9 +4,9 @@
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 2 (Flutter) — 🟢 الأدوار الخمسة مكتملة (dart analyze نظيف)
-- **الاكتمال العام:** ~55% (Phase 0 ≈ 90% · Phase 1 ≈ 92% · Phase 2 ≈ 80%)
-- المتبقي في Phase 2: build APK فعلي (Android SDK) + منتقي خريطة + image_picker + Socket.io client الحي + تلميع UI حسب التصاميم.
+- **Phase الحالية:** Phase 3 (Web) — 🟢 الأدوار الخمسة مكتملة (next build ✅) + Firebase مربوط
+- **الاكتمال العام:** ~68% (Phase 0 ≈ 90% · Phase 1 ≈ 92% · Phase 2 ≈ 82% · Phase 3 ≈ 80%)
+- المتبقي (Phase 2+3): Socket.io client حي + منتقي خريطة + build APK + تلميع UI + شاشات ثانوية.
 
 ---
 
@@ -110,34 +110,28 @@
 
 ---
 
-## Phase 3: Web Application — الـ 5 أدوار
-### Customer Web Pages
-- [ ] Login page
-- [ ] Order creation wizard
-- [ ] Tracking page
-- [ ] History + Invoice
+## Phase 3: Web Application — الـ 5 أدوار  ← 🟢 الأدوار الخمسة مكتملة (next build ✅)
+### الأساس (Foundation) ✅
+- [x] API client (fetch + تجديد توكن 401) + auth/session (localStorage) + login (OTP+password+اختيار الدور)
+- [x] DashboardShell (sidebar RTL + حارس دور) + UI kit + useQuery hook + LiveMap (Google Maps) + layouts الأدوار
 
-### Driver Web Pages
-- [ ] Login page
-- [ ] Trip list + active trip
-- [ ] Delivery confirmation
+### Customer ✅
+- [x] طلباتي + إنشاء طلب (بلا سعر) + تفاصيل/قبول-رفض السعر + تتبع (خريطة) + فواتير
 
-### Supervisor Web Pages
-- [ ] Dashboard + KPIs
-- [ ] Orders management
-- [ ] Order details + pricing
-- [ ] Live map
-- [ ] Fleet + Drivers + Vehicles
-- [ ] Users management
-- [ ] Reports + Cold chain
+### Driver ✅
+- [x] رحلاتي + تفاصيل الرحلة (confirm-loading/start/deliver stops + حرارة + بلاغ)
 
-### Accountant Web Pages
-- [ ] Dashboard + Invoices + Payments
+### Supervisor ✅
+- [x] لوحة KPIs + إدارة الطلبات + تفاصيل (تسعير + إسناد) + خريطة حية + الأسطول + السائقون
 
-### Workshop Web Pages
-- [ ] Maintenance + Schedule
+### Accountant ✅
+- [x] الفواتير + جاهزة للفوترة (إنشاء) + تفاصيل (إرسال + تسجيل دفع)
 
-**Quality Gate:** كل الـ 5 أدوار تعمل على Chrome ← لا
+### Workshop ✅
+- [x] طلبات الصيانة + إنشاء + تفاصيل (تغيير الحالة + تكلفة)
+
+**Quality Gate:** ✅ `next build` (18 route) + `tsc` صارم نظيف + `/login` يُخدَّم RTL عربي فعلياً.
+المتبقي: Socket.io client الحي + منتقي خريطة + تلميع UI حسب mockups + Users management + Reports/Cold-chain screens.
 
 ---
 
@@ -169,3 +163,5 @@
 | 2026-07-05 | Phase 1 (Trips+Socket.io+ColdChain+GPS) | تنفيذ الرحلة + Socket.io حي + حرارة + GPS. **E2E 21/21 ✅** (socket فعلي) |
 | 2026-07-05 | Phase 1 (Invoices) | فوترة VAT 15% + send + mark-paid. **E2E 17/17 ✅**. Phase 1 ≈ 92% |
 | 2026-07-05 | Phase 2 Flutter (الأدوار 5) | عميل (تتبع/خريطة/سجل/فاتورة) + سائق (GPS/رحلة/POD/حرارة/offline) + مشرف (تسعير/إسناد/خريطة) + محاسب + ورشة + FCM scaffolding. **dart analyze نظيف (48 ملف)**. + Backend: Maintenance module (E2E 10/10) + track + trip stops |
+| 2026-07-05 | Firebase + Maps integration | flutter create (android/ios) + Firebase configs + Admin SDK حقيقي (FCM push) + device-token + Maps keys. أسرار مؤمّنة (gitignore). commit a0bbe65 |
+| 2026-07-05 | Phase 3 Web (الأدوار 5) | Next.js 14: أساس (api/auth/shell/map) + الأدوار الخمسة. **next build 18 route ✅** + tsc صارم نظيف + /login RTL مُتحقَّق |
