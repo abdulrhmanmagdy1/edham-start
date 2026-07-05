@@ -4,8 +4,8 @@
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 1 (Core Backend) — ✅ شبه مكتملة (المتبقي: FCM/SMS فعلي + Redis + ZATCA فعلي)
-- **الاكتمال العام:** ~38% (Phase 0 ≈ 90% · Phase 1 ≈ 92%)
+- **Phase الحالية:** Phase 2 (Flutter) — 🔵 بدأت (الأساس + دور العميل)
+- **الاكتمال العام:** ~42% (Phase 0 ≈ 90% · Phase 1 ≈ 92% · Phase 2 ≈ 15%)
 
 ---
 
@@ -71,15 +71,19 @@
 
 ---
 
-## Phase 2: Flutter App — الـ 5 أدوار
-### Customer Screens
-- [ ] Login (OTP)
-- [ ] Order creation (4 خطوات)
-- [ ] Order summary (بدون سعر)
-- [ ] Pending pricing screen
-- [ ] Price acceptance/rejection
-- [ ] Live GPS tracking
-- [ ] Order history + Invoice
+## Phase 2: Flutter App — الـ 5 أدوار  ← 🔵 بدأت (2026-07-05)
+### الأساس (Foundation) ✅ — `dart analyze` نظيف
+- [x] Theme (أسود/أحمر RTL) + go_router (redirect حسب الدور) + Dio ApiClient (refresh على 401)
+- [x] Hive TokenStorage + Riverpod (auth + orders) + models (enums/user/order)
+
+### Customer Screens ✅ (dart analyze نظيف — build APK يحتاج Android SDK)
+- [x] Login (OTP للعميل + password للموظفين + اختيار الدور)
+- [x] Home (قائمة طلباتي + حالات ملوّنة + pull-to-refresh)
+- [x] Order creation (نموذج: استلام/تسليم/بضاعة/تبريد/وزن/موعد — بلا سعر)
+- [x] Order detail + Price acceptance/rejection (فلو PRE-001 من جانب العميل)
+- [ ] Live GPS tracking (خريطة) — TODO (يحتاج Google Maps widget)
+- [ ] Order history + Invoice — TODO
+- [ ] منتقي خريطة للإحداثيات (حالياً إحداثيات ثابتة)
 
 ### Driver Screens
 - [ ] Login (Employee ID + Password)

@@ -17,11 +17,21 @@
 **ملاحظة:** docker-compose.yml (port 5432) يبقى للمرجع/الإنتاج؛ التطوير الحالي على 5433.
 
 ## [BLK-002] Flutter SDK غير مثبّت
-**الحالة:** 🟡 مفتوح (غير مانع لـ Phase 0)
+**الحالة:** 🟡 مفتوح — يؤثر على verification في Phase 2
 **التاريخ:** 2026-07-05
 **الوصف:** Flutter غير مثبّت، فلا يمكن `flutter pub get` / `flutter build apk` / `flutter analyze`.
-**الأثر:** التحقق من `apps/mobile` مؤجَّل. الملفات مكتوبة (pubspec.yaml + main.dart + هيكل features) لكن غير مُبنيّة.
-**الحل المقترح:** تثبيت Flutter SDK (channel stable) قبل Phase 2.
+**الأثر:** كود Flutter يُكتب، لكن التحقق (analyze/build) مؤجَّل. `build apk` يحتاج أيضاً Android SDK + JDK (ثقيل).
+**الحل المُطبَّق جزئياً (2026-07-05):** نُزّل Flutter SDK 3.24.5 المحمول في `scratchpad/flsdk/flutter`.
+- ✅ `dart analyze` يعمل (استخدمناه — كود العميل نظيف). شغّله بـ: `scratchpad/flsdk/flutter/bin/dart analyze lib` من apps/mobile.
+- ⚠️ `flutter analyze` يتعطّل (Windows MAX_PATH داخل مسارات SDK الطويلة في scratchpad) — استخدم `dart analyze` بدلاً منه.
+- ❌ `flutter build apk` يحتاج Android SDK + JDK (غير مثبّتين) — مؤجَّل.
+**تذكير:** SDK في scratchpad (مؤقت). لو أُفرغ، أعد التنزيل/الاستخراج.
+
+## [BLK-006] بنود Phase 1 المتبقية (تذكير للمستخدم في Phase 4)
+**الحالة:** 🟡 مؤجَّل عمداً — راجع [deferred-items.md](deferred-items.md)
+**التاريخ:** 2026-07-05
+**البنود:** FCM Push + SMS (Unifonic) + Email (SendGrid) الفعلي + ZATCA e-invoicing + PDF عبر MinIO + Redis (refresh store + Socket.io adapter + BullMQ). كلها stubs/in-memory حالياً وتحتاج مفاتيح/بنية إنتاج.
+**🔔 التزام:** أعرض هذه على المستخدم تلقائياً عند بداية Phase 4.
 
 ## [BLK-003] DATABASE_URL / REDIS_URL فارغان في CREDENTIALS.env
 **الحالة:** 🟡 مفتوح

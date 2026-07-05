@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
-  runApp(const ProviderScope(child: EdhamApp()));
+import 'core/storage/token_storage.dart';
+import 'core/theme/app_theme.dart';
+import 'features/auth/providers/auth_providers.dart';
+import 'routing/app_router.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  final TokenStorage storage = await TokenStorage.open();
+
+  runApp(
+    ProviderScope(
+      overrides: <Override>[tokenStorageProvider.overrideWithValue(storage)],
+      child: const EdhamApp(),
+    ),
+  );
 }
 
-/// ألوان هوية إدهام للوجستيات.
-class EdhamColors {
-  const EdhamColors._();
-
-  static const Color primary = Color(0xFF0D0D0D);
-  static const Color accent = Color(0xFFDC2626);
-}
-
-class EdhamApp extends StatelessWidget {
+class EdhamApp extends ConsumerWidget {
   const EdhamApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
       title: 'إدهام للوجستيات',
       debugShowCheckedModeBanner: false,
-      // دعم العربية والاتجاه من اليمين لليسار (RTL).
+      theme: AppTheme.light,
       locale: const Locale('ar'),
       supportedLocales: const <Locale>[Locale('ar')],
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
@@ -30,62 +38,9 @@ class EdhamApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: EdhamColors.accent,
-          primary: EdhamColors.primary,
-          secondary: EdhamColors.accent,
-        ),
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: EdhamColors.primary,
-          foregroundColor: Colors.white,
-          centerTitle: true,
-        ),
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // فرض اتجاه RTL لكامل الشاشة.
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(title: const Text('إدهام للوجستيات')),
-        body: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.local_shipping,
-                size: 72,
-                color: EdhamColors.accent,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'إدهام للوجستيات',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: EdhamColors.primary,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'منصة الشحن المبرّد والتتبع الحي',
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
-          ),
-        ),
-      ),
+      routerConfig: router,
+      builder: (BuildContext context, Widget? child) =>
+          Directionality(textDirection: TextDirection.rtl, child: child ?? const SizedBox.shrink()),
     );
   }
 }
