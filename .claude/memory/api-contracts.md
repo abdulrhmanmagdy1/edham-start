@@ -112,4 +112,42 @@ DELIVERED        — عميل يُبلَّغ بالتسليم
 ```
 
 ---
-*[يُكمَّل هذا الملف بواسطة Backend Agent في Phase 1]*
+
+## ✅ حالة التنفيذ — Phase 1 (2026-07-05)
+
+### مُنفَّذ فعلياً (build + boot + unit tests ✅)
+**Auth** (`/api/v1/auth`):
+- `POST /send-otp` — CUSTOMER. ينشئ حساب shell للرقم الجديد، OTP 6 أرقام صلاحية 10د، rate-limit 5/ساعة.
+- `POST /verify-otp` — تحقق + إصدار توكنات (rate-limit 10/ساعة).
+- `POST /login` — موظفون (email أو employeeId + password، bcrypt، rate-limit 20/15د).
+- `POST /refresh` — تجديد access (مع rotation للـ refresh).
+- `POST /logout` — إبطال refresh (JwtAuthGuard).
+- `GET /me` — بيانات المستخدم (JwtAuthGuard).
+
+**JWT TTL (TECH §5.1):** Access 1h سائق / 15m البقية. Refresh 30d سائق+عميل / 8h البقية.
+**RBAC:** `JwtAuthGuard` + `RolesGuard` + `@Roles(...)` + `@CurrentUser()`.
+
+**Users** (`/api/v1/users`):
+- `POST /` — SUPERVISOR ينشئ موظفاً (DRIVER ينشئ Driver profile تلقائياً).
+
+**Orders** (`/api/v1/orders`):
+- `POST /` — CUSTOMER. ينشئ طلباً + order_stops، status = PENDING_PRICING. delivery_* = آخر محطة.
+- `GET /` — SUPERVISOR,ACCOUNTANT (pagination + فلاتر: status/customerId/vehicleType/temperatureType/from/to).
+- `GET /my` — CUSTOMER.
+- `GET /:id` — SUPERVISOR,ACCOUNTANT,CUSTOMER(مالك),DRIVER(مُسنَد) — resource auth.
+- `PATCH /:id/status` — SUPERVISOR (يُتحقَّق بآلة الحالة).
+
+**فلو التسعير (PRE-001):**
+- `PATCH /:id/set-price` — SUPERVISOR. PENDING_PRICING→PRICED فقط + email + إشعار PRICE_SENT.
+- `POST /:id/accept-price` — CUSTOMER(مالك). PRICED→CUSTOMER_CONFIRMED + إشعار المشرفين.
+- `POST /:id/reject-price` — CUSTOMER(مالك). PRICED→CANCELLED + إشعار المشرفين.
+
+**آلة حالة الطلب:** DRAFT→PENDING_PRICING→PRICED→CUSTOMER_CONFIRMED→ASSIGNED→LOADING→IN_TRANSIT→DELIVERED→COMPLETED؛ إلغاء حتى LOADING؛ لا إلغاء بعد IN_TRANSIT.
+
+### مؤجَّل (يحتاج DB حيّة — BLK-001)
+- تشغيل الفلو end-to-end فعلياً (create/accept/reject) — الكود جاهز، ينتظر Postgres.
+- Unifonic SMS + SendGrid Email + FCM — stubs تسجّل في اللوج (المفاتيح فارغة).
+- Refresh store حالياً in-memory (يُستبدَل بـ Redis في Phase 4).
+
+### لم يُبنَ بعد (Phase 1 متبقٍّ / Phase لاحقة)
+- Drivers/Vehicles CRUD + الإسناد (assign) + Socket.io GPS + Invoices.

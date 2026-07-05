@@ -4,8 +4,8 @@
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 0 — ✅ مكتمل جزئياً (المتبقي محجوب بـ Docker/Flutter)
-- **الاكتمال العام:** ~12% (Phase 0 ≈ 80%)
+- **Phase الحالية:** Phase 1 (Core Backend) — قيد التنفيذ
+- **الاكتمال العام:** ~22% (Phase 0 ≈ 80% · Phase 1 ≈ 55%)
 
 ---
 
@@ -26,34 +26,33 @@
 
 ---
 
-## Phase 1: Core Backend API
-### Auth
-- [ ] SMS OTP (Unifonic)
-- [ ] JWT tokens
-- [ ] RBAC (6 roles)
+## Phase 1: Core Backend API  ← قيد التنفيذ (~55%)
+### Auth  ✅ (كود مبني + boot + tests؛ E2E ينتظر DB)
+- [x] SMS OTP (send/verify) — Unifonic stub (مفتاح فارغ → يسجّل باللوج)
+- [x] JWT tokens (access+refresh، TTL حسب الدور، rotation، logout)
+- [x] RBAC (5 roles) — JwtAuthGuard + RolesGuard + @Roles + @CurrentUser
+- [x] POST /users (SUPERVISOR ينشئ موظفاً)
 
-### Orders
-- [ ] Create order
-- [ ] Order status machine
-- [ ] PATCH /set-price (Supervisor)
-- [ ] POST /accept-price (Customer)
-- [ ] POST /reject-price (Customer)
+### Orders  ✅ (كود مبني + tests؛ E2E ينتظر DB)
+- [x] Create order (+ order_stops، PENDING_PRICING)
+- [x] Order status machine (13 unit test ✅)
+- [x] PATCH /set-price (Supervisor) — PENDING_PRICING→PRICED + email
+- [x] POST /accept-price (Customer) — →CUSTOMER_CONFIRMED
+- [x] POST /reject-price (Customer) — →CANCELLED
+- [x] GET / (فلاتر+pagination) + GET /my + GET /:id (resource auth) + PATCH /:id/status
 
 ### Drivers & Vehicles
 - [ ] CRUD endpoints
-- [ ] Assignment logic
+- [ ] Assignment logic (assign بعد CUSTOMER_CONFIRMED)
 
 ### Real-time
-- [ ] Socket.io setup
-- [ ] GPS broadcast
-- [ ] Order status updates
+- [ ] Socket.io setup / GPS broadcast / status updates
 
 ### Notifications
-- [ ] FCM push
-- [ ] Email (pricing)
-- [ ] SMS alerts
+- [x] Email (pricing) — SendGrid stub | [x] In-app notifications (جدول)
+- [ ] FCM push | [ ] SMS alerts (فعلي — ينتظر مفاتيح)
 
-**Quality Gate:** جميع الـ tests تمر ← لا
+**Quality Gate:** unit tests تمر ✅ (13/13). E2E عبر DB ← مؤجَّل (BLK-001)
 
 ---
 
@@ -145,3 +144,5 @@
 |---------|--------|---------|
 | — | بداية المشروع | الوثائق جاهزة ✅ |
 | 2026-07-05 | Phase 0 Bootstrap | Monorepo + Backend + Web + shared-types + DevOps/Flutter scaffold. API build+boot+health ✅، Prisma valid ✅، Web build RTL ✅. المتبقي محجوب بـ Docker/Flutter |
+| 2026-07-05 | أمان | معالجة تسريب CREDENTIALS.env: تطهير التاريخ + force push (origin نظيف). تدوير المفاتيح على المستخدم |
+| 2026-07-05 | Phase 1 (Auth+Orders+Pricing) | order_stops + Auth كامل + RBAC + Orders + فلو التسعير. build ✅ boot ✅ 13 unit tests ✅. E2E ينتظر DB |

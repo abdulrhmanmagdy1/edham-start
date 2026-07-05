@@ -59,7 +59,7 @@ DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → LOA
 
 ## حالة المشروع
 - Phase 0 (Bootstrap): ✅ مكتمل جزئياً (2026-07-05) — Monorepo + Backend + Web + shared-types + scaffolds. المتبقي (migrate + flutter build + docker up) محجوب بـ Docker/Flutter غير المثبّتين.
-- Phase 1 (Backend): لم يبدأ
+- Phase 1 (Backend): 🔵 قيد التنفيذ (2026-07-05) — Auth (OTP+login+JWT+RBAC) + Orders + فلو التسعير (PRE-001) مبنية ومختبَرة (13 unit). المتبقي: Drivers/Vehicles + الإسناد + Socket.io + Invoices. E2E ينتظر DB.
 - Phase 2 (Mobile Flutter): لم يبدأ
 - Phase 3 (Web Application): لم يبدأ
 - Phase 4 (Integration): لم يبدأ

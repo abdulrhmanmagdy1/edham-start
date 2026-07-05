@@ -263,7 +263,8 @@ model Order {
   updatedAt           DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt           DateTime?        @map("deleted_at") @db.Timestamptz(6)
 
-  customer Customer @relation(fields: [customerId], references: [id])
+  customer Customer    @relation(fields: [customerId], references: [id])
+  stops    OrderStop[]
   trip     Trip?
   invoice  Invoice?
 
@@ -272,6 +273,27 @@ model Order {
   @@index([scheduledAt])
   @@index([status, createdAt(sort: Desc)])
   @@map("orders")
+}
+
+// محطات الطلب وقت الإنشاء (Multi-Stop — SPEC A29). تُنسخ إلى trip_stops عند الإسناد.
+model OrderStop {
+  id               String    @id @default(uuid()) @db.Uuid
+  orderId          String    @map("order_id") @db.Uuid
+  sequenceNumber   Int       @map("sequence_number")
+  address          String    @db.Text
+  city             String?   @db.VarChar(100)
+  latitude         Decimal?  @db.Decimal(10, 8)
+  longitude        Decimal?  @db.Decimal(11, 8)
+  contactName      String?   @map("contact_name") @db.VarChar(255)
+  contactPhone     String?   @map("contact_phone") @db.VarChar(20)
+  scheduledArrival DateTime? @map("scheduled_arrival") @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@unique([orderId, sequenceNumber])
+  @@index([orderId])
+  @@map("order_stops")
 }
 
 model Trip {
