@@ -47,6 +47,10 @@ describe('OrdersService — فلو التسعير (PRE-001)', () => {
   let prisma: MockPrisma;
   let notifications: { notify: jest.Mock };
   let email: { sendPricingEmail: jest.Mock };
+  let realtime: {
+    emitPriceReceived: jest.Mock;
+    emitOrderStatusChanged: jest.Mock;
+  };
   let service: OrdersService;
 
   beforeEach(() => {
@@ -56,10 +60,12 @@ describe('OrdersService — فلو التسعير (PRE-001)', () => {
     };
     notifications = { notify: jest.fn().mockResolvedValue(undefined) };
     email = { sendPricingEmail: jest.fn().mockResolvedValue(undefined) };
+    realtime = { emitPriceReceived: jest.fn(), emitOrderStatusChanged: jest.fn() };
     service = new OrdersService(
       prisma as never,
       notifications as never,
       email as never,
+      realtime as never,
     );
   });
 

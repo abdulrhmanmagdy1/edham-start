@@ -22,6 +22,7 @@ import { AuthenticatedUser } from '../../common/auth/auth.types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { EmailService } from '../messaging/email.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { RealtimeGateway } from '../realtime/realtime.gateway';
 import { isTemperatureCompatible } from '../vehicles/temperature-match';
 import { AssignOrderDto } from './dto/assign.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -41,6 +42,7 @@ export class OrdersService {
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
     private readonly email: EmailService,
+    private readonly realtime: RealtimeGateway,
   ) {}
 
   // ── إنشاء الطلب (CUSTOMER) → PENDING_PRICING ──
@@ -201,6 +203,8 @@ export class OrdersService {
       referenceType: 'ORDER',
       referenceId: updated.id,
     });
+    this.realtime.emitPriceReceived(updated.customer.userId, updated.id, dto.quotedPrice);
+    this.realtime.emitOrderStatusChanged(updated.customer.userId, updated.id, OrderStatus.PRICED);
 
     return OrdersService.toDto(updated);
   }
@@ -220,6 +224,7 @@ export class OrdersService {
       `تم قبول سعر الطلب ${updated.id} — جاهز للإسناد`,
       updated.id,
     );
+    this.realtime.emitOrderStatusChanged(user.sub, updated.id, OrderStatus.CUSTOMER_CONFIRMED);
     return OrdersService.toDto(updated);
   }
 
@@ -238,6 +243,7 @@ export class OrdersService {
       `تم رفض سعر الطلب ${updated.id} — أُلغي الطلب`,
       updated.id,
     );
+    this.realtime.emitOrderStatusChanged(user.sub, updated.id, OrderStatus.CANCELLED);
     return OrdersService.toDto(updated);
   }
 
@@ -268,7 +274,7 @@ export class OrdersService {
   async assign(id: string, dto: AssignOrderDto, _user: AuthenticatedUser): Promise<OrderDto> {
     const order = await this.prisma.order.findFirst({
       where: { id, deletedAt: null },
-      include: { stops: { orderBy: { sequenceNumber: 'asc' } } },
+      include: { stops: { orderBy: { sequenceNumber: 'asc' } }, customer: true },
     });
     if (!order) throw new NotFoundException({ code: 'ORDER_NOT_FOUND', message: 'الطلب غير موجود' });
     this.assertTransition(order.status as OrderStatus, OrderStatus.ASSIGNED);
@@ -338,6 +344,7 @@ export class OrdersService {
       referenceType: 'ORDER',
       referenceId: order.id,
     });
+    this.realtime.emitOrderStatusChanged(order.customer.userId, order.id, OrderStatus.ASSIGNED);
 
     return OrdersService.toDto(updated);
   }
