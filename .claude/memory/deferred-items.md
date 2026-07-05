@@ -18,7 +18,7 @@
 > 🔔 **ذكّر المستخدم بهذه تحديداً عند بداية Phase 4:**
 | البند | الحالة الحالية | متى يُنفَّذ |
 |------|----------------|-----------|
-| **FCM Push (فعلي)** | stub يسجّل باللوج | Phase 4 (يحتاج FIREBASE_SERVER_KEY صالح) |
+| **FCM Push (فعلي)** | ✅ Firebase Admin مربوط (2026-07-05) — يرسل push حقيقي عبر service account. متبقٍّ: تخزين device tokens في DB/Redis (حالياً in-memory) + اختبار على جهاز | Phase 4 |
 | **SMS Unifonic (فعلي)** | stub يسجّل باللوج | Phase 4 (يحتاج UNIFONIC_API_KEY — فارغ) |
 | **Email SendGrid (فعلي)** | stub يسجّل باللوج | Phase 4 (يحتاج SENDGRID_API_KEY — فارغ) |
 | **ZATCA e-invoicing (فعلي)** | حقول zatca_* جاهزة، لا تكامل | Phase 5 (يحتاج ZATCA onboarding) |

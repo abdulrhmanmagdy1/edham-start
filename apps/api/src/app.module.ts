@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { FirebaseModule } from './firebase/firebase.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ColdChainModule } from './modules/cold-chain/cold-chain.module';
 import { DriversModule } from './modules/drivers/drivers.module';
@@ -27,6 +28,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     // Rate limiting افتراضي عام (TECH.md §5.4) — 100 طلب/دقيقة
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 100 }]),
     PrismaModule,
+    FirebaseModule,
     MessagingModule,
     NotificationsModule,
     RealtimeModule,

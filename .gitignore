@@ -4,9 +4,27 @@ node_modules/
 
 # ── Env & Secrets ──
 .env
+.env.local
+.env.*.local
 .env.*
 !.env.example
 CREDENTIALS.env
+
+# ── Firebase — Client configs (contain API keys) ──
+**/google-services.json
+**/GoogleService-Info.plist
+apps/mobile/lib/firebase_options.dart
+
+# ── Firebase — Admin SDK (HIGHLY SENSITIVE — full backend access) ──
+**/firebase-adminsdk-*.json
+**/*firebase-adminsdk-*.json
+**/*service-account*.json
+apps/api/firebase-service-account.json
+
+# ── Android signing ──
+apps/mobile/android/key.properties
+apps/mobile/android/app/*.keystore
+apps/mobile/android/app/*.jks
 
 # ── Build outputs ──
 dist/
