@@ -4,9 +4,10 @@
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 3 (Web) — 🟢 الأدوار الخمسة مكتملة (next build ✅) + Firebase مربوط
-- **الاكتمال العام:** ~68% (Phase 0 ≈ 90% · Phase 1 ≈ 92% · Phase 2 ≈ 82% · Phase 3 ≈ 80%)
-- المتبقي (Phase 2+3): Socket.io client حي + منتقي خريطة + build APK + تلميع UI + شاشات ثانوية.
+- **الحالية:** Stage 1 (Backend Production + Web Completion + Testing) — 🟢 مكتمل، full stack يعمل locally
+- **الاكتمال العام:** ~78% (Backend ~96% · Web ~92% · Mobile ~80%)
+- **Stage 1 (2026-07-05):** Docker (pg+redis) · Redis (device-tokens/refresh/rate-limit) · SMS/Email providers (mock+scaffold) · ZATCA scaffold · Socket.io web حي · MapPicker · شاشات المشرف (users/vehicles/reports/cold-chain) · seed واقعي (20 طلب/14 فاتورة) · testing guide. المنافذ: API:3001 / Web:3000.
+- **التالي (Stage 2 — لم يبدأ):** GitHub + Mobile build (Android SDK) + Deployment.
 
 ---
 
