@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { createHash } from 'node:crypto';
 import { AuthTokens, JwtPayload, UserRole } from '@edham/shared-types';
+import { RedisService } from '../../redis/redis.service';
 
 /**
  * TTLs حسب الدور (TECH.md §5.1):
@@ -25,6 +26,14 @@ const REFRESH_TTL: Record<UserRole, string> = {
   [UserRole.WORKSHOP]: '8h',
 };
 
+const REFRESH_TTL_SECONDS: Record<UserRole, number> = {
+  [UserRole.DRIVER]: 60 * 60 * 24 * 30,
+  [UserRole.CUSTOMER]: 60 * 60 * 24 * 30,
+  [UserRole.SUPERVISOR]: 60 * 60 * 8,
+  [UserRole.ACCOUNTANT]: 60 * 60 * 8,
+  [UserRole.WORKSHOP]: 60 * 60 * 8,
+};
+
 type IssuedUser = Pick<AuthTokens['user'], 'id' | 'role'>;
 
 @Injectable()
@@ -32,14 +41,12 @@ export class TokenService {
   private readonly accessSecret: string;
   private readonly refreshSecret: string;
 
-  /**
-   * مخزن refresh tokens الصالحة (userId → مجموعة hashes).
-   * بديل تطويري لـ Redis (TECH.md §5.1). يُستبدَل بـ Redis في Phase 4 لدعم multi-instance.
-   */
-  private readonly store = new Map<string, Set<string>>();
+  /** بديل in-memory لمخزن refresh tokens عند تعطّل Redis. */
+  private readonly mem = new Map<string, Set<string>>();
 
   constructor(
     private readonly jwt: JwtService,
+    private readonly redis: RedisService,
     config: ConfigService,
   ) {
     this.accessSecret = config.get<string>('JWT_ACCESS_SECRET', 'dev_access_secret_change_me');
@@ -48,6 +55,10 @@ export class TokenService {
 
   private hash(token: string): string {
     return createHash('sha256').update(token).digest('hex');
+  }
+
+  private key(userId: string): string {
+    return `refresh:${userId}`;
   }
 
   async issueTokens(user: IssuedUser): Promise<{ accessToken: string; refreshToken: string }> {
@@ -62,14 +73,32 @@ export class TokenService {
       expiresIn: REFRESH_TTL[user.role],
     });
 
-    this.remember(user.id, refreshToken);
+    await this.remember(user.id, user.role, refreshToken);
     return { accessToken, refreshToken };
   }
 
-  private remember(userId: string, refreshToken: string): void {
-    const set = this.store.get(userId) ?? new Set<string>();
-    set.add(this.hash(refreshToken));
-    this.store.set(userId, set);
+  private async remember(userId: string, role: UserRole, refreshToken: string): Promise<void> {
+    const h = this.hash(refreshToken);
+    if (this.redis.enabled) {
+      await this.redis.sadd(this.key(userId), h, REFRESH_TTL_SECONDS[role]);
+      return;
+    }
+    const set = this.mem.get(userId) ?? new Set<string>();
+    set.add(h);
+    this.mem.set(userId, set);
+  }
+
+  private async isKnown(userId: string, h: string): Promise<boolean> {
+    if (this.redis.enabled) return this.redis.sismember(this.key(userId), h);
+    return this.mem.get(userId)?.has(h) ?? false;
+  }
+
+  private async forget(userId: string, h: string): Promise<void> {
+    if (this.redis.enabled) {
+      await this.redis.srem(this.key(userId), h);
+      return;
+    }
+    this.mem.get(userId)?.delete(h);
   }
 
   /** يتحقق من refresh token ويُصدر access جديد (rotation للـ refresh). */
@@ -81,16 +110,16 @@ export class TokenService {
       throw new UnauthorizedException({ code: 'INVALID_REFRESH', message: 'رمز التجديد غير صالح' });
     }
 
-    const set = this.store.get(payload.sub);
-    if (!set?.has(this.hash(refreshToken))) {
+    const h = this.hash(refreshToken);
+    if (!(await this.isKnown(payload.sub, h))) {
       throw new UnauthorizedException({ code: 'REVOKED_REFRESH', message: 'رمز التجديد مُبطَل' });
     }
 
-    set.delete(this.hash(refreshToken)); // rotation: أبطل القديم
+    await this.forget(payload.sub, h); // rotation: أبطل القديم
     return this.issueTokens({ id: payload.sub, role: payload.role });
   }
 
-  revoke(userId: string, refreshToken: string): void {
-    this.store.get(userId)?.delete(this.hash(refreshToken));
+  async revoke(userId: string, refreshToken: string): Promise<void> {
+    await this.forget(userId, this.hash(refreshToken));
   }
 }

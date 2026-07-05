@@ -16,6 +16,7 @@ import {
 } from '@edham/shared-types';
 import { AuthenticatedUser } from '../../common/auth/auth.types';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { ZatcaService } from '../../zatca/zatca.service';
 import { EmailService } from '../messaging/email.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CreateInvoiceDto, MarkPaidDto } from './dto/invoice.dto';
@@ -29,6 +30,7 @@ export class InvoicesService {
     private readonly prisma: PrismaService,
     private readonly email: EmailService,
     private readonly notifications: NotificationsService,
+    private readonly zatca: ZatcaService,
   ) {}
 
   /** ACCOUNTANT ينشئ فاتورة من طلب مكتمل. VAT 15% تلقائي. */
@@ -124,9 +126,27 @@ export class InvoicesService {
     const issuedAt = new Date();
     const dueAt = new Date(issuedAt.getTime() + invoice.customer.paymentTermsDays * 86400000);
 
+    // ZATCA (scaffold): يملأ الحقول لو ZATCA_ENABLED=true، وإلا null
+    const zatca = this.zatca.enrich({
+      invoiceNumber: invoice.invoiceNumber,
+      issuedAt,
+      subtotal: Number(invoice.subtotal),
+      vatAmount: Number(invoice.vatAmount),
+      totalAmount: Number(invoice.totalAmount),
+      customerName: invoice.customer.companyName,
+      customerVatNumber: invoice.customer.vatNumber,
+    });
+
     const updated = await this.prisma.invoice.update({
       where: { id },
-      data: { status: InvoiceStatus.SENT, issuedAt, dueAt },
+      data: {
+        status: InvoiceStatus.SENT,
+        issuedAt,
+        dueAt,
+        zatcaUuid: zatca?.uuid ?? undefined,
+        zatcaHash: zatca?.hash ?? undefined,
+        zatcaQr: zatca?.qr ?? undefined,
+      },
     });
 
     const billingEmail = invoice.customer.billingEmail ?? invoice.customer.user.email;

@@ -41,7 +41,7 @@ export class NotificationsService {
     this.logger.log(`🔔 إشعار [${input.type}] → user ${input.userId}: ${input.title}`);
 
     // إرسال push لأجهزة المستخدم المسجّلة (يُتجاهَل بأمان لو FCM معطّل أو لا أجهزة)
-    const tokens = this.deviceTokens.tokensFor(input.userId);
+    const tokens = await this.deviceTokens.tokensFor(input.userId);
     if (tokens.length > 0 && this.firebase.enabled) {
       const data: Record<string, string> = { type: input.type };
       if (input.referenceType) data.referenceType = input.referenceType;
@@ -52,7 +52,7 @@ export class NotificationsService {
     }
   }
 
-  registerDevice(userId: string, token: string): void {
-    this.deviceTokens.register(userId, token);
+  registerDevice(userId: string, token: string): Promise<void> {
+    return this.deviceTokens.register(userId, token);
   }
 }

@@ -1,24 +1,42 @@
 import { Injectable } from '@nestjs/common';
+import { RedisService } from '../redis/redis.service';
+
+const TTL_SECONDS = 60 * 60 * 24 * 60; // 60 يوم
 
 /**
  * مخزن رموز أجهزة FCM (userId → tokens).
- * بديل تطويري في الذاكرة — يُستبدَل بجدول/Redis في Phase 4 (deferred-items).
+ * Redis إن كان مُفعّلاً، وإلا بديل in-memory.
  */
 @Injectable()
 export class DeviceTokenStore {
-  private readonly tokens = new Map<string, Set<string>>();
+  private readonly mem = new Map<string, Set<string>>();
 
-  register(userId: string, token: string): void {
-    const set = this.tokens.get(userId) ?? new Set<string>();
+  constructor(private readonly redis: RedisService) {}
+
+  private key(userId: string): string {
+    return `device:${userId}`;
+  }
+
+  async register(userId: string, token: string): Promise<void> {
+    if (this.redis.enabled) {
+      await this.redis.sadd(this.key(userId), token, TTL_SECONDS);
+      return;
+    }
+    const set = this.mem.get(userId) ?? new Set<string>();
     set.add(token);
-    this.tokens.set(userId, set);
+    this.mem.set(userId, set);
   }
 
-  tokensFor(userId: string): string[] {
-    return Array.from(this.tokens.get(userId) ?? []);
+  async tokensFor(userId: string): Promise<string[]> {
+    if (this.redis.enabled) return this.redis.smembers(this.key(userId));
+    return Array.from(this.mem.get(userId) ?? []);
   }
 
-  remove(userId: string, token: string): void {
-    this.tokens.get(userId)?.delete(token);
+  async remove(userId: string, token: string): Promise<void> {
+    if (this.redis.enabled) {
+      await this.redis.srem(this.key(userId), token);
+      return;
+    }
+    this.mem.get(userId)?.delete(token);
   }
 }

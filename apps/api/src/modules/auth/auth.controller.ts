@@ -42,11 +42,11 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  logout(
+  async logout(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: RefreshDto,
-  ): { success: boolean } {
-    this.auth.logout(user.sub, dto.refreshToken);
+  ): Promise<{ success: boolean }> {
+    await this.auth.logout(user.sub, dto.refreshToken);
     return { success: true };
   }
 

@@ -72,8 +72,8 @@ export class AuthService {
     return this.tokens.refresh(refreshToken);
   }
 
-  logout(userId: string, refreshToken: string): void {
-    this.tokens.revoke(userId, refreshToken);
+  logout(userId: string, refreshToken: string): Promise<void> {
+    return this.tokens.revoke(userId, refreshToken);
   }
 
   async me(userId: string): Promise<UserDto> {

@@ -26,6 +26,11 @@
 
 ---
 
+## 🟡 Stage 1 Scaffolds — تكامل خارجي مؤجَّل (يحتاج اعتمادات حقيقية)
+- **SMS (Unifonic):** `UnifonicProvider` scaffold عبر fetch. mock في dev (يطبع OTP). يتطلب `UNIFONIC_APP_SID` صالحاً + `SMS_PROVIDER=unifonic`. لم يُختبَر مع اعتماد حقيقي.
+- **Email (Resend):** `ResendProvider` scaffold عبر fetch. mock في dev. يتطلب `RESEND_API_KEY` + `EMAIL_PROVIDER=resend`.
+- **ZATCA (فوترة إلكترونية):** `ZatcaService` يولّد QR (TLV base64) + hash + uuid ويملأ `invoice.zatca_*`، لكنه **scaffold**: قالب XML مبسّط غير متوافق كاملاً، ولا يوجد تكامل CSR/شهادات/Clearance/Reporting API. **معطّل** (`ZATCA_ENABLED=false`) حتى **onboarding العميل + رقمه الضريبي**. لا يُفعَّل في الإنتاج قبل مراجعة امتثال ZATCA Phase 2.
+
 ## 🟡 بنية للإنتاج (Phase 4)
 
 - **Device token store (FCM):** حالياً في الذاكرة (`DeviceTokenStore`) — يُفقد عند إعادة التشغيل ولا يدعم multi-instance. → جدول `device_tokens` أو Redis.

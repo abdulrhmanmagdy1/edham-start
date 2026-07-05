@@ -19,11 +19,11 @@ export class NotificationsController {
   @Post('device-token')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  registerDevice(
+  async registerDevice(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: RegisterDeviceDto,
-  ): { success: boolean } {
-    this.notifications.registerDevice(user.sub, dto.token);
+  ): Promise<{ success: boolean }> {
+    await this.notifications.registerDevice(user.sub, dto.token);
     return { success: true };
   }
 }

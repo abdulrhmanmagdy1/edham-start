@@ -19,11 +19,11 @@
 | البند | الحالة الحالية | متى يُنفَّذ |
 |------|----------------|-----------|
 | **FCM Push (فعلي)** | ✅ Firebase Admin مربوط (2026-07-05) — يرسل push حقيقي عبر service account. متبقٍّ: تخزين device tokens في DB/Redis (حالياً in-memory) + اختبار على جهاز | Phase 4 |
-| **SMS Unifonic (فعلي)** | stub يسجّل باللوج | Phase 4 (يحتاج UNIFONIC_API_KEY — فارغ) |
-| **Email SendGrid (فعلي)** | stub يسجّل باللوج | Phase 4 (يحتاج SENDGRID_API_KEY — فارغ) |
-| **ZATCA e-invoicing (فعلي)** | حقول zatca_* جاهزة، لا تكامل | Phase 5 (يحتاج ZATCA onboarding) |
+| **SMS Unifonic (فعلي)** | ✅ provider pattern (mock/Unifonic scaffold، auto-swap). يحتاج UNIFONIC_APP_SID صالح للتفعيل | Phase 4 |
+| **Email Resend (فعلي)** | ✅ provider pattern (mock/Resend scaffold). يحتاج RESEND_API_KEY | Phase 4 |
+| **ZATCA e-invoicing (فعلي)** | ✅ ZatcaService scaffold (QR TLV + hash، ZATCA_ENABLED=false). يحتاج شهادات + رقم ضريبي + Clearance API | Phase 5 |
 | **PDF الفواتير عبر MinIO** | لم يُبنَ | Phase 4-5 |
-| **Redis** (refresh store + Socket.io adapter + BullMQ + rate-limit store) | in-memory حالياً | Phase 4 (multi-instance) |
+| **Redis** | ✅ مربوط (2026-07-05): device-tokens + refresh store + rate-limit (hybrid مع fallback). متبقٍّ: Socket.io adapter + BullMQ | Phase 4 (Socket adapter/queues) |
 | تقرير Cold Chain PDF | لم يُبنَ | Phase 4-5 |
 
 ### فجوات وظيفية في Phase 1 (Backend) لم تُبنَ بعد — تُستكمل قبل/أثناء Phase 3-4

@@ -4,6 +4,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { FirebaseModule } from './firebase/firebase.module';
+import { RedisModule } from './redis/redis.module';
+import { RedisService } from './redis/redis.service';
+import { RedisThrottlerStorage } from './redis/throttler-redis.storage';
+import { ZatcaModule } from './zatca/zatca.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ColdChainModule } from './modules/cold-chain/cold-chain.module';
 import { DriversModule } from './modules/drivers/drivers.module';
@@ -25,9 +29,18 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
       isGlobal: true,
       envFilePath: ['.env', '../../.env'],
     }),
-    // Rate limiting افتراضي عام (TECH.md §5.4) — 100 طلب/دقيقة
-    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 100 }]),
+    // Rate limiting عام (TECH.md §5.4) — 100 طلب/دقيقة، تخزين Redis (hybrid)
+    ThrottlerModule.forRootAsync({
+      imports: [RedisModule],
+      inject: [RedisService],
+      useFactory: (redis: RedisService) => ({
+        throttlers: [{ ttl: 60_000, limit: 100 }],
+        storage: new RedisThrottlerStorage(redis),
+      }),
+    }),
     PrismaModule,
+    RedisModule,
+    ZatcaModule,
     FirebaseModule,
     MessagingModule,
     NotificationsModule,
