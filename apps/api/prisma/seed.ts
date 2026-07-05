@@ -30,6 +30,34 @@ async function main(): Promise<void> {
   // eslint-disable-next-line no-console
   console.warn(`✅ مشرف: ${supervisor.email}`);
 
+  // 1.b) عميل تجريبي (شركة) — لتجارب الفلو E2E
+  const customerUser = await prisma.user.upsert({
+    where: { phone: '+966500000001' },
+    update: {},
+    create: {
+      fullName: 'شركة النقل التجريبية',
+      phone: '+966500000001',
+      email: 'customer@demo.sa',
+      role: 'CUSTOMER',
+      status: 'ACTIVE',
+    },
+  });
+  await prisma.customer.upsert({
+    where: { userId: customerUser.id },
+    update: {},
+    create: {
+      userId: customerUser.id,
+      companyName: 'شركة النقل التجريبية المحدودة',
+      commercialRegistrationNumber: '1010101010',
+      vatNumber: '300000000000003',
+      contactPersonName: 'أحمد التجريبي',
+      billingEmail: 'billing@demo.sa',
+      paymentTermsDays: 30,
+    },
+  });
+  // eslint-disable-next-line no-console
+  console.warn(`✅ عميل تجريبي: ${customerUser.phone}`);
+
   // 2) مركبات أولية (3 أنواع)
   const vehicles: Array<{
     plateNumber: string;

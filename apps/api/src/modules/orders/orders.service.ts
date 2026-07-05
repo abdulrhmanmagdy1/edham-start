@@ -7,17 +7,23 @@ import {
 } from '@nestjs/common';
 import { Prisma, Order as PrismaOrder } from '@prisma/client';
 import {
+  DriverStatus,
   NotificationType,
   Order as OrderDto,
   OrderStatus,
   PaginationMeta,
+  TemperatureCapability,
   TemperatureType,
+  TripStatus,
   UserRole,
+  VehicleStatus,
 } from '@edham/shared-types';
 import { AuthenticatedUser } from '../../common/auth/auth.types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { EmailService } from '../messaging/email.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { isTemperatureCompatible } from '../vehicles/temperature-match';
+import { AssignOrderDto } from './dto/assign.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { SetPriceDto, UpdateOrderStatusDto } from './dto/pricing.dto';
@@ -252,6 +258,87 @@ export class OrdersService {
           dto.status === OrderStatus.CANCELLED ? (dto.cancellationReason ?? null) : undefined,
       },
     });
+    return OrdersService.toDto(updated);
+  }
+
+  /**
+   * إسناد سائق + مركبة (SPEC Flow 2). فقط بعد CUSTOMER_CONFIRMED.
+   * ينشئ Trip + ينسخ order_stops → trip_stops، ويتحقق من توافق التبريد (Q9).
+   */
+  async assign(id: string, dto: AssignOrderDto, _user: AuthenticatedUser): Promise<OrderDto> {
+    const order = await this.prisma.order.findFirst({
+      where: { id, deletedAt: null },
+      include: { stops: { orderBy: { sequenceNumber: 'asc' } } },
+    });
+    if (!order) throw new NotFoundException({ code: 'ORDER_NOT_FOUND', message: 'الطلب غير موجود' });
+    this.assertTransition(order.status as OrderStatus, OrderStatus.ASSIGNED);
+
+    const driver = await this.prisma.driver.findUnique({
+      where: { id: dto.driverId },
+      include: { user: true },
+    });
+    if (!driver) throw new NotFoundException({ code: 'DRIVER_NOT_FOUND', message: 'السائق غير موجود' });
+    if (driver.status !== DriverStatus.AVAILABLE) {
+      throw new ConflictException({ code: 'DRIVER_UNAVAILABLE', message: 'السائق غير متاح' });
+    }
+
+    const vehicle = await this.prisma.vehicle.findFirst({
+      where: { id: dto.vehicleId, deletedAt: null },
+    });
+    if (!vehicle) throw new NotFoundException({ code: 'VEHICLE_NOT_FOUND', message: 'المركبة غير موجودة' });
+    if (vehicle.status !== VehicleStatus.AVAILABLE) {
+      throw new ConflictException({ code: 'VEHICLE_UNAVAILABLE', message: 'المركبة غير متاحة' });
+    }
+
+    // قاعدة توافق التبريد (Q9)
+    if (
+      !isTemperatureCompatible(
+        (order.temperatureType as TemperatureType | null) ?? null,
+        vehicle.temperatureCapability as TemperatureCapability,
+      )
+    ) {
+      throw new ConflictException({
+        code: 'TEMPERATURE_MISMATCH',
+        message: 'قدرة تبريد المركبة لا تتوافق مع نوع الشحنة',
+      });
+    }
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      await tx.trip.create({
+        data: {
+          orderId: order.id,
+          driverId: driver.id,
+          vehicleId: vehicle.id,
+          status: TripStatus.ASSIGNED,
+          totalStops: order.stops.length,
+          stops: {
+            create: order.stops.map((s) => ({
+              sequenceNumber: s.sequenceNumber,
+              address: s.address,
+              city: s.city,
+              latitude: s.latitude,
+              longitude: s.longitude,
+              contactName: s.contactName,
+              contactPhone: s.contactPhone,
+              scheduledArrival: s.scheduledArrival,
+            })),
+          },
+        },
+      });
+      await tx.driver.update({ where: { id: driver.id }, data: { status: DriverStatus.ON_TRIP } });
+      await tx.vehicle.update({ where: { id: vehicle.id }, data: { status: VehicleStatus.ON_TRIP } });
+      return tx.order.update({ where: { id: order.id }, data: { status: OrderStatus.ASSIGNED } });
+    });
+
+    await this.notifications.notify({
+      userId: driver.userId,
+      type: NotificationType.TRIP_ASSIGNED,
+      title: 'تم إسناد رحلة جديدة إليك',
+      body: `رحلة جديدة للطلب ${order.id}`,
+      referenceType: 'ORDER',
+      referenceId: order.id,
+    });
+
     return OrdersService.toDto(updated);
   }
 

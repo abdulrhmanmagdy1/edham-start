@@ -17,6 +17,7 @@ import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import { RolesGuard } from '../../common/auth/roles.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { AssignOrderDto } from './dto/assign.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { SetPriceDto, UpdateOrderStatusDto } from './dto/pricing.dto';
@@ -87,6 +88,18 @@ export class OrdersController {
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<OrderDto> {
     return this.orders.rejectPrice(id, user);
+  }
+
+  /** إسناد سائق + مركبة (بعد CUSTOMER_CONFIRMED). */
+  @Post(':id/assign')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.SUPERVISOR)
+  assign(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: AssignOrderDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<OrderDto> {
+    return this.orders.assign(id, dto, user);
   }
 
   @Patch(':id/status')

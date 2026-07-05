@@ -5,12 +5,16 @@
 ---
 
 ## [BLK-001] Docker غير مثبّت على جهاز التطوير
-**الحالة:** 🟡 مفتوح (غير مانع لـ Phase 0)
+**الحالة:** ✅ تم تجاوزه (2026-07-05) — DB حقيقية تعمل بدون Docker
 **التاريخ:** 2026-07-05
-**الوصف:** Docker Desktop غير مثبّت، فلا يمكن تشغيل `docker-compose up` (Postgres + Redis + MinIO محلياً).
-**الأثر:** بنود quality gate التالية مؤجَّلة: `docker-compose up`، `prisma migrate dev`، `prisma studio`، seed على DB.
-**الحل المقترح:** تثبيت Docker Desktop، أو توفير `DATABASE_URL` سحابي (Railway).
-**Workaround الحالي:** الـ API يقلع بدون DB حيّة (`/health` يرجع `db:down`)؛ الـ schema مُتحقَّق منه بـ `prisma validate` + `prisma generate`.
+**الوصف:** Docker Desktop غير مثبّت (يحتاج admin+WSL2+reboot — غير عملي headless). pgAdmin موجود لكن بلا محرّك server.
+**الحل المُطبَّق:** نزّلنا **PostgreSQL 16.4 المحمول** (binaries zip من EnterpriseDB، بلا admin) في:
+`scratchpad/pgsql`، cluster في `scratchpad/pgdata`، يعمل على **port 5433** (trust auth).
+- `.env` → `DATABASE_URL=...localhost:5433/edham_dev`.
+- تم: `prisma migrate dev` (17 جدول) + seed + **E2E الفلو الكامل على DB حقيقية**.
+**لإعادة التشغيل بعد إغلاق الجهاز:**
+`scratchpad/pgsql/bin/pg_ctl.exe -D scratchpad/pgdata -o "-p 5433" -l scratchpad/pg.log start`
+**ملاحظة:** docker-compose.yml (port 5432) يبقى للمرجع/الإنتاج؛ التطوير الحالي على 5433.
 
 ## [BLK-002] Flutter SDK غير مثبّت
 **الحالة:** 🟡 مفتوح (غير مانع لـ Phase 0)

@@ -144,10 +144,19 @@ DELIVERED        — عميل يُبلَّغ بالتسليم
 
 **آلة حالة الطلب:** DRAFT→PENDING_PRICING→PRICED→CUSTOMER_CONFIRMED→ASSIGNED→LOADING→IN_TRANSIT→DELIVERED→COMPLETED؛ إلغاء حتى LOADING؛ لا إلغاء بعد IN_TRANSIT.
 
-### مؤجَّل (يحتاج DB حيّة — BLK-001)
-- تشغيل الفلو end-to-end فعلياً (create/accept/reject) — الكود جاهز، ينتظر Postgres.
-- Unifonic SMS + SendGrid Email + FCM — stubs تسجّل في اللوج (المفاتيح فارغة).
-- Refresh store حالياً in-memory (يُستبدَل بـ Redis في Phase 4).
+**Vehicles** (`/api/v1/vehicles`):
+- `POST /` (SUPERVISOR) · `GET /` (SUPERVISOR,WORKSHOP) · `GET /available?vehicleType&temperatureType` (SUPERVISOR — فلترة توافق التبريد) · `GET /:id` · `PATCH /:id/status`.
 
-### لم يُبنَ بعد (Phase 1 متبقٍّ / Phase لاحقة)
-- Drivers/Vehicles CRUD + الإسناد (assign) + Socket.io GPS + Invoices.
+**Drivers** (`/api/v1/drivers`): `GET /` · `GET /:id` · `PATCH /:id/status` (SUPERVISOR). الإنشاء عبر `POST /users`.
+
+**الإسناد:** `POST /orders/:id/assign` (SUPERVISOR) — body `{ driverId, vehicleId }`. فقط من CUSTOMER_CONFIRMED. يتحقق: السائق/المركبة متاحان + توافق التبريد (Q9). ينشئ Trip(ASSIGNED) + ينسخ order_stops→trip_stops + driver/vehicle→ON_TRIP + order→ASSIGNED + إشعار TRIP_ASSIGNED للسائق.
+
+### ✅ مُتحقَّق E2E على PostgreSQL 16.4 حقيقي (port 5433)
+- فلو التسعير 21/21 · الإسناد + قاعدة التبريد 19/19. سكربتات: `apps/api/scripts/e2e-*.mjs`.
+
+### stubs / مؤجَّل
+- Unifonic SMS + SendGrid Email + FCM — stubs تسجّل في اللوج (المفاتيح فارغة).
+- Refresh store in-memory (يُستبدَل بـ Redis في Phase 4).
+
+### لم يُبنَ بعد (Phase 1 متبقٍّ)
+- Socket.io GPS (locations/tracking) + Trips endpoints للسائق + Invoices.

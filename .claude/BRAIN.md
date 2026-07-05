@@ -59,7 +59,7 @@ DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → LOA
 
 ## حالة المشروع
 - Phase 0 (Bootstrap): ✅ مكتمل جزئياً (2026-07-05) — Monorepo + Backend + Web + shared-types + scaffolds. المتبقي (migrate + flutter build + docker up) محجوب بـ Docker/Flutter غير المثبّتين.
-- Phase 1 (Backend): 🔵 قيد التنفيذ (2026-07-05) — Auth (OTP+login+JWT+RBAC) + Orders + فلو التسعير (PRE-001) مبنية ومختبَرة (13 unit). المتبقي: Drivers/Vehicles + الإسناد + Socket.io + Invoices. E2E ينتظر DB.
+- Phase 1 (Backend): 🔵 قيد التنفيذ (~75%، 2026-07-05) — Auth+RBAC + Orders + فلو التسعير + Vehicles/Drivers + الإسناد (Q9). **مُتحقَّق E2E على PostgreSQL حقيقي**: تسعير 21/21، إسناد 19/19 + 16 unit. المتبقي: Socket.io GPS + Trips (تنفيذ الرحلة) + Invoices.
 - Phase 2 (Mobile Flutter): لم يبدأ
 - Phase 3 (Web Application): لم يبدأ
 - Phase 4 (Integration): لم يبدأ
@@ -67,6 +67,6 @@ DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → LOA
 
 ## ملاحظات تشغيلية مهمة
 - **pnpm:** لا صلاحية admin لـ `corepack enable`. استخدم `corepack pnpm@9.12.0 <cmd>` دائماً.
-- **DB:** لا قاعدة حيّة. `DATABASE_URL` في CREDENTIALS.env فارغ. الـ API يقلع بدونها (`/health` → db:down).
+- **DB:** PostgreSQL 16.4 محمول يعمل على **port 5433** (scratchpad/pgsql + pgdata، trust auth). `.env` يشير إليه. إعادة التشغيل بعد إقفال الجهاز عبر pg_ctl (راجع blockers.md BLK-001). Docker غير مثبّت.
 - **⚠️ تعارض ألوان (لحسمه في Phase 3):** BRAIN/CLAUDE يقولان أسود #0D0D0D + أحمر #DC2626، لكن `docs/DESIGN_SYSTEM.md §2` يعرّف primary أزرق #2563EB. الـ Web scaffold استخدم الأسود/الأحمر حالياً. يجب حسم المرجع قبل بناء شاشات Phase 3.
 - **بنية dist:** أُضيف `apps/api/tsconfig.build.json` يستثني `prisma/` كي يكون الإخراج `dist/main.js` مباشرة (seed يُشغَّل بـ ts-node).

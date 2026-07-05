@@ -4,8 +4,8 @@
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 1 (Core Backend) — قيد التنفيذ
-- **الاكتمال العام:** ~22% (Phase 0 ≈ 80% · Phase 1 ≈ 55%)
+- **Phase الحالية:** Phase 1 (Core Backend) — قيد التنفيذ (متبقٍّ: Socket.io + Invoices)
+- **الاكتمال العام:** ~30% (Phase 0 ≈ 90% بعد DB · Phase 1 ≈ 75%)
 
 ---
 
@@ -41,9 +41,10 @@
 - [x] POST /reject-price (Customer) — →CANCELLED
 - [x] GET / (فلاتر+pagination) + GET /my + GET /:id (resource auth) + PATCH /:id/status
 
-### Drivers & Vehicles
-- [ ] CRUD endpoints
-- [ ] Assignment logic (assign بعد CUSTOMER_CONFIRMED)
+### Drivers & Vehicles  ✅ (E2E على DB حقيقية)
+- [x] Vehicles CRUD (create/list/available/get/status) + قاعدة توافق التبريد
+- [x] Drivers (list/get/status) + إنشاء عبر POST /users
+- [x] Assignment logic — POST /orders/:id/assign (Trip + نسخ stops + Q9 + إشعار السائق)
 
 ### Real-time
 - [ ] Socket.io setup / GPS broadcast / status updates
@@ -52,7 +53,8 @@
 - [x] Email (pricing) — SendGrid stub | [x] In-app notifications (جدول)
 - [ ] FCM push | [ ] SMS alerts (فعلي — ينتظر مفاتيح)
 
-**Quality Gate:** unit tests تمر ✅ (13/13). E2E عبر DB ← مؤجَّل (BLK-001)
+**Quality Gate:** ✅ 16 unit tests + **E2E حقيقي على PostgreSQL 16.4**: فلو التسعير 21/21، الإسناد 19/19.
+DB محلية على port 5433 (Postgres محمول — BLK-001 تم تجاوزه).
 
 ---
 
@@ -146,3 +148,5 @@
 | 2026-07-05 | Phase 0 Bootstrap | Monorepo + Backend + Web + shared-types + DevOps/Flutter scaffold. API build+boot+health ✅، Prisma valid ✅، Web build RTL ✅. المتبقي محجوب بـ Docker/Flutter |
 | 2026-07-05 | أمان | معالجة تسريب CREDENTIALS.env: تطهير التاريخ + force push (origin نظيف). تدوير المفاتيح على المستخدم |
 | 2026-07-05 | Phase 1 (Auth+Orders+Pricing) | order_stops + Auth كامل + RBAC + Orders + فلو التسعير. build ✅ boot ✅ 13 unit tests ✅. E2E ينتظر DB |
+| 2026-07-05 | DB حقيقية (Postgres محمول 5433) | migrate 17 جدول + seed. **E2E التسعير 21/21 ✅** على DB فعلية |
+| 2026-07-05 | Phase 1 (Vehicles+Drivers+Assign) | Vehicles/Drivers + الإسناد + قاعدة التبريد Q9. 16 unit ✅ + **E2E الإسناد 19/19 ✅** |
