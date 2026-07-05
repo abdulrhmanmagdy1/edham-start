@@ -1,0 +1,72 @@
+# docker-compose.yml — إدهام للوجستيات
+# بيئة التطوير المحلية: PostgreSQL 16 + Redis 7 + MinIO
+# الاستخدام: docker-compose up -d
+# ملاحظة: كل القيم هنا للتطوير المحلي فقط — لا تُستخدم في الإنتاج.
+
+services:
+  # قاعدة البيانات الرئيسية — PostgreSQL 16
+  postgres:
+    image: postgres:16-alpine
+    container_name: edham_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: edham
+      POSTGRES_PASSWORD: edham_dev_pass
+      POSTGRES_DB: edham_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U edham -d edham_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Cache + Queues (Bull) + Sessions — Redis 7
+  redis:
+    image: redis:7-alpine
+    container_name: edham_redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # تخزين الكائنات (صور إثبات التسليم + التواقيع + PDF الفواتير) — MinIO (S3-compatible)
+  minio:
+    image: minio/minio
+    container_name: edham_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: edham
+      MINIO_ROOT_PASSWORD: edham_dev_pass
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+# الأحجام المُسمّاة (Named Volumes) لحفظ البيانات بين عمليات إعادة التشغيل
+volumes:
+  postgres_data:
+    name: edham_postgres_data
+  redis_data:
+    name: edham_redis_data
+  minio_data:
+    name: edham_minio_data

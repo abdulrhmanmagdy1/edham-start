@@ -47,6 +47,16 @@
 
 ---
 
+### [DEC-004] بنية Monorepo (Phase 0 — 2026-07-05)
+**القرار:** Turborepo + pnpm workspaces. `apps/{api,web,mobile}` + `packages/{shared-types,tsconfig,eslint-config}`.
+**السبب:** مطابق لـ TECH.md §3. shared-types يوحّد عقد الـ API (enums/entities/dtos) بين NestJS و Next.js.
+**التأثير:** أي تغيير في enum/DTO يُحدَّث في `packages/shared-types` أولاً ثم يُستهلك في الطرفين.
+
+### [DEC-005] ⚠️ تعارض palette الألوان — يحتاج حسم قبل Phase 3
+**القرار المؤقت:** الـ Web scaffold يستخدم أسود #0D0D0D + أحمر #DC2626 (حسب BRAIN/CLAUDE).
+**التعارض:** `docs/DESIGN_SYSTEM.md §2` يعرّف primary أزرق #2563EB.
+**مطلوب:** حسم المرجع الرسمي مع المستخدم قبل بناء شاشات Phase 3.
+
 ### [DEC-002] دمج Admin في Supervisor — 5 أدوار فقط
 **القرار:** لا يوجد دور Admin منفصل — SUPERVISOR يجمع العمليات + إدارة الموظفين + التعريفة
 **السبب:** شاشة اللوجين في الديزاين تُظهر 5 مسارات فقط: عميل / مشرف / سائق / محاسب / ورشة

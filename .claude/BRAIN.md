@@ -58,9 +58,15 @@ DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → LOA
 ```
 
 ## حالة المشروع
-- Phase 0 (Bootstrap): لم يبدأ
+- Phase 0 (Bootstrap): ✅ مكتمل جزئياً (2026-07-05) — Monorepo + Backend + Web + shared-types + scaffolds. المتبقي (migrate + flutter build + docker up) محجوب بـ Docker/Flutter غير المثبّتين.
 - Phase 1 (Backend): لم يبدأ
 - Phase 2 (Mobile Flutter): لم يبدأ
 - Phase 3 (Web Application): لم يبدأ
 - Phase 4 (Integration): لم يبدأ
 - Phase 5 (Launch): لم يبدأ
+
+## ملاحظات تشغيلية مهمة
+- **pnpm:** لا صلاحية admin لـ `corepack enable`. استخدم `corepack pnpm@9.12.0 <cmd>` دائماً.
+- **DB:** لا قاعدة حيّة. `DATABASE_URL` في CREDENTIALS.env فارغ. الـ API يقلع بدونها (`/health` → db:down).
+- **⚠️ تعارض ألوان (لحسمه في Phase 3):** BRAIN/CLAUDE يقولان أسود #0D0D0D + أحمر #DC2626، لكن `docs/DESIGN_SYSTEM.md §2` يعرّف primary أزرق #2563EB. الـ Web scaffold استخدم الأسود/الأحمر حالياً. يجب حسم المرجع قبل بناء شاشات Phase 3.
+- **بنية dist:** أُضيف `apps/api/tsconfig.build.json` يستثني `prisma/` كي يكون الإخراج `dist/main.js` مباشرة (seed يُشغَّل بـ ts-node).

@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --edham-black: #0d0d0d;
+  --edham-red: #dc2626;
+}
+
+html {
+  direction: rtl;
+}
+
+body {
+  color: var(--edham-black);
+  background-color: #ffffff;
+  font-family: var(--font-ibm-plex-arabic), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}

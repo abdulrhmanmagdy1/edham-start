@@ -1,0 +1,47 @@
+# ── Dependencies ──
+node_modules/
+.pnpm-store/
+
+# ── Env & Secrets ──
+.env
+.env.*
+!.env.example
+CREDENTIALS.env
+
+# ── Build outputs ──
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# ── Turbo ──
+.turbo/
+
+# ── Prisma ──
+apps/api/prisma/*.db
+
+# ── Logs ──
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# ── Testing ──
+coverage/
+
+# ── Flutter ──
+apps/mobile/.dart_tool/
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/build/
+apps/mobile/android/.gradle/
+apps/mobile/android/app/google-services.json
+apps/mobile/ios/GoogleService-Info.plist
+apps/mobile/ios/Pods/
+*.iml
+
+# ── IDE / OS ──
+.DS_Store
+Thumbs.db
+.idea/
+*.swp

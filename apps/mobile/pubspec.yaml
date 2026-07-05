@@ -1,0 +1,50 @@
+name: edham_mobile
+description: "تطبيق إدهام للوجستيات — منصة B2B للشحن المبرّد والتتبع الحي بالـ 5 أدوار (عميل + سائق + مشرف + محاسب + ورشة)."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # إدارة الحالة
+  flutter_riverpod: ^2.5.0
+
+  # التخزين المحلي (Offline-first)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # الشبكة
+  dio: ^5.4.0
+
+  # التوجيه
+  go_router: ^14.0.0
+
+  # الخرائط والموقع
+  google_maps_flutter: ^2.6.0
+  geolocator: ^12.0.0
+
+  # التتبع الحي (Socket.io)
+  socket_io_client: ^2.0.3
+
+  # الإشعارات (Firebase Cloud Messaging)
+  firebase_core: ^3.1.0
+  firebase_messaging: ^15.0.0
+
+  # التعريب والتنسيق
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.0
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true

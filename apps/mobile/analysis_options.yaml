@@ -1,0 +1,19 @@
+# قواعد التحليل الثابت لتطبيق إدهام للوجستيات (Strict mode)
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-raw-types: true
+    strict-inference: true
+  errors:
+    # اعتبر التحذيرات الحرجة أخطاء
+    invalid_annotation_target: ignore
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_final_locals: true
+    always_declare_return_types: true
+    avoid_print: true

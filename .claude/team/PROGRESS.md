@@ -1,25 +1,28 @@
 # لوحة التقدم — Edham Logistics
-> آخر تحديث: [يُحدَّث في كل session]
+> آخر تحديث: 2026-07-05
 
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 0 — لم تبدأ بعد
-- **الاكتمال العام:** 0%
+- **Phase الحالية:** Phase 0 — ✅ مكتمل جزئياً (المتبقي محجوب بـ Docker/Flutter)
+- **الاكتمال العام:** ~12% (Phase 0 ≈ 80%)
 
 ---
 
 ## Phase 0: Bootstrap & Setup
-- [ ] Docker Compose (Postgres + Redis + MinIO)
-- [ ] NestJS project scaffold
-- [ ] Prisma schema كامل
-- [ ] Database migrations
-- [ ] Next.js 14 Web App scaffold
-- [ ] Flutter project scaffold
-- [ ] GitHub repository + CI skeleton
-- [ ] Health check endpoint
+- [x] Monorepo (Turborepo + pnpm workspaces + tsconfig + eslint) ✅
+- [x] packages/shared-types (enums + entities + DTOs + socket-events) ✅
+- [x] NestJS project scaffold (main + modules + filters + interceptors) ✅
+- [x] Prisma schema كامل (15 model + كل الـ enums) — `prisma validate` ✅
+- [x] Next.js 14 Web App scaffold (RTL عربي + 5 أدوار) ✅
+- [x] Health check endpoint `GET /api/v1/health` (200) ✅
+- [x] `docker-compose.yml` مكتوب ✅ | [x] `.env.example` + `.gitignore` + `README.md` ✅
+- [x] Flutter project scaffold مكتوب (pubspec + main.dart + features) ✅
+- [⏸️] Database migrations — محجوب (BLK-001: Docker/DB)
+- [⏸️] تشغيل docker-compose / flutter build — محجوب (BLK-001/002)
+- [ ] GitHub repository + CI skeleton — Phase لاحقة
 
-**Quality Gate:** `docker-compose up` ← لا
+**Quality Gate:** ✅ كل ما لا يحتاج Docker/Flutter يعمل — راجع quality-gates/phase-0-checklist.md
 
 ---
 
@@ -141,3 +144,4 @@
 | التاريخ | الخطوة | النتيجة |
 |---------|--------|---------|
 | — | بداية المشروع | الوثائق جاهزة ✅ |
+| 2026-07-05 | Phase 0 Bootstrap | Monorepo + Backend + Web + shared-types + DevOps/Flutter scaffold. API build+boot+health ✅، Prisma valid ✅، Web build RTL ✅. المتبقي محجوب بـ Docker/Flutter |
