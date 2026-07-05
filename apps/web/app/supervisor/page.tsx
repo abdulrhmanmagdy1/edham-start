@@ -1,11 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import { useQuery } from '@/hooks/use-query';
+import { useRealtime, SOCKET_EVENTS } from '@/lib/realtime';
 import { Card, Spinner, ErrorText, PageHeader, Badge, EmptyState } from '@/components/ui';
 import { orderStatusArabic } from '@/lib/labels';
 import type { Order, PaginationMeta } from '@edham/shared-types';
+
+function LiveIndicator({ connected }: { connected: boolean }): React.ReactElement {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
+        connected ? 'bg-green-50 text-green-700' : 'bg-neutral-100 text-neutral-400'
+      }`}
+    >
+      <span
+        className={`h-2 w-2 rounded-full ${connected ? 'bg-green-500' : 'bg-neutral-300'}`}
+      />
+      {connected ? 'مباشر' : 'غير متصل'}
+    </span>
+  );
+}
 
 interface OrdersResponse {
   data: Order[];
@@ -56,11 +73,20 @@ function Kpi({
 }
 
 export default function SupervisorDashboardPage(): React.ReactElement {
-  const { data, loading, error } = useQuery<DashboardData>(() => loadDashboard(), []);
+  const { data, loading, error, refetch } = useQuery<DashboardData>(() => loadDashboard(), []);
+
+  const [connected, setConnected] = useState(false);
+  useRealtime(
+    {
+      [SOCKET_EVENTS.orderStatusChanged]: () => refetch(),
+      [SOCKET_EVENTS.orderPriceReceived]: () => refetch(),
+    },
+    { onConnectionChange: setConnected },
+  );
 
   return (
     <div>
-      <PageHeader title="لوحة التحكم" />
+      <PageHeader title="لوحة التحكم" action={<LiveIndicator connected={connected} />} />
 
       {loading && <Spinner />}
       {error && <ErrorText message={error} />}

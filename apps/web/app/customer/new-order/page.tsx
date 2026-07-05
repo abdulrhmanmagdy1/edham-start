@@ -4,12 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
 import { Button, Card, ErrorText, Input, PageHeader } from '@/components/ui';
+import { MapPicker, type MapLocation } from '@/components/map-picker';
 import { vehicleTypeArabic } from '@/lib/labels';
 import { CargoType, Order, TemperatureType, VehicleType } from '@edham/shared-types';
-
-// إحداثيات ثابتة مؤقتاً — TODO منتقي خريطة لاحقاً
-const PICKUP = { lat: 24.7136, lng: 46.6753 }; // الرياض
-const DELIVERY = { lat: 21.4858, lng: 39.1925 }; // جدة
 
 const CARGO_LABELS: Record<CargoType, string> = {
   [CargoType.DRY]: 'جاف',
@@ -51,8 +48,8 @@ function Select({
 export default function NewOrderPage(): React.ReactElement {
   const router = useRouter();
 
-  const [pickupAddress, setPickupAddress] = useState('');
-  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [pickup, setPickup] = useState<MapLocation | null>(null);
+  const [delivery, setDelivery] = useState<MapLocation | null>(null);
   const [deliveryCity, setDeliveryCity] = useState('');
   const [cargoType, setCargoType] = useState<CargoType>(CargoType.DRY);
   const [vehicleType, setVehicleType] = useState<VehicleType>(VehicleType.HIACE_VAN);
@@ -70,8 +67,8 @@ export default function NewOrderPage(): React.ReactElement {
     setError(null);
 
     const weightKg = Number(weight);
-    if (!pickupAddress.trim() || !deliveryAddress.trim()) {
-      setError('يرجى إدخال عنواني الاستلام والتسليم');
+    if (!pickup || !pickup.address.trim() || !delivery || !delivery.address.trim()) {
+      setError('يرجى تحديد موقعي الاستلام والتسليم على الخريطة');
       return;
     }
     if (!Number.isFinite(weightKg) || weightKg <= 0) {
@@ -86,14 +83,14 @@ export default function NewOrderPage(): React.ReactElement {
     setSubmitting(true);
     try {
       await api.post<Order>('/orders', {
-        pickup: { address: pickupAddress.trim(), lat: PICKUP.lat, lng: PICKUP.lng },
+        pickup: { address: pickup.address.trim(), lat: pickup.lat, lng: pickup.lng },
         stops: [
           {
             sequenceNumber: 1,
-            address: deliveryAddress.trim(),
+            address: delivery.address.trim(),
             city: deliveryCity.trim() || undefined,
-            lat: DELIVERY.lat,
-            lng: DELIVERY.lng,
+            lat: delivery.lat,
+            lng: delivery.lng,
           },
         ],
         vehicleTypeRequired: vehicleType,
@@ -116,8 +113,8 @@ export default function NewOrderPage(): React.ReactElement {
 
       <Card>
         <div className="space-y-4">
-          <Input label="عنوان الاستلام" value={pickupAddress} onChange={setPickupAddress} />
-          <Input label="عنوان التسليم" value={deliveryAddress} onChange={setDeliveryAddress} />
+          <MapPicker label="موقع الاستلام" value={pickup} onChange={setPickup} />
+          <MapPicker label="موقع التسليم" value={delivery} onChange={setDelivery} />
           <Input label="مدينة التسليم" value={deliveryCity} onChange={setDeliveryCity} />
 
           <Select

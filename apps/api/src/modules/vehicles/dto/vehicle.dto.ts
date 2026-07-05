@@ -50,6 +50,31 @@ export class UpdateVehicleStatusDto {
   status!: VehicleStatus;
 }
 
+export class UpdateVehicleDto {
+  @IsOptional()
+  @IsString()
+  make?: string;
+
+  @IsOptional()
+  @IsString()
+  model?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1990)
+  @Max(2100)
+  year?: number;
+
+  @IsOptional()
+  @IsPositive()
+  capacityKg?: number;
+
+  @IsOptional()
+  @IsEnum(TemperatureCapability)
+  temperatureCapability?: TemperatureCapability;
+}
+
 export class AvailableVehiclesQueryDto {
   @IsOptional()
   @IsEnum(VehicleType)

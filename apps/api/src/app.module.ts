@@ -19,6 +19,7 @@ import { MessagingModule } from './modules/messaging/messaging.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { RealtimeModule } from './modules/realtime/realtime.module';
+import { ReportsModule } from './modules/reports/reports.module';
 import { TripsModule } from './modules/trips/trips.module';
 import { UsersModule } from './modules/users/users.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
@@ -56,6 +57,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     LocationsModule,
     InvoicesModule,
     MaintenanceModule,
+    ReportsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

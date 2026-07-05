@@ -7,6 +7,10 @@ const NAV: NavItem[] = [
   { href: '/supervisor/map', label: 'الخريطة الحية' },
   { href: '/supervisor/fleet', label: 'الأسطول' },
   { href: '/supervisor/drivers', label: 'السائقون' },
+  { href: '/supervisor/users', label: 'المستخدمون' },
+  { href: '/supervisor/vehicles', label: 'المركبات' },
+  { href: '/supervisor/reports', label: 'التقارير' },
+  { href: '/supervisor/cold-chain', label: 'سلسلة التبريد' },
 ];
 
 export default function SupervisorLayout({

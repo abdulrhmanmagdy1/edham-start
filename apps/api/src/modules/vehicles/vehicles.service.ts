@@ -73,6 +73,30 @@ export class VehiclesService {
     return VehiclesService.toDto(updated);
   }
 
+  async update(
+    id: string,
+    data: {
+      make?: string;
+      model?: string;
+      year?: number;
+      capacityKg?: number;
+      temperatureCapability?: TemperatureCapability;
+    },
+  ): Promise<VehicleDto> {
+    await this.findOne(id);
+    const updated = await this.prisma.vehicle.update({
+      where: { id },
+      data: {
+        make: data.make ?? undefined,
+        model: data.model ?? undefined,
+        year: data.year ?? undefined,
+        capacityKg: data.capacityKg ?? undefined,
+        temperatureCapability: data.temperatureCapability ?? undefined,
+      },
+    });
+    return VehiclesService.toDto(updated);
+  }
+
   static toDto(v: PrismaVehicle): VehicleDto {
     return {
       id: v.id,

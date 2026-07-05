@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Prisma, User } from '@prisma/client';
 import { UserRole } from '@edham/shared-types';
@@ -96,5 +96,47 @@ export class UsersService {
 
       return user;
     });
+  }
+
+  /** قائمة المستخدمين (موظفون افتراضياً) — SUPERVISOR. */
+  findAll(role?: UserRole): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: { deletedAt: null, ...(role ? { role } : {}) },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async updateProfile(id: string, data: { fullName?: string; email?: string }): Promise<User> {
+    await this.getOr404(id);
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        fullName: data.fullName ?? undefined,
+        email: data.email ?? undefined,
+      },
+    });
+  }
+
+  async setStatus(id: string, status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'): Promise<User> {
+    await this.getOr404(id);
+    return this.prisma.user.update({ where: { id }, data: { status } });
+  }
+
+  async getOr404(id: string): Promise<User> {
+    const user = await this.findById(id);
+    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: 'المستخدم غير موجود' });
+    return user;
+  }
+
+  static toDto(u: User): Record<string, unknown> {
+    return {
+      id: u.id,
+      fullName: u.fullName,
+      phone: u.phone,
+      email: u.email,
+      role: u.role,
+      status: u.status,
+      createdAt: u.createdAt.toISOString(),
+    };
   }
 }

@@ -2,6 +2,7 @@
 
 import { api } from '@/lib/api';
 import { useQuery } from '@/hooks/use-query';
+import { useRealtime, SOCKET_EVENTS } from '@/lib/realtime';
 import { Badge, Card, ErrorText, PageHeader, Spinner } from '@/components/ui';
 import { orderStatusArabic } from '@/lib/labels';
 import { LiveMap, MapPoint } from '@/components/live-map';
@@ -26,10 +27,18 @@ export default function TrackPage({
   params: { id: string };
 }): React.ReactElement {
   const { id } = params;
-  const { data, loading, error } = useQuery<TrackData>(
+  const { data, loading, error, refetch } = useQuery<TrackData>(
     () => api.get<TrackData>(`/orders/${id}/track`),
     [id],
   );
+
+  useRealtime({
+    [SOCKET_EVENTS.driverLocationUpdated]: () => refetch(),
+    [SOCKET_EVENTS.orderStatusChanged]: (payload) => {
+      const { orderId } = payload as { orderId: string; newStatus: string };
+      if (orderId === id) refetch();
+    },
+  });
 
   if (loading) return <Spinner />;
   if (error) return <ErrorText message={error} />;

@@ -5,9 +5,25 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { useQuery } from '@/hooks/use-query';
+import { useRealtime, SOCKET_EVENTS } from '@/lib/realtime';
 import { Card, Spinner, ErrorText, PageHeader, Badge, EmptyState } from '@/components/ui';
 import { orderStatusArabic, vehicleTypeArabic } from '@/lib/labels';
 import type { Order, PaginationMeta } from '@edham/shared-types';
+
+function LiveIndicator({ connected }: { connected: boolean }): React.ReactElement {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
+        connected ? 'bg-green-50 text-green-700' : 'bg-neutral-100 text-neutral-400'
+      }`}
+    >
+      <span
+        className={`h-2 w-2 rounded-full ${connected ? 'bg-green-500' : 'bg-neutral-300'}`}
+      />
+      {connected ? 'مباشر' : 'غير متصل'}
+    </span>
+  );
+}
 
 interface OrdersResponse {
   data: Order[];
@@ -37,14 +53,23 @@ function OrdersContent(): React.ReactElement {
   const current = FILTERS.find((f) => f.key === active) ?? FILTERS[0];
   const statusQuery = current?.status ? `status=${current.status}&` : '';
 
-  const { data, loading, error } = useQuery<OrdersResponse>(
+  const { data, loading, error, refetch } = useQuery<OrdersResponse>(
     () => api.get<OrdersResponse>(`/orders?${statusQuery}page=1&limit=50`),
     [active],
   );
 
+  const [connected, setConnected] = useState(false);
+  useRealtime(
+    {
+      [SOCKET_EVENTS.orderStatusChanged]: () => refetch(),
+      [SOCKET_EVENTS.orderPriceReceived]: () => refetch(),
+    },
+    { onConnectionChange: setConnected },
+  );
+
   return (
     <div>
-      <PageHeader title="الطلبات" />
+      <PageHeader title="الطلبات" action={<LiveIndicator connected={connected} />} />
 
       <div className="mb-5 flex flex-wrap gap-2">
         {FILTERS.map((f) => (

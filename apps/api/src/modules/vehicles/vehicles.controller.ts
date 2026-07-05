@@ -6,6 +6,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import {
   AvailableVehiclesQueryDto,
   CreateVehicleDto,
+  UpdateVehicleDto,
   UpdateVehicleStatusDto,
 } from './dto/vehicle.dto';
 import { VehiclesService } from './vehicles.service';
@@ -46,5 +47,14 @@ export class VehiclesController {
     @Body() dto: UpdateVehicleStatusDto,
   ): Promise<VehicleDto> {
     return this.vehicles.updateStatus(id, dto.status);
+  }
+
+  @Patch(':id')
+  @Roles(UserRole.SUPERVISOR)
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateVehicleDto,
+  ): Promise<VehicleDto> {
+    return this.vehicles.update(id, dto);
   }
 }
