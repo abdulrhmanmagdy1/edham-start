@@ -1,34 +1,38 @@
+import 'package:edham_mobile/core/theme/app_theme.dart';
+import 'package:edham_mobile/features/auth/providers/auth_providers.dart';
+import 'package:edham_mobile/features/workshop/providers/workshop_providers.dart';
+import 'package:edham_mobile/models/maintenance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/app_theme.dart';
-import '../../../models/enums.dart';
-import '../../../models/order.dart';
-import '../../auth/providers/auth_providers.dart';
-import '../providers/orders_providers.dart';
+/// لون حالة طلب الصيانة.
+Color maintenanceStatusColor(String status) {
+  switch (status) {
+    case 'OPEN':
+      return EdhamColors.warning;
+    case 'IN_PROGRESS':
+      return EdhamColors.black;
+    case 'COMPLETED':
+      return EdhamColors.success;
+    case 'CANCELLED':
+      return EdhamColors.textMuted;
+    default:
+      return EdhamColors.textMuted;
+  }
+}
 
-class CustomerHomeScreen extends ConsumerWidget {
-  const CustomerHomeScreen({super.key});
+class WorkshopHomeScreen extends ConsumerWidget {
+  const WorkshopHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<Order>> orders = ref.watch(myOrdersProvider);
+    final AsyncValue<List<MaintenanceRequest>> requests = ref.watch(maintenanceListProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('طلباتي'),
+        title: const Text('طلبات الصيانة'),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.receipt_long),
-            tooltip: 'فواتيري',
-            onPressed: () => context.push('/customer/invoices'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.history),
-            tooltip: 'السجل',
-            onPressed: () => context.push('/customer/history'),
-          ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'خروج',
@@ -39,22 +43,25 @@ class CustomerHomeScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: EdhamColors.red,
         foregroundColor: Colors.white,
-        onPressed: () => context.push('/customer/new-order'),
+        onPressed: () => context.push('/workshop/new'),
         icon: const Icon(Icons.add),
-        label: const Text('طلب شحن جديد'),
+        label: const Text('طلب صيانة جديد'),
       ),
       body: RefreshIndicator(
-        onRefresh: () async => ref.invalidate(myOrdersProvider),
-        child: orders.when(
+        onRefresh: () async => ref.invalidate(maintenanceListProvider),
+        child: requests.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (Object e, _) => _ErrorView(message: '$e', onRetry: () => ref.invalidate(myOrdersProvider)),
-          data: (List<Order> list) => list.isEmpty
+          error: (Object e, _) => _ErrorView(
+            message: '$e',
+            onRetry: () => ref.invalidate(maintenanceListProvider),
+          ),
+          data: (List<MaintenanceRequest> list) => list.isEmpty
               ? _empty()
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: list.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (_, int i) => _OrderCard(order: list[i]),
+                  itemBuilder: (_, int i) => _RequestCard(request: list[i]),
                 ),
         ),
       ),
@@ -64,26 +71,28 @@ class CustomerHomeScreen extends ConsumerWidget {
   Widget _empty() => ListView(
         children: const <Widget>[
           SizedBox(height: 120),
-          Icon(Icons.inbox_outlined, size: 64, color: EdhamColors.textMuted),
+          Icon(Icons.build_outlined, size: 64, color: EdhamColors.textMuted),
           SizedBox(height: 12),
-          Text('لا توجد طلبات بعد', textAlign: TextAlign.center, style: TextStyle(color: EdhamColors.textMuted)),
+          Text('لا توجد طلبات صيانة',
+              textAlign: TextAlign.center, style: TextStyle(color: EdhamColors.textMuted)),
           SizedBox(height: 4),
-          Text('اضغط "طلب شحن جديد" للبدء', textAlign: TextAlign.center, style: TextStyle(color: EdhamColors.textMuted)),
+          Text('اضغط "طلب صيانة جديد" للبدء',
+              textAlign: TextAlign.center, style: TextStyle(color: EdhamColors.textMuted)),
         ],
       );
 }
 
-class _OrderCard extends StatelessWidget {
-  const _OrderCard({required this.order});
+class _RequestCard extends StatelessWidget {
+  const _RequestCard({required this.request});
 
-  final Order order;
+  final MaintenanceRequest request;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => context.push('/customer/orders/${order.id}'),
+        onTap: () => context.push('/workshop/maintenance/${request.id}'),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -93,41 +102,32 @@ class _OrderCard extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      order.deliveryAddress,
+                      request.typeArabic,
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  _StatusBadge(status: order.status),
+                  _StatusBadge(status: request.status, label: request.statusArabic),
                 ],
               ),
               const SizedBox(height: 8),
               Row(
                 children: <Widget>[
-                  const Icon(Icons.scale, size: 16, color: EdhamColors.textMuted),
+                  const Icon(Icons.directions_car, size: 16, color: EdhamColors.textMuted),
                   const SizedBox(width: 4),
-                  Text('${order.cargoWeightKg.toStringAsFixed(0)} كجم',
-                      style: const TextStyle(color: EdhamColors.textMuted)),
-                  const SizedBox(width: 16),
-                  if (order.coldChainRequired) ...<Widget>[
-                    const Icon(Icons.ac_unit, size: 16, color: EdhamColors.red),
-                    const SizedBox(width: 4),
-                    const Text('مبرّدة', style: TextStyle(color: EdhamColors.red)),
-                  ],
+                  Text(
+                    request.vehiclePlate ?? 'مركبة غير محددة',
+                    style: const TextStyle(color: EdhamColors.textMuted),
+                  ),
                 ],
               ),
-              if (order.awaitingCustomerDecision) ...<Widget>[
+              if (request.description.isNotEmpty) ...<Widget>[
                 const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: EdhamColors.red.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'عرض سعر بانتظار موافقتك: ${order.quotedPrice?.toStringAsFixed(0)} ${order.currency}',
-                    style: const TextStyle(color: EdhamColors.red, fontWeight: FontWeight.w600),
-                  ),
+                Text(
+                  request.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: EdhamColors.textMuted, fontSize: 13),
                 ),
               ],
             ],
@@ -139,13 +139,14 @@ class _OrderCard extends StatelessWidget {
 }
 
 class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({required this.status});
+  const _StatusBadge({required this.status, required this.label});
 
   final String status;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    final Color color = StatusColor.of(status);
+    final Color color = maintenanceStatusColor(status);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -153,7 +154,7 @@ class _StatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        orderStatusArabic(status),
+        label,
         style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
       ),
     );

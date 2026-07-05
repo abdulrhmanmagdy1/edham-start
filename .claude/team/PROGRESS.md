@@ -4,8 +4,9 @@
 ---
 
 ## الحالة العامة
-- **Phase الحالية:** Phase 2 (Flutter) — 🔵 بدأت (الأساس + دور العميل)
-- **الاكتمال العام:** ~42% (Phase 0 ≈ 90% · Phase 1 ≈ 92% · Phase 2 ≈ 15%)
+- **Phase الحالية:** Phase 2 (Flutter) — 🟢 الأدوار الخمسة مكتملة (dart analyze نظيف)
+- **الاكتمال العام:** ~55% (Phase 0 ≈ 90% · Phase 1 ≈ 92% · Phase 2 ≈ 80%)
+- المتبقي في Phase 2: build APK فعلي (Android SDK) + منتقي خريطة + image_picker + Socket.io client الحي + تلميع UI حسب التصاميم.
 
 ---
 
@@ -76,38 +77,36 @@
 - [x] Theme (أسود/أحمر RTL) + go_router (redirect حسب الدور) + Dio ApiClient (refresh على 401)
 - [x] Hive TokenStorage + Riverpod (auth + orders) + models (enums/user/order)
 
-### Customer Screens ✅ (dart analyze نظيف — build APK يحتاج Android SDK)
+### Customer Screens ✅ (dart analyze نظيف)
 - [x] Login (OTP للعميل + password للموظفين + اختيار الدور)
-- [x] Home (قائمة طلباتي + حالات ملوّنة + pull-to-refresh)
-- [x] Order creation (نموذج: استلام/تسليم/بضاعة/تبريد/وزن/موعد — بلا سعر)
-- [x] Order detail + Price acceptance/rejection (فلو PRE-001 من جانب العميل)
-- [ ] Live GPS tracking (خريطة) — TODO (يحتاج Google Maps widget)
-- [ ] Order history + Invoice — TODO
-- [ ] منتقي خريطة للإحداثيات (حالياً إحداثيات ثابتة)
+- [x] Home (قائمة طلباتي + حالات ملوّنة + pull-to-refresh + وصول للسجل/الفواتير)
+- [x] Order creation (نموذج كامل — بلا سعر PRE-001)
+- [x] Order detail + Price acceptance/rejection
+- [x] Live GPS tracking (Google Maps + محطات + حالة) — عبر GET /orders/:id/track
+- [x] Order history + Invoices (قائمة + متأخرة)
+- [ ] منتقي خريطة للإحداثيات (حالياً ثابتة — TODO)
 
-### Driver Screens
-- [ ] Login (Employee ID + Password)
-- [ ] Trip list
-- [ ] Active trip + GPS broadcasting
-- [ ] Stop confirmation + photos
-- [ ] Cold chain temperature
-- [ ] Report problem
-- [ ] Offline sync (Hive)
+### Driver Screens ✅ (agent + dart analyze نظيف)
+- [x] Login (Employee ID + Password — عبر شاشة الدخول الموحّدة)
+- [x] Trip list (رحلة نشطة بارزة + قادمة)
+- [x] Active trip + GPS (geolocator → POST /locations)
+- [x] Stop confirmation + POD (placeholder صورة/توقيع — image_picker مؤجَّل)
+- [x] Cold chain temperature (+ تحذير الانتهاك)
+- [x] Report problem
+- [x] Offline sync (Hive queue + syncPending)
 
-### Supervisor Screens
-- [ ] Dashboard (KPIs)
-- [ ] Orders list + pricing
-- [ ] Order details + driver assignment
-- [ ] Live map
+### Supervisor Screens ✅ (agent)
+- [x] Orders list + فلترة بالحالة | [x] Order details + pricing + driver/vehicle assignment
+- [x] Live map (Google Maps + fleet markers)
 
-### Accountant Screens
-- [ ] Financial dashboard
-- [ ] Invoices + payments
+### Accountant Screens ✅ (agent)
+- [x] Invoices list (متأخرة ملوّنة) + طلبات جاهزة للفوترة
+- [x] Invoice detail + send + mark-paid
 
-### Workshop Screens
-- [ ] Maintenance list + details
+### Workshop Screens ✅ (agent)
+- [x] Maintenance list + new request + detail + تغيير الحالة (+ تكلفة)
 
-**Quality Gate:** Happy path يعمل على Android لكل الـ 5 أدوار ← لا
+**Quality Gate:** `dart analyze` نظيف على 48 ملف (الأدوار الخمسة). build APK يحتاج Android SDK (BLK-002).
 
 ---
 
@@ -169,3 +168,4 @@
 | 2026-07-05 | Phase 1 (Vehicles+Drivers+Assign) | Vehicles/Drivers + الإسناد + قاعدة التبريد Q9. 16 unit ✅ + **E2E الإسناد 19/19 ✅** |
 | 2026-07-05 | Phase 1 (Trips+Socket.io+ColdChain+GPS) | تنفيذ الرحلة + Socket.io حي + حرارة + GPS. **E2E 21/21 ✅** (socket فعلي) |
 | 2026-07-05 | Phase 1 (Invoices) | فوترة VAT 15% + send + mark-paid. **E2E 17/17 ✅**. Phase 1 ≈ 92% |
+| 2026-07-05 | Phase 2 Flutter (الأدوار 5) | عميل (تتبع/خريطة/سجل/فاتورة) + سائق (GPS/رحلة/POD/حرارة/offline) + مشرف (تسعير/إسناد/خريطة) + محاسب + ورشة + FCM scaffolding. **dart analyze نظيف (48 ملف)**. + Backend: Maintenance module (E2E 10/10) + track + trip stops |

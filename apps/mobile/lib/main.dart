@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'core/notifications/fcm_service.dart';
 import 'core/storage/token_storage.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/providers/auth_providers.dart';
@@ -12,6 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   final TokenStorage storage = await TokenStorage.open();
+  await FcmService.init(); // محميّ — لا يُعطّل التطبيق لو Firebase غير مُهيّأ
 
   runApp(
     ProviderScope(

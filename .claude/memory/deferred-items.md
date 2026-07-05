@@ -41,12 +41,16 @@
 | **Cron jobs**: تذكير صيانة (7 أيام)، انتهاء رخصة، فواتير overdue، حذف GPS بعد 90 يوم | لم تُبنَ (تحتاج BullMQ/Redis) |
 | **Trip detail مع stops** | GET /trips/:id لا يُرجع المحطات (السائق يحتاجها) — تحسين مطلوب |
 
-## 🔵 Phase 2 (Flutter) — بدأت (2026-07-05)
-- ✅ مُنجز: الأساس + دور العميل (login/home/create-order/pricing). `dart analyze` نظيف.
-- ⏳ متبقٍّ من العميل: tracking (خريطة Google Maps) + history + invoice + منتقي خريطة للإحداثيات.
-- ⏳ الأدوار الأربعة الأخرى: السائق (GPS/رحلة/POD/حرارة/offline Hive) + المشرف + المحاسب + الورشة.
-- ⏳ FCM في الموبايل (firebase_messaging) + Socket.io client للتتبع الحي.
-- verification: `dart analyze` يعمل (SDK محمول في scratchpad). `flutter build apk` يحتاج Android SDK (مؤجَّل).
+## 🟢 Phase 2 (Flutter) — الأدوار الخمسة مكتملة (2026-07-05، dart analyze نظيف 48 ملف)
+- ✅ عميل (login/home/create/pricing/tracking+خريطة/history/invoices) + سائق (رحلة/GPS/POD/حرارة/offline Hive) + مشرف (تسعير/إسناد/خريطة) + محاسب + ورشة + FCM scaffolding.
+- ⏳ متبقٍّ Phase 2 (تلميع/تفعيل):
+  - **build APK فعلي** — يحتاج Android SDK + JDK (BLK-002، مؤجَّل).
+  - **منتقي خريطة** للإحداثيات (create-order يستخدم إحداثيات ثابتة الآن).
+  - **image_picker** لصور POD الحقيقية (placeholder `captured://pod` حالياً — يحتاج إضافة package بإذن).
+  - **Socket.io client** للتحديثات الحية في الموبايل (socket_io_client موجود، غير مربوط بعد).
+  - **FCM فعلي:** يحتاج google-services.json + GoogleService-Info.plist + FIREBASE_SERVER_KEY + endpoint لتسجيل التوكن (Phase 4).
+  - **تلميع UI** حسب mockups في design/ (الحالي وظيفي بالهوية أسود/أحمر).
+  - Google Maps: مفتاح API في AndroidManifest/AppDelegate (Phase 5 / وقت البناء).
 
 ## 🔜 Phase 3 (Web — Next.js)
 - شاشات الأدوار الخمسة (37 شاشة). حالياً placeholders فقط.

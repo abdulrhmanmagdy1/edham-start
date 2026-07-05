@@ -1,5 +1,7 @@
 import '../../../core/network/api_client.dart';
+import '../../../models/invoice.dart';
 import '../../../models/order.dart';
+import '../../../models/track.dart';
 
 class OrdersRepository {
   OrdersRepository(this._api);
@@ -9,6 +11,16 @@ class OrdersRepository {
   Future<List<Order>> myOrders() async {
     final List<dynamic> data = await _api.getList('/orders/my');
     return data.map((dynamic e) => Order.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<TrackInfo> track(String id) async {
+    final Map<String, dynamic> data = await _api.get('/orders/$id/track');
+    return TrackInfo.fromJson(data);
+  }
+
+  Future<List<Invoice>> myInvoices() async {
+    final List<dynamic> data = await _api.getList('/invoices/my');
+    return data.map((dynamic e) => Invoice.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<Order> getOrder(String id) async {

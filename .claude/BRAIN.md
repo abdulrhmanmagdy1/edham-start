@@ -60,7 +60,7 @@ DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → LOA
 ## حالة المشروع
 - Phase 0 (Bootstrap): ✅ مكتمل جزئياً (2026-07-05) — Monorepo + Backend + Web + shared-types + scaffolds. المتبقي (migrate + flutter build + docker up) محجوب بـ Docker/Flutter غير المثبّتين.
 - Phase 1 (Backend): 🟢 ~92% (2026-07-05) — Auth+RBAC + Orders + التسعير + Vehicles/Drivers + الإسناد + Trips + Socket.io + Cold Chain + GPS + Invoices. **مُتحقَّق E2E على PostgreSQL حقيقي**: تسعير 21/21، إسناد 19/19، رحلة+socket 21/21، فوترة 17/17 + 24 unit. المتبقي: FCM/SMS/ZATCA فعلي + Redis (Phase 4-5).
-- Phase 2 (Mobile Flutter): 🔵 بدأ (2026-07-05) — الأساس (theme/router/dio/Hive/Riverpod) + دور العميل (login OTP + home + create-order + pricing accept/reject). **`dart analyze` نظيف**. المتبقي: tracking/history + الأدوار الأربعة + build APK (يحتاج Android SDK).
+- Phase 2 (Mobile Flutter): 🟢 ~80% (2026-07-05) — **الأدوار الخمسة كاملة**: عميل (login/home/create/pricing/tracking+خريطة/history/invoices) + سائق (رحلة/GPS/POD/حرارة/offline Hive) + مشرف (تسعير/إسناد/خريطة حية) + محاسب (فواتير/مدفوعات) + ورشة (صيانة) + FCM scaffolding. **`dart analyze` نظيف (48 ملف)**. المتبقي: build APK (Android SDK — BLK-002) + منتقي خريطة + image_picker + Socket.io client حي.
 - Phase 3 (Web Application): لم يبدأ
 - Phase 4 (Integration): لم يبدأ
 - Phase 5 (Launch): لم يبدأ

@@ -58,6 +58,15 @@ export class OrdersController {
     return this.orders.findOne(id, user);
   }
 
+  @Get(':id/track')
+  @Roles(UserRole.CUSTOMER, UserRole.SUPERVISOR)
+  track(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<Record<string, unknown>> {
+    return this.orders.track(id, user);
+  }
+
   // ── فلو التسعير ──
 
   @Patch(':id/set-price')

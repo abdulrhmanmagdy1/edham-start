@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/invoice.dart';
 import '../../../models/order.dart';
+import '../../../models/track.dart';
 import '../../auth/providers/auth_providers.dart';
 import '../data/orders_repository.dart';
 
@@ -16,4 +18,14 @@ final myOrdersProvider = FutureProvider.autoDispose<List<Order>>(
 /// تفاصيل طلب واحد.
 final orderDetailProvider = FutureProvider.autoDispose.family<Order, String>(
   (Ref ref, String id) => ref.watch(ordersRepositoryProvider).getOrder(id),
+);
+
+/// تتبّع الطلب (حالة + موقع + محطات).
+final orderTrackProvider = FutureProvider.autoDispose.family<TrackInfo, String>(
+  (Ref ref, String id) => ref.watch(ordersRepositoryProvider).track(id),
+);
+
+/// فواتير العميل.
+final myInvoicesProvider = FutureProvider.autoDispose<List<Invoice>>(
+  (Ref ref) => ref.watch(ordersRepositoryProvider).myInvoices(),
 );

@@ -44,6 +44,15 @@ export class TripsController {
     return this.trips.findOne(id, user);
   }
 
+  @Get(':id/stops')
+  @Roles(UserRole.SUPERVISOR, UserRole.DRIVER)
+  stops(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<Record<string, unknown>[]> {
+    return this.trips.stops(id, user);
+  }
+
   @Post(':id/confirm-loading')
   @HttpCode(HttpStatus.OK)
   @Roles(UserRole.DRIVER)

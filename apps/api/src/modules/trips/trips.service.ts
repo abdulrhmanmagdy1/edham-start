@@ -60,6 +60,23 @@ export class TripsService {
     return TripsService.toDto(trip);
   }
 
+  /** محطات الرحلة (السائق يحتاج معرّفاتها للتسليم). */
+  async stops(id: string, user: AuthenticatedUser): Promise<Record<string, unknown>[]> {
+    const trip = await this.getFull(id);
+    this.assertCanView(trip, user);
+    return trip.stops.map((s) => ({
+      id: s.id,
+      sequenceNumber: s.sequenceNumber,
+      address: s.address,
+      city: s.city,
+      contactName: s.contactName,
+      contactPhone: s.contactPhone,
+      status: s.status,
+      podPhotoUrl: s.podPhotoUrl,
+      podSignatureUrl: s.podSignatureUrl,
+    }));
+  }
+
   /** السائق يؤكد التحميل: order ASSIGNED → LOADING. */
   async confirmLoading(id: string, user: AuthenticatedUser): Promise<TripDto> {
     const trip = await this.getOwned(id, user);

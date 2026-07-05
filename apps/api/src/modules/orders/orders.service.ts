@@ -167,6 +167,48 @@ export class OrdersService {
     return OrdersService.toDto(order);
   }
 
+  /** تتبع الطلب (CUSTOMER مالك / SUPERVISOR): الحالة + الرحلة + آخر موقع + المحطات. */
+  async track(id: string, user: AuthenticatedUser): Promise<Record<string, unknown>> {
+    const order = await this.prisma.order.findFirst({
+      where: { id, deletedAt: null },
+      include: {
+        customer: true,
+        trip: { include: { stops: { orderBy: { sequenceNumber: 'asc' } } } },
+      },
+    });
+    if (!order) throw new NotFoundException({ code: 'ORDER_NOT_FOUND', message: 'الطلب غير موجود' });
+    if (user.role === UserRole.CUSTOMER && order.customer.userId !== user.sub) {
+      throw new ForbiddenException({ code: 'NOT_ORDER_OWNER', message: 'ليس طلبك' });
+    }
+
+    let lastLocation: Record<string, unknown> | null = null;
+    if (order.trip) {
+      const loc = await this.prisma.locationPoint.findFirst({
+        where: { tripId: order.trip.id },
+        orderBy: { recordedAt: 'desc' },
+      });
+      if (loc) {
+        lastLocation = {
+          lat: Number(loc.lat),
+          lng: Number(loc.lng),
+          recordedAt: loc.recordedAt.toISOString(),
+        };
+      }
+    }
+
+    return {
+      orderId: order.id,
+      status: order.status,
+      trip: order.trip ? { id: order.trip.id, status: order.trip.status } : null,
+      lastLocation,
+      stops: (order.trip?.stops ?? []).map((s) => ({
+        sequenceNumber: s.sequenceNumber,
+        address: s.address,
+        status: s.status,
+      })),
+    };
+  }
+
   // ── فلو التسعير (PRE-001) ──
 
   /** المشرف يحدد السعر يدوياً → PRICED → إيميل للعميل. */
