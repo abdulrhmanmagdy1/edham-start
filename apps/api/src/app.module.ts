@@ -10,6 +10,7 @@ import { RedisThrottlerStorage } from './redis/throttler-redis.storage';
 import { ZatcaModule } from './zatca/zatca.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ColdChainModule } from './modules/cold-chain/cold-chain.module';
+import { CustomersModule } from './modules/customers/customers.module';
 import { DriversModule } from './modules/drivers/drivers.module';
 import { HealthModule } from './modules/health/health.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
@@ -50,6 +51,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     AuthModule,
     UsersModule,
     OrdersModule,
+    CustomersModule,
     VehiclesModule,
     DriversModule,
     TripsModule,
