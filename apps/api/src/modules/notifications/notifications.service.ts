@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { NotificationType } from '@edham/shared-types';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Notification as PrismaNotification } from '@prisma/client';
+import { Notification as NotificationDto, NotificationType } from '@edham/shared-types';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { DeviceTokenStore } from '../../firebase/device-token.store';
 import { FirebaseService } from '../../firebase/firebase.service';
@@ -54,5 +55,68 @@ export class NotificationsService {
 
   registerDevice(userId: string, token: string): Promise<void> {
     return this.deviceTokens.register(userId, token);
+  }
+
+  /** قائمة إشعارات المستخدم (الأحدث أولاً)، مع خيار غير المقروء فقط. */
+  async listForUser(
+    userId: string,
+    opts: { unreadOnly?: boolean; limit?: number } = {},
+  ): Promise<NotificationDto[]> {
+    const rows = await this.prisma.notification.findMany({
+      where: { userId, ...(opts.unreadOnly ? { isRead: false } : {}) },
+      orderBy: { createdAt: 'desc' },
+      take: Math.min(opts.limit ?? 50, 100),
+    });
+    return rows.map(NotificationsService.toDto);
+  }
+
+  /** عدد الإشعارات غير المقروءة (لعدّاد الجرس). */
+  unreadCount(userId: string): Promise<number> {
+    return this.prisma.notification.count({ where: { userId, isRead: false } });
+  }
+
+  /** تعليم إشعار كمقروء (يتحقق من ملكية المستخدم له). */
+  async markRead(userId: string, id: string): Promise<NotificationDto> {
+    const existing = await this.prisma.notification.findFirst({ where: { id, userId } });
+    if (!existing) {
+      throw new NotFoundException({ code: 'NOTIFICATION_NOT_FOUND', message: 'الإشعار غير موجود' });
+    }
+    const updated = await this.prisma.notification.update({
+      where: { id },
+      data: { isRead: true },
+    });
+    return NotificationsService.toDto(updated);
+  }
+
+  /** تعليم كل إشعارات المستخدم كمقروءة. */
+  async markAllRead(userId: string): Promise<{ updated: number }> {
+    const res = await this.prisma.notification.updateMany({
+      where: { userId, isRead: false },
+      data: { isRead: true },
+    });
+    return { updated: res.count };
+  }
+
+  /** حذف إشعار (يتحقق من ملكية المستخدم له). */
+  async remove(userId: string, id: string): Promise<{ success: boolean }> {
+    const res = await this.prisma.notification.deleteMany({ where: { id, userId } });
+    if (res.count === 0) {
+      throw new NotFoundException({ code: 'NOTIFICATION_NOT_FOUND', message: 'الإشعار غير موجود' });
+    }
+    return { success: true };
+  }
+
+  static toDto(n: PrismaNotification): NotificationDto {
+    return {
+      id: n.id,
+      userId: n.userId,
+      type: n.type as NotificationType,
+      title: n.title,
+      body: n.body,
+      isRead: n.isRead,
+      referenceType: n.referenceType,
+      referenceId: n.referenceId,
+      createdAt: n.createdAt.toISOString(),
+    };
   }
 }
