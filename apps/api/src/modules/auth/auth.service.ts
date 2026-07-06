@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { randomInt } from 'node:crypto';
-import { User as PrismaUser } from '@prisma/client';
+import { Prisma, User as PrismaUser } from '@prisma/client';
 import { AuthTokens, User as UserDto, UserRole } from '@edham/shared-types';
 import { EmailService } from '../messaging/email.service';
 import { SmsService } from '../messaging/sms.service';
@@ -42,15 +42,32 @@ export class AuthService {
     }
 
     const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
-    const user = await this.users.createCustomerAccount({
-      companyName: dto.companyName,
-      commercialRegistrationNumber: dto.commercialRegistrationNumber,
-      vatNumber: dto.vatNumber,
-      fullName: dto.fullName,
-      phone: dto.phone,
-      email: dto.email,
-      passwordHash,
-    });
+    let user: PrismaUser;
+    try {
+      user = await this.users.createCustomerAccount({
+        companyName: dto.companyName,
+        commercialRegistrationNumber: dto.commercialRegistrationNumber,
+        vatNumber: dto.vatNumber,
+        fullName: dto.fullName,
+        phone: dto.phone,
+        email: dto.email,
+        passwordHash,
+      });
+    } catch (error) {
+      // قيد فريد (السجل التجاري / البريد / الجوال مكرّر) → رسالة واضحة بدل 500
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        const target = Array.isArray(error.meta?.target) ? (error.meta.target as string[]).join(', ') : '';
+        const field = target.includes('commercial')
+          ? 'رقم السجل التجاري'
+          : target.includes('vat')
+            ? 'الرقم الضريبي'
+            : target.includes('email')
+              ? 'البريد الإلكتروني'
+              : 'رقم الجوال';
+        throw new ConflictException({ code: 'DUPLICATE_FIELD', message: `${field} مسجّل مسبقاً` });
+      }
+      throw error;
+    }
 
     const code = this.genOtp();
     await this.users.setOtp(user.id, code, new Date(Date.now() + OTP_TTL_MINUTES * 60_000));
