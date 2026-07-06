@@ -90,6 +90,80 @@ export class InvoicesService {
     };
   }
 
+  /** ملخص مالي للمحاسب: المُفوتر، المدفوع، المستحق، المتأخر، وتوزيع الحالات. */
+  async financialSummary(): Promise<{
+    totalInvoiced: number;
+    totalPaid: number;
+    outstanding: number;
+    overdueAmount: number;
+    overdueCount: number;
+    thisMonthRevenue: number;
+    byStatus: Record<string, number>;
+  }> {
+    const now = new Date();
+    const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+    const [invoices, paidThisMonth] = await this.prisma.$transaction([
+      this.prisma.invoice.findMany({
+        where: { status: { not: InvoiceStatus.DRAFT } },
+        select: { status: true, totalAmount: true, dueAt: true },
+      }),
+      this.prisma.invoice.findMany({
+        where: { status: InvoiceStatus.PAID, paidAt: { gte: monthStart } },
+        select: { totalAmount: true },
+      }),
+    ]);
+    const grouped = await this.prisma.invoice.groupBy({
+      by: ['status'],
+      _count: { _all: true },
+      orderBy: { status: 'asc' },
+    });
+
+    let totalInvoiced = 0;
+    let totalPaid = 0;
+    let outstanding = 0;
+    let overdueAmount = 0;
+    let overdueCount = 0;
+    for (const inv of invoices) {
+      const amount = Number(inv.totalAmount);
+      totalInvoiced += amount;
+      if (inv.status === InvoiceStatus.PAID) {
+        totalPaid += amount;
+      } else if (inv.status === InvoiceStatus.SENT || inv.status === InvoiceStatus.OVERDUE) {
+        outstanding += amount;
+        if (inv.dueAt && inv.dueAt.getTime() < now.getTime()) {
+          overdueAmount += amount;
+          overdueCount += 1;
+        }
+      }
+    }
+
+    const byStatus: Record<string, number> = {};
+    for (const g of grouped) byStatus[g.status] = g._count._all;
+    const thisMonthRevenue = paidThisMonth.reduce((s, i) => s + Number(i.totalAmount), 0);
+
+    return {
+      totalInvoiced: round2(totalInvoiced),
+      totalPaid: round2(totalPaid),
+      outstanding: round2(outstanding),
+      overdueAmount: round2(overdueAmount),
+      overdueCount,
+      thisMonthRevenue: round2(thisMonthRevenue),
+      byStatus,
+    };
+  }
+
+  /** الفواتير المتأخرة (SENT/OVERDUE وتجاوزت تاريخ الاستحقاق). */
+  async findOverdue(): Promise<InvoiceDto[]> {
+    const rows = await this.prisma.invoice.findMany({
+      where: {
+        status: { in: [InvoiceStatus.SENT, InvoiceStatus.OVERDUE] },
+        dueAt: { lt: new Date() },
+      },
+      orderBy: { dueAt: 'asc' },
+    });
+    return rows.map(InvoicesService.toDto);
+  }
+
   async findMy(user: AuthenticatedUser): Promise<InvoiceDto[]> {
     const customer = await this.prisma.customer.findFirst({ where: { userId: user.sub } });
     if (!customer) return [];

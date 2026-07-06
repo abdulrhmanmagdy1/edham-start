@@ -3,13 +3,19 @@ import { UserRole } from '@edham/shared-types';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import { RolesGuard } from '../../common/auth/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { ReportsService } from './reports.service';
+import { ReportsService, SupervisorDashboard } from './reports.service';
 
 @Controller('reports')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.SUPERVISOR)
 export class ReportsController {
   constructor(private readonly reports: ReportsService) {}
+
+  /** لوحة مؤشرات المشرف (عدّادات فورية). */
+  @Get('dashboard')
+  dashboard(): Promise<SupervisorDashboard> {
+    return this.reports.supervisorDashboard();
+  }
 
   @Get('orders-per-week')
   ordersPerWeek(): Promise<Array<{ week: string; count: number }>> {

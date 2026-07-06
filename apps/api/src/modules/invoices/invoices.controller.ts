@@ -46,6 +46,20 @@ export class InvoicesController {
     return this.invoices.findMy(user);
   }
 
+  /** ملخص مالي للوحة المحاسب. */
+  @Get('summary')
+  @Roles(UserRole.ACCOUNTANT)
+  summary(): ReturnType<InvoicesService['financialSummary']> {
+    return this.invoices.financialSummary();
+  }
+
+  /** قائمة الفواتير المتأخرة. */
+  @Get('overdue')
+  @Roles(UserRole.ACCOUNTANT)
+  overdue(): Promise<InvoiceDto[]> {
+    return this.invoices.findOverdue();
+  }
+
   @Get(':id')
   @Roles(UserRole.ACCOUNTANT, UserRole.CUSTOMER)
   findOne(

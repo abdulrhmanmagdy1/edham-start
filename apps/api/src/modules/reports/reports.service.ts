@@ -1,10 +1,83 @@
 import { Injectable } from '@nestjs/common';
-import { InvoiceStatus, TripStatus } from '@edham/shared-types';
+import {
+  DriverStatus,
+  InvoiceStatus,
+  OrderStatus,
+  TripStatus,
+  VehicleStatus,
+} from '@edham/shared-types';
 import { PrismaService } from '../../common/prisma/prisma.service';
+
+export interface SupervisorDashboard {
+  orders: {
+    total: number;
+    pendingPricing: number;
+    awaitingCustomer: number;
+    inProgress: number;
+    completed: number;
+    cancelled: number;
+  };
+  trips: { active: number };
+  vehicles: { total: number; available: number; inMaintenance: number };
+  drivers: { available: number };
+  coldChainCompliancePct: number;
+}
 
 @Injectable()
 export class ReportsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  /** لوحة مؤشرات المشرف (KPIs) — عدّادات فورية. */
+  async supervisorDashboard(): Promise<SupervisorDashboard> {
+    const activeOrderStatuses: OrderStatus[] = [
+      OrderStatus.ASSIGNED,
+      OrderStatus.LOADING,
+      OrderStatus.IN_TRANSIT,
+      OrderStatus.DELIVERED,
+    ];
+    const [
+      total,
+      pendingPricing,
+      awaitingCustomer,
+      inProgress,
+      completed,
+      cancelled,
+      activeTrips,
+      totalVehicles,
+      availableVehicles,
+      inMaintenance,
+      availableDrivers,
+      totalReadings,
+      violations,
+    ] = await this.prisma.$transaction([
+      this.prisma.order.count({ where: { deletedAt: null } }),
+      this.prisma.order.count({ where: { deletedAt: null, status: OrderStatus.PENDING_PRICING } }),
+      this.prisma.order.count({ where: { deletedAt: null, status: OrderStatus.PRICED } }),
+      this.prisma.order.count({ where: { deletedAt: null, status: { in: activeOrderStatuses } } }),
+      this.prisma.order.count({ where: { deletedAt: null, status: OrderStatus.COMPLETED } }),
+      this.prisma.order.count({ where: { deletedAt: null, status: OrderStatus.CANCELLED } }),
+      this.prisma.trip.count({
+        where: { status: { in: [TripStatus.ASSIGNED, TripStatus.IN_PROGRESS, TripStatus.AT_STOP] } },
+      }),
+      this.prisma.vehicle.count({ where: { deletedAt: null } }),
+      this.prisma.vehicle.count({ where: { deletedAt: null, status: VehicleStatus.AVAILABLE } }),
+      this.prisma.vehicle.count({ where: { deletedAt: null, status: VehicleStatus.IN_MAINTENANCE } }),
+      this.prisma.driver.count({ where: { status: DriverStatus.AVAILABLE } }),
+      this.prisma.temperatureLog.count(),
+      this.prisma.temperatureLog.count({ where: { isViolation: true } }),
+    ]);
+
+    const coldChainCompliancePct =
+      totalReadings === 0 ? 100 : Math.round(((totalReadings - violations) / totalReadings) * 1000) / 10;
+
+    return {
+      orders: { total, pendingPricing, awaitingCustomer, inProgress, completed, cancelled },
+      trips: { active: activeTrips },
+      vehicles: { total: totalVehicles, available: availableVehicles, inMaintenance },
+      drivers: { available: availableDrivers },
+      coldChainCompliancePct,
+    };
+  }
 
   /** عدد الطلبات لكل أسبوع (آخر 8 أسابيع). */
   async ordersPerWeek(): Promise<Array<{ week: string; count: number }>> {
