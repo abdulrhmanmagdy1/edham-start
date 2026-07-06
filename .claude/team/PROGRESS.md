@@ -7,6 +7,7 @@
 - **الحالية:** Stage 1 (Backend Production + Web Completion + Testing) — 🟢 مكتمل، full stack يعمل locally
 - **الاكتمال العام:** ~78% (Backend ~96% · Web ~92% · Mobile ~80%)
 - **Stage 1 (2026-07-05):** Docker (pg+redis) · Redis (device-tokens/refresh/rate-limit) · SMS/Email providers (mock+scaffold) · ZATCA scaffold · Socket.io web حي · MapPicker · شاشات المشرف (users/vehicles/reports/cold-chain) · seed واقعي (20 طلب/14 فاتورة) · testing guide. المنافذ: API:3001 / Web:3000.
+- **Public-facing (2026-07-06):** Landing احترافية + Auth كامل (login/signup/forgot/reset، split-screen) + backend (signup-customer/forgot/reset، bcrypt 12، revokeAll) + middleware (كوكي edham_role) + SEO (robots/sitemap/OG). العميل يدخل بـ OTP أو password. مُتحقَّق E2E + next build (30+ route، middleware active).
 - **التالي (Stage 2 — لم يبدأ):** GitHub + Mobile build (Android SDK) + Deployment.
 
 ---
