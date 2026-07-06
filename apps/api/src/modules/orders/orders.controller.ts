@@ -9,8 +9,10 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { Order as OrderDto, PaginationMeta, UserRole } from '@edham/shared-types';
 import { AuthenticatedUser } from '../../common/auth/auth.types';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
@@ -54,6 +56,16 @@ export class OrdersController {
   @Roles(UserRole.CUSTOMER)
   findMy(@CurrentUser() user: AuthenticatedUser): Promise<OrderDto[]> {
     return this.orders.findMy(user);
+  }
+
+  /** تصدير الطلبات CSV. */
+  @Get('export')
+  @Roles(UserRole.SUPERVISOR, UserRole.ACCOUNTANT)
+  async export(@Res({ passthrough: false }) res: Response): Promise<void> {
+    const csv = await this.orders.exportCsv();
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="orders.csv"');
+    res.send(csv);
   }
 
   @Get(':id')

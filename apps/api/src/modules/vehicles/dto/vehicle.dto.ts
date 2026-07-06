@@ -1,10 +1,13 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
+  IsArray,
   IsEnum,
   IsInt,
   IsOptional,
   IsPositive,
   IsString,
+  IsUUID,
   Matches,
   Max,
   Min,
@@ -46,6 +49,16 @@ export class CreateVehicleDto {
 }
 
 export class UpdateVehicleStatusDto {
+  @IsEnum(VehicleStatus)
+  status!: VehicleStatus;
+}
+
+export class BulkVehicleStatusDto {
+  @IsArray()
+  @ArrayMinSize(1, { message: 'اختر مركبة واحدة على الأقل' })
+  @IsUUID('4', { each: true, message: 'معرّف مركبة غير صالح' })
+  ids!: string[];
+
   @IsEnum(VehicleStatus)
   status!: VehicleStatus;
 }

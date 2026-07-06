@@ -20,6 +20,7 @@ import {
 } from '@edham/shared-types';
 import { AuthenticatedUser } from '../../common/auth/auth.types';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { toCsv } from '../../common/util/csv';
 import { EmailService } from '../messaging/email.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { RealtimeGateway } from '../realtime/realtime.gateway';
@@ -170,6 +171,40 @@ export class OrdersService {
       orderBy: { createdAt: 'desc' },
     });
     return rows.map(OrdersService.toDto);
+  }
+
+  /** تصدير الطلبات CSV (المشرف/المحاسب) — TECH §5.3. */
+  async exportCsv(): Promise<string> {
+    const rows = await this.prisma.order.findMany({
+      where: { deletedAt: null },
+      orderBy: { createdAt: 'desc' },
+      include: { customer: { select: { companyName: true } } },
+    });
+    const headers = [
+      'رقم الطلب',
+      'الشركة',
+      'من',
+      'إلى',
+      'نوع البضاعة',
+      'الوزن (كجم)',
+      'سلسلة تبريد',
+      'السعر',
+      'الحالة',
+      'تاريخ الإنشاء',
+    ];
+    const data = rows.map((o) => [
+      o.id,
+      o.customer.companyName,
+      o.pickupAddress,
+      o.deliveryAddress,
+      o.cargoType,
+      Number(o.cargoWeightKg),
+      o.coldChainRequired ? 'نعم' : 'لا',
+      o.quotedPrice === null ? '' : Number(o.quotedPrice),
+      o.status,
+      o.createdAt.toISOString(),
+    ]);
+    return toCsv(headers, data);
   }
 
   async findOne(id: string, user: AuthenticatedUser): Promise<OrderDto> {

@@ -8,6 +8,7 @@ import {
   VehicleType,
 } from '@edham/shared-types';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { toCsv } from '../../common/util/csv';
 import { AvailableVehiclesQueryDto, CreateVehicleDto } from './dto/vehicle.dto';
 import { isTemperatureCompatible } from './temperature-match';
 
@@ -95,6 +96,44 @@ export class VehiclesService {
       },
     });
     return VehiclesService.toDto(updated);
+  }
+
+  /** تغيير حالة عدة مركبات دفعة واحدة (SPEC §5.1 Bulk Operations). */
+  async bulkStatus(ids: string[], status: VehicleStatus): Promise<{ updated: number }> {
+    const res = await this.prisma.vehicle.updateMany({
+      where: { id: { in: ids }, deletedAt: null },
+      data: { status },
+    });
+    return { updated: res.count };
+  }
+
+  /** تصدير قائمة المركبات CSV (SPEC §5.1). */
+  async exportCsv(): Promise<string> {
+    const rows = await this.prisma.vehicle.findMany({
+      where: { deletedAt: null },
+      orderBy: { plateNumber: 'asc' },
+    });
+    const headers = [
+      'رقم اللوحة',
+      'النوع',
+      'الصانع',
+      'الموديل',
+      'السنة',
+      'الحمولة (كجم)',
+      'قدرة التبريد',
+      'الحالة',
+    ];
+    const data = rows.map((v) => [
+      v.plateNumber,
+      v.type,
+      v.make,
+      v.model,
+      v.year,
+      Number(v.capacityKg),
+      v.temperatureCapability,
+      v.status,
+    ]);
+    return toCsv(headers, data);
   }
 
   static toDto(v: PrismaVehicle): VehicleDto {

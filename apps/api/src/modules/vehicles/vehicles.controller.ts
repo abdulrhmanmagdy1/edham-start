@@ -1,10 +1,23 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import type { Response } from 'express';
 import { Vehicle as VehicleDto, UserRole } from '@edham/shared-types';
 import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import { RolesGuard } from '../../common/auth/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import {
   AvailableVehiclesQueryDto,
+  BulkVehicleStatusDto,
   CreateVehicleDto,
   UpdateVehicleDto,
   UpdateVehicleStatusDto,
@@ -32,6 +45,23 @@ export class VehiclesController {
   @Roles(UserRole.SUPERVISOR)
   findAvailable(@Query() query: AvailableVehiclesQueryDto): Promise<VehicleDto[]> {
     return this.vehicles.findAvailable(query);
+  }
+
+  /** تصدير قائمة المركبات CSV. */
+  @Get('export')
+  @Roles(UserRole.SUPERVISOR)
+  async export(@Res({ passthrough: false }) res: Response): Promise<void> {
+    const csv = await this.vehicles.exportCsv();
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="vehicles.csv"');
+    res.send(csv);
+  }
+
+  /** تغيير حالة عدة مركبات دفعة واحدة. */
+  @Patch('bulk-status')
+  @Roles(UserRole.SUPERVISOR)
+  bulkStatus(@Body() dto: BulkVehicleStatusDto): Promise<{ updated: number }> {
+    return this.vehicles.bulkStatus(dto.ids, dto.status);
   }
 
   @Get(':id')
