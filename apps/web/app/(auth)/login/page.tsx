@@ -2,34 +2,38 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { UserRole } from '@edham/shared-types';
-import { Button, Card, ErrorText, Input } from '../../../components/ui';
+import { Button, ErrorText, Input } from '../../../components/ui';
+import { PasswordInput, Tabs } from '../../../components/auth-ui';
 import { ApiError } from '../../../lib/api';
 import { useAuth } from '../../../lib/auth-context';
-import { roleArabic } from '../../../lib/labels';
+import { AuthLink, AuthShell, OtpField, PhoneField } from '../auth-shell';
 
-const ROLE_HOME: Record<string, string> = {
-  CUSTOMER: '/customer',
-  DRIVER: '/driver',
-  SUPERVISOR: '/supervisor',
-  ACCOUNTANT: '/accountant',
-  WORKSHOP: '/workshop',
-};
+type Account = 'customer' | 'employee';
+type CustomerMode = 'otp' | 'password';
 
 export default function LoginPage(): React.ReactElement {
   const { sendOtp, verifyOtp, login } = useAuth();
   const router = useRouter();
 
-  const [role, setRole] = useState<UserRole>(UserRole.CUSTOMER);
+  const [account, setAccount] = useState<Account>('customer');
+  const [customerMode, setCustomerMode] = useState<CustomerMode>('otp');
+
+  // عميل — OTP
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [identifier, setIdentifier] = useState('');
+
+  // عميل بكلمة مرور / موظف
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isCustomer = role === UserRole.CUSTOMER;
+  function resetError(): void {
+    setError(null);
+  }
 
   async function guard(fn: () => Promise<void>): Promise<void> {
     setBusy(true);
@@ -43,85 +47,162 @@ export default function LoginPage(): React.ReactElement {
     }
   }
 
+  function goHome(role: string): void {
+    router.replace('/' + role.toLowerCase());
+  }
+
   const handleSendOtp = (): Promise<void> =>
     guard(async () => {
-      await sendOtp(`+966${phone.trim()}`);
+      await sendOtp(`+966${phone}`);
       setOtpSent(true);
     });
 
-  const handleVerify = (): Promise<void> =>
+  const handleVerifyOtp = (): Promise<void> =>
     guard(async () => {
-      const u = await verifyOtp(`+966${phone.trim()}`, otp.trim());
-      router.replace(ROLE_HOME[u.role] ?? '/');
+      const u = await verifyOtp(`+966${phone}`, otp);
+      goHome(u.role);
     });
 
-  const handleLogin = (): Promise<void> =>
+  const handlePasswordLogin = (): Promise<void> =>
     guard(async () => {
-      const u = await login(identifier.trim(), password);
-      router.replace(ROLE_HOME[u.role] ?? '/');
+      const u = await login(email.trim(), password);
+      goHome(u.role);
     });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 p-4">
-      <Card className="w-full max-w-md">
-        <div className="mb-6 text-center">
-          <div className="text-3xl font-bold text-edham-red">إدهام للوجستيات</div>
-          <p className="mt-1 text-sm text-neutral-500">سجّل الدخول للمتابعة</p>
+    <AuthShell title="تسجيل الدخول" subtitle="أدخل بياناتك للوصول إلى حسابك">
+      <div className="mb-5">
+        <Tabs
+          active={account}
+          onChange={(k) => {
+            setAccount(k as Account);
+            resetError();
+          }}
+          tabs={[
+            { key: 'customer', label: 'عميل' },
+            { key: 'employee', label: 'موظف' },
+          ]}
+        />
+      </div>
+
+      {error && (
+        <div className="mb-4">
+          <ErrorText message={error} />
         </div>
+      )}
 
-        <div className="mb-5 flex flex-wrap justify-center gap-2">
-          {Object.values(UserRole).map((r) => (
-            <button
-              key={r}
-              onClick={() => {
-                setRole(r);
-                setOtpSent(false);
-                setError(null);
-              }}
-              className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-                r === role ? 'bg-edham-black text-white' : 'bg-neutral-100 text-neutral-700'
-              }`}
-            >
-              {roleArabic(r)}
-            </button>
-          ))}
+      {account === 'customer' ? (
+        <div className="space-y-4">
+          <Tabs
+            active={customerMode}
+            onChange={(k) => {
+              setCustomerMode(k as CustomerMode);
+              resetError();
+            }}
+            tabs={[
+              { key: 'otp', label: 'برمز التحقق' },
+              { key: 'password', label: 'بكلمة المرور' },
+            ]}
+          />
+
+          {customerMode === 'otp' ? (
+            <div className="space-y-3">
+              <PhoneField label="رقم الجوال" value={phone} onChange={setPhone} />
+              {otpSent && (
+                <>
+                  <OtpField label="رمز التحقق (6 أرقام)" value={otp} onChange={setOtp} />
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={busy}
+                    className="text-xs font-medium text-neutral-500 hover:text-edham-red disabled:opacity-50"
+                  >
+                    إعادة إرسال الرمز
+                  </button>
+                </>
+              )}
+              <Button
+                type="button"
+                disabled={busy || (otpSent ? otp.length < 6 : phone.length < 9)}
+                onClick={otpSent ? handleVerifyOtp : handleSendOtp}
+                className="w-full"
+              >
+                {busy ? 'جارٍ...' : otpSent ? 'تسجيل الدخول' : 'إرسال رمز التحقق'}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <Input
+                label="البريد الإلكتروني"
+                value={email}
+                onChange={setEmail}
+                type="email"
+                placeholder="you@company.com"
+              />
+              <PasswordInput
+                label="كلمة المرور"
+                value={password}
+                onChange={setPassword}
+                autoComplete="current-password"
+              />
+              <Button
+                type="button"
+                disabled={busy || !email.trim() || !password}
+                onClick={handlePasswordLogin}
+                className="w-full"
+              >
+                {busy ? 'جارٍ...' : 'تسجيل الدخول'}
+              </Button>
+            </div>
+          )}
+
+          <p className="text-center text-sm text-neutral-500">
+            ليس لديك حساب؟ <AuthLink href="/signup">سجّل الآن</AuthLink>
+          </p>
         </div>
+      ) : (
+        <div className="space-y-3">
+          <Input
+            label="البريد الإلكتروني"
+            value={email}
+            onChange={setEmail}
+            type="email"
+            placeholder="you@edham.sa"
+          />
+          <PasswordInput
+            label="كلمة المرور"
+            value={password}
+            onChange={setPassword}
+            autoComplete="current-password"
+          />
 
-        {error && (
-          <div className="mb-4">
-            <ErrorText message={error} />
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-2 text-sm text-neutral-600">
+              <input
+                type="checkbox"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
+                className="h-4 w-4 rounded border-neutral-300 accent-edham-red"
+              />
+              تذكّرني
+            </label>
+            <AuthLink href="/forgot-password">نسيت كلمة المرور؟</AuthLink>
           </div>
-        )}
 
-        {isCustomer ? (
-          <div className="space-y-3">
-            <Input label="رقم الجوال" value={phone} onChange={setPhone} placeholder="5XXXXXXXX" />
-            {otpSent && (
-              <Input label="رمز التحقق (6 أرقام)" value={otp} onChange={setOtp} type="text" />
-            )}
-            <Button
-              type="button"
-              disabled={busy}
-              onClick={otpSent ? handleVerify : handleSendOtp}
-              className="w-full"
-            >
-              {busy ? '...' : otpSent ? 'تحقّق ودخول' : 'إرسال رمز التحقق'}
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <Input
-              label="البريد الإلكتروني أو رقم الموظف"
-              value={identifier}
-              onChange={setIdentifier}
-            />
-            <Input label="كلمة المرور" value={password} onChange={setPassword} type="password" />
-            <Button type="button" disabled={busy} onClick={handleLogin} className="w-full">
-              {busy ? '...' : 'دخول'}
-            </Button>
-          </div>
-        )}
-      </Card>
-    </div>
+          <Button
+            type="button"
+            disabled={busy || !email.trim() || !password}
+            onClick={handlePasswordLogin}
+            className="w-full"
+          >
+            {busy ? 'جارٍ...' : 'تسجيل الدخول'}
+          </Button>
+
+          <p className="text-center text-xs text-neutral-400">
+            الحسابات الموظفة تُنشأ من إدارة إدهام.
+          </p>
+        </div>
+      )}
+    </AuthShell>
   );
 }
