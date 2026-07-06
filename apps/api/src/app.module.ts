@@ -20,6 +20,7 @@ import { MaintenanceModule } from './modules/maintenance/maintenance.module';
 import { MessagingModule } from './modules/messaging/messaging.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { PricingModule } from './modules/pricing/pricing.module';
 import { RealtimeModule } from './modules/realtime/realtime.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { TripsModule } from './modules/trips/trips.module';
@@ -54,6 +55,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     UsersModule,
     OrdersModule,
     CustomersModule,
+    PricingModule,
     VehiclesModule,
     DriversModule,
     TripsModule,
