@@ -57,6 +57,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     await this.raw?.srem(key, member);
   }
 
+  async del(key: string): Promise<void> {
+    await this.raw?.del(key);
+  }
+
   async smembers(key: string): Promise<string[]> {
     return this.raw ? this.raw.smembers(key) : [];
   }

@@ -46,6 +46,55 @@ export class UsersService {
     await this.prisma.user.update({ where: { id: userId }, data: { lastLoginAt: new Date() } });
   }
 
+  /** بحث بالجوال أو البريد (للاستعادة/التسجيل). */
+  findByPhoneOrEmail(phone: string, email: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: { deletedAt: null, OR: [{ phone }, { email }] },
+    });
+  }
+
+  /** إنشاء حساب عميل كامل (تسجيل ذاتي): user + ملف الشركة + كلمة مرور. */
+  createCustomerAccount(input: {
+    companyName: string;
+    commercialRegistrationNumber?: string;
+    vatNumber?: string;
+    fullName: string;
+    phone: string;
+    email: string;
+    passwordHash: string;
+  }): Promise<User> {
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          fullName: input.fullName,
+          phone: input.phone,
+          email: input.email,
+          role: UserRole.CUSTOMER,
+          status: 'ACTIVE',
+          passwordHash: input.passwordHash,
+        },
+      });
+      await tx.customer.create({
+        data: {
+          userId: user.id,
+          companyName: input.companyName,
+          commercialRegistrationNumber: input.commercialRegistrationNumber ?? null,
+          vatNumber: input.vatNumber ?? null,
+          contactPersonName: input.fullName,
+          billingEmail: input.email,
+        },
+      });
+      return user;
+    });
+  }
+
+  async setPasswordAndClearOtp(userId: string, passwordHash: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash, otpCode: null, otpExpiresAt: null },
+    });
+  }
+
   /** ينشئ حساب عميل (shell) عند أول send-otp لرقم غير موجود. */
   createCustomerShell(phone: string): Promise<User> {
     return this.prisma.user.create({

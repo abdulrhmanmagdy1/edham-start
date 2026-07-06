@@ -122,4 +122,13 @@ export class TokenService {
   async revoke(userId: string, refreshToken: string): Promise<void> {
     await this.forget(userId, this.hash(refreshToken));
   }
+
+  /** إبطال كل جلسات المستخدم (بعد تغيير كلمة المرور). */
+  async revokeAll(userId: string): Promise<void> {
+    if (this.redis.enabled) {
+      await this.redis.del(this.key(userId));
+      return;
+    }
+    this.mem.delete(userId);
+  }
 }

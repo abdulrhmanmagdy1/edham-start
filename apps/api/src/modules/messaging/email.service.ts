@@ -55,6 +55,17 @@ export class EmailService {
     await this.provider.send(input.to, subject, body);
   }
 
+  async sendOtpEmail(to: string, code: string): Promise<void> {
+    const subject = 'رمز استعادة كلمة المرور — إدهام للوجستيات';
+    const body = `
+      <div dir="rtl">
+        <h2>استعادة كلمة المرور</h2>
+        <p>رمز التحقق الخاص بك: <strong style="font-size:20px">${code}</strong></p>
+        <p>صالح لمدة 10 دقائق. إذا لم تطلب ذلك، تجاهل هذه الرسالة.</p>
+      </div>`;
+    await this.provider.send(to, subject, body);
+  }
+
   async sendInvoiceEmail(input: InvoiceEmailInput): Promise<void> {
     const subject = `فاتورة ${input.invoiceNumber} — إدهام للوجستيات`;
     const body = `
