@@ -44,7 +44,7 @@ export class AuthController {
   /** تسجيل ذاتي للعميل (شركة B2B) — CUSTOMER حصراً. */
   @Post('signup-customer')
   @HttpCode(HttpStatus.CREATED)
-  @Throttle({ default: { limit: 5, ttl: 3_600_000 } })
+  @Throttle({ default: { limit: 20, ttl: 3_600_000 } })
   signupCustomer(
     @Body() dto: SignupCustomerDto,
   ): Promise<{ requiresOtpVerification: true; phone: string; expiresIn: number }> {
