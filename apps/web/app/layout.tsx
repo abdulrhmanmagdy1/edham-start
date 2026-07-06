@@ -12,8 +12,22 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
-  title: 'إدهام للوجستيات',
-  description: 'نظام لوجستي متكامل لسلسلة التبريد والنقل — إدهام للوجستيات',
+  metadataBase: new URL('https://edham.sa'),
+  title: {
+    default: 'إدهام - نظام إدارة النقل المبرد | Edham Logistics',
+    template: '%s | إدهام',
+  },
+  description:
+    'شركة إدهام للنقل المبرد. تتبع مباشر للأسطول، إدارة شاملة للحمولات المبردة والمجمدة، فواتير إلكترونية.',
+  openGraph: {
+    title: 'إدهام - نظام إدارة النقل المبرد | Edham Logistics',
+    description:
+      'شركة إدهام للنقل المبرد. تتبع مباشر للأسطول، إدارة شاملة للحمولات المبردة والمجمدة، فواتير إلكترونية.',
+    type: 'website',
+    locale: 'ar_SA',
+    siteName: 'إدهام للوجستيات',
+  },
+  icons: { icon: '/logo.png' },
 };
 
 export default function RootLayout({
