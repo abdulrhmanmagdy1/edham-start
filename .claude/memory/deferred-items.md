@@ -26,20 +26,21 @@
 | **Redis** | ✅ مربوط (2026-07-05): device-tokens + refresh store + rate-limit (hybrid مع fallback). متبقٍّ: Socket.io adapter + BullMQ | Phase 4 (Socket adapter/queues) |
 | تقرير Cold Chain PDF | لم يُبنَ | Phase 4-5 |
 
-### فجوات وظيفية في Phase 1 (Backend) لم تُبنَ بعد — تُستكمل قبل/أثناء Phase 3-4
-| البند | ملاحظة |
+### فجوات Phase 1 (Backend) — ✅ سُدَّت واتأكدت E2E (2026-07-07)
+| البند | الحالة |
 |------|--------|
-| **Maintenance module (الورشة)** | جدول maintenance_requests موجود، لا endpoints. دور WORKSHOP بلا API بعد |
-| **Customers management** (SUPERVISOR: إنشاء/تعديل شركات) | لا endpoint — العميل يُنشأ عبر seed فقط حالياً |
-| **Order Flow 1B** (المشرف ينشئ طلباً نيابة عن العميل) | لم يُبنَ |
-| **Notifications endpoints** (GET/read/read-all/delete) | NotificationsService.notify فقط — لا REST |
-| **Users CRUD كامل** (list/get/update/status) | فقط POST /users مبني |
-| **Pricing tiers + client overrides** (إدارة المشرف — مرجع داخلي) | جداول موجودة، لا endpoints |
-| **Vehicles**: bulk-status + history + update كامل | فقط create/list/available/get/status |
-| **Order bulk-export (Excel)** | TECH §5.3 — لم يُبنَ |
-| **Audit Log** (كتابة فعلية) | جدول audit_logs موجود، لا middleware يكتب |
-| **Cron jobs**: تذكير صيانة (7 أيام)، انتهاء رخصة، فواتير overdue، حذف GPS بعد 90 يوم | لم تُبنَ (تحتاج BullMQ/Redis) |
-| **Trip detail مع stops** | GET /trips/:id لا يُرجع المحطات (السائق يحتاجها) — تحسين مطلوب |
+| **Maintenance module (الورشة)** | ✅ كان مبنياً بالفعل (create/list/byVehicle/findOne/updateStatus) |
+| **Customers management** (B1) | ✅ GET/POST/PATCH /customers (SUPERVISOR+ACCOUNTANT) — commit 5ebafb4 |
+| **Order Flow 1B** (B2) | ✅ POST /orders/for-customer (SUPERVISOR) — commit 0006852 |
+| **Notifications endpoints** (B5) | ✅ GET/unread-count/read/read-all/delete — commit d2c8cc2 |
+| **Users CRUD كامل** | ✅ كان مبنياً بالفعل (list/get/update/status) |
+| **Pricing tiers + overrides** (B3) | ✅ CRUD كامل /pricing/tiers + /pricing/overrides |
+| **Vehicles bulk-status + export** (B6) | ✅ PATCH /vehicles/bulk-status + GET /vehicles/export |
+| **Order export CSV** (B7) | ✅ GET /orders/export (CSV UTF-8 BOM) |
+| **Audit Log** (B4) | ✅ AuditInterceptor عام يكتب فعلاً + GET /audit-logs (اتأكد: 4 سجلات) |
+| **لوحات المشرف/المحاسب** (B8) | ✅ GET /reports/dashboard + /invoices/summary + /invoices/overdue |
+| **Trip detail مع stops** | ✅ كان مبنياً بالفعل (tripInclude + GET /trips/:id/stops) |
+| **Cron jobs** (تذكير صيانة/رخص/overdue/GPS 90 يوم) | ⏳ لسه — تحتاج BullMQ/Redis — Phase 4 |
 
 ## 🟢 Phase 2 (Flutter) — الأدوار الخمسة مكتملة (2026-07-05، dart analyze نظيف 48 ملف)
 - ✅ عميل (login/home/create/pricing/tracking+خريطة/history/invoices) + سائق (رحلة/GPS/POD/حرارة/offline Hive) + مشرف (تسعير/إسناد/خريطة) + محاسب + ورشة + FCM scaffolding.
@@ -63,3 +64,12 @@
 ## 🔜 Phase 5 (Launch)
 - Google Play ($25) + App Store ($99/سنة) + Vercel (web) + Railway (API/DB/Redis).
 - ZATCA onboarding فعلي + شهادات + production secrets + تدوير كل المفاتيح المكشوفة سابقاً.
+
+## ⏸️ Google Maps Billing — مؤجَّل بقرار المستخدم (2026-07-06)
+> المشروع الجديد **edham-logistics-501615** — Maps key `AIzaSyACj…` تمّ ضبطه بالكامل:
+> APIs مفعّلة (Maps JS + Geocoding + SDK Android/iOS) + المفتاح غير مقيّد على Geocoding (اتصلحت).
+> **العائق الوحيد المتبقّي:** Billing غير مفعّل على المشروع → Maps Platform يرفض كل الطلبات (REQUEST_DENIED "You must enable Billing").
+- **قرار المستخدم:** تأجيل تفعيل Billing لحين الاقتراب من الإطلاق (يحتاج بطاقة ائتمان — $300 رصيد مجاني + حصة شهرية مجانية).
+- **لا يعطّل أي وظيفة:** [map-picker.tsx](apps/web/components/map-picker.tsx) فيه fallback إدخال يدوي تلقائي (gm_authFailure + loadError) — كل فلو الطلبات يكمل بعنوان يدوي.
+- **عند التفعيل:** اربط billing account بالمشروع → الكود يشتغل فوراً بلا أي تعديل (المفتاح والإعدادات جاهزة).
+- **متى يُنفَّذ:** Phase 5 (Launch) أو وقت ما يطلب المستخدم تفعيل الخريطة البصرية.
