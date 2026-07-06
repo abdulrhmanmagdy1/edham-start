@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans_Arabic } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '../components/auth-ui';
 import { Providers } from './providers';
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={ibmPlexArabic.variable}>
       <body className="font-sans">
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );

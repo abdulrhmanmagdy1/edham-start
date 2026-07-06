@@ -5,16 +5,38 @@ import type { AuthTokens } from '@edham/shared-types';
 import { api } from './api';
 import { StoredUser, tokenStore } from './tokens';
 
+export interface SignupCustomerInput {
+  companyName: string;
+  commercialRegistrationNumber?: string;
+  vatNumber?: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  password: string;
+}
+
 interface AuthState {
   user: StoredUser | null;
   ready: boolean;
   sendOtp: (phone: string) => Promise<void>;
   verifyOtp: (phone: string, otp: string) => Promise<StoredUser>;
   login: (identifier: string, password: string) => Promise<StoredUser>;
+  signupCustomer: (input: SignupCustomerInput) => Promise<{ phone: string }>;
+  verifySignupOtp: (phone: string, otp: string) => Promise<StoredUser>;
+  forgotPassword: (identifier: string) => Promise<{ channel: 'phone' | 'email' }>;
+  resetPassword: (identifier: string, otp: string, newPassword: string) => Promise<void>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
+
+/** كوكي الدور (غير حسّاس) — ليقرأه middleware للتوجيه. الأمان الحقيقي على JWT في الـ API. */
+function setRoleCookie(role: string): void {
+  document.cookie = `edham_role=${role}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
+}
+function clearRoleCookie(): void {
+  document.cookie = 'edham_role=; path=/; max-age=0; samesite=lax';
+}
 
 function persist(tokens: AuthTokens): StoredUser {
   const user: StoredUser = {
@@ -23,6 +45,7 @@ function persist(tokens: AuthTokens): StoredUser {
     role: tokens.user.role,
   };
   tokenStore.save(tokens.accessToken, tokens.refreshToken, user);
+  setRoleCookie(user.role);
   return user;
 }
 
@@ -31,7 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setUser(tokenStore.user);
+    const stored = tokenStore.user;
+    setUser(stored);
+    if (stored) setRoleCookie(stored.role); // مزامنة الكوكي عند إعادة التحميل
     setReady(true);
   }, []);
 
@@ -54,8 +79,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
         setUser(u);
         return u;
       },
+      signupCustomer: async (input: SignupCustomerInput): Promise<{ phone: string }> => {
+        const res = await api.post<{ phone: string }>('/auth/signup-customer', input);
+        return { phone: res.phone };
+      },
+      verifySignupOtp: async (phone: string, otp: string): Promise<StoredUser> => {
+        const tokens = await api.post<AuthTokens>('/auth/verify-signup-otp', { phone, otp });
+        const u = persist(tokens);
+        setUser(u);
+        return u;
+      },
+      forgotPassword: async (identifier: string): Promise<{ channel: 'phone' | 'email' }> => {
+        return api.post<{ channel: 'phone' | 'email' }>('/auth/forgot-password', { identifier });
+      },
+      resetPassword: async (identifier: string, otp: string, newPassword: string): Promise<void> => {
+        await api.post('/auth/reset-password', { identifier, otp, newPassword });
+      },
       logout: (): void => {
         tokenStore.clear();
+        clearRoleCookie();
         setUser(null);
       },
     }),
