@@ -18,7 +18,7 @@ import { RolesGuard } from '../../common/auth/roles.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { AssignOrderDto } from './dto/assign.dto';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CreateOrderDto, CreateOrderForCustomerDto } from './dto/create-order.dto';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { SetPriceDto, UpdateOrderStatusDto } from './dto/pricing.dto';
 import { OrdersService } from './orders.service';
@@ -35,6 +35,13 @@ export class OrdersController {
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<OrderDto> {
     return this.orders.create(dto, user);
+  }
+
+  /** المشرف ينشئ طلباً نيابةً عن شركة (Flow 1B). */
+  @Post('for-customer')
+  @Roles(UserRole.SUPERVISOR)
+  createForCustomer(@Body() dto: CreateOrderForCustomerDto): Promise<OrderDto> {
+    return this.orders.createForCustomer(dto.customerId, dto);
   }
 
   @Get()

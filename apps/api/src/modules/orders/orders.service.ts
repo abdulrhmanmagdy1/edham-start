@@ -54,7 +54,23 @@ export class OrdersService {
         message: 'لا يوجد ملف شركة مرتبط بحسابك',
       });
     }
+    return this.persistOrder(customer.id, customer.companyName, dto);
+  }
 
+  /** المشرف ينشئ طلباً نيابةً عن شركة (SPEC Flow 1B — طلبات الهاتف/واتساب). */
+  async createForCustomer(customerId: string, dto: CreateOrderDto): Promise<OrderDto> {
+    const customer = await this.prisma.customer.findUnique({ where: { id: customerId } });
+    if (!customer) {
+      throw new NotFoundException({ code: 'CUSTOMER_NOT_FOUND', message: 'الشركة غير موجودة' });
+    }
+    return this.persistOrder(customer.id, customer.companyName, dto);
+  }
+
+  private async persistOrder(
+    customerId: string,
+    companyName: string,
+    dto: CreateOrderDto,
+  ): Promise<OrderDto> {
     if (dto.coldChainRequired && !dto.temperatureType) {
       throw new BadRequestException({
         code: 'TEMPERATURE_TYPE_REQUIRED',
@@ -68,7 +84,7 @@ export class OrdersService {
 
     const created = await this.prisma.order.create({
       data: {
-        customerId: customer.id,
+        customerId,
         pickupAddress: dto.pickup.address,
         pickupLat: dto.pickup.lat,
         pickupLng: dto.pickup.lng,
@@ -104,7 +120,7 @@ export class OrdersService {
     await this.notifySupervisors(
       NotificationType.ORDER_STATUS,
       'طلب جديد بانتظار التسعير',
-      `طلب جديد من ${customer.companyName} يحتاج تسعيراً`,
+      `طلب جديد من ${companyName} يحتاج تسعيراً`,
       created.id,
     );
 

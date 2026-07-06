@@ -11,6 +11,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsUUID,
   Min,
   MinLength,
   ValidateIf,
@@ -96,4 +97,10 @@ export class CreateOrderDto {
 
   @IsISO8601()
   scheduledAt!: string;
+}
+
+/** المشرف ينشئ طلباً نيابةً عن شركة (Flow 1B) — نفس بيانات الطلب + معرّف الشركة. */
+export class CreateOrderForCustomerDto extends CreateOrderDto {
+  @IsUUID('4', { message: 'معرّف الشركة غير صالح' })
+  customerId!: string;
 }
