@@ -8,6 +8,7 @@ import { RedisModule } from './redis/redis.module';
 import { RedisService } from './redis/redis.service';
 import { RedisThrottlerStorage } from './redis/throttler-redis.storage';
 import { ZatcaModule } from './zatca/zatca.module';
+import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ColdChainModule } from './modules/cold-chain/cold-chain.module';
 import { CustomersModule } from './modules/customers/customers.module';
@@ -42,6 +43,7 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
     }),
     PrismaModule,
     RedisModule,
+    AuditModule,
     ZatcaModule,
     FirebaseModule,
     MessagingModule,
