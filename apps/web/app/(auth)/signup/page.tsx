@@ -6,7 +6,7 @@ import { Button, ErrorText, Input } from '../../../components/ui';
 import { PasswordInput, PasswordStrength, passwordStrength } from '../../../components/auth-ui';
 import { ApiError } from '../../../lib/api';
 import { useAuth } from '../../../lib/auth-context';
-import { AuthLink, AuthShell, OtpField, PhoneField } from '../auth-shell';
+import { AuthLink, AuthShell, isValidSaudiPhone, OtpField, PhoneField } from '../auth-shell';
 
 type Step = 'form' | 'otp';
 
@@ -46,8 +46,12 @@ export default function SignupPage(): React.ReactElement {
 
   const handleSignup = (): Promise<void> =>
     guard(async () => {
-      if (!companyName.trim() || !fullName.trim() || phone.length < 9 || !email.trim()) {
+      if (!companyName.trim() || !fullName.trim() || !email.trim()) {
         setError('يرجى تعبئة كل الحقول المطلوبة (*).');
+        return;
+      }
+      if (!isValidSaudiPhone(phone)) {
+        setError('رقم الجوال يجب أن يبدأ بـ 5 ويتكوّن من 9 أرقام (مثال: 512345678).');
         return;
       }
       if (password !== confirm) {

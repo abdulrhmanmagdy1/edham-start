@@ -67,7 +67,20 @@ export function AuthShell({
   );
 }
 
-/** حقل جوال سعودي: بادئة ثابتة +966 + إدخال للأرقام فقط (يخزّن 5XXXXXXXX). */
+/** يطبّع رقم جوال سعودي إلى صيغة 5XXXXXXXX (يزيل 966/0 الزائدة). */
+export function normalizeSaudiPhone(raw: string): string {
+  let v = raw.replace(/\D/g, '');
+  if (v.startsWith('966')) v = v.slice(3);
+  if (v.startsWith('0')) v = v.slice(1);
+  return v.slice(0, 9);
+}
+
+/** يتحقق أن الرقم بصيغة 5 + 8 أرقام. */
+export function isValidSaudiPhone(v: string): boolean {
+  return /^5\d{8}$/.test(v);
+}
+
+/** حقل جوال سعودي: بادئة ثابتة +966 + تطبيع تلقائي (يخزّن 5XXXXXXXX). */
 export function PhoneField({
   label,
   value,
@@ -79,12 +92,15 @@ export function PhoneField({
   onChange: (v: string) => void;
   autoComplete?: string;
 }): React.ReactElement {
+  const invalid = value.length > 0 && !isValidSaudiPhone(value);
   return (
     <label className="block">
       <span className="mb-1 block text-sm font-medium text-neutral-700">{label}</span>
       <div
         dir="ltr"
-        className="flex items-stretch overflow-hidden rounded-lg border border-neutral-300 focus-within:border-edham-red"
+        className={`flex items-stretch overflow-hidden rounded-lg border ${
+          invalid ? 'border-edham-red' : 'border-neutral-300'
+        } focus-within:border-edham-red`}
       >
         <span className="flex select-none items-center bg-neutral-100 px-3 text-sm font-medium text-neutral-600">
           +966
@@ -97,10 +113,13 @@ export function PhoneField({
           placeholder="5XXXXXXXX"
           aria-label={label}
           maxLength={9}
-          onChange={(e) => onChange(e.target.value.replace(/\D/g, ''))}
+          onChange={(e) => onChange(normalizeSaudiPhone(e.target.value))}
           className="w-full px-3 py-2.5 text-left outline-none"
         />
       </div>
+      <span className={`mt-1 block text-xs ${invalid ? 'text-edham-red' : 'text-neutral-400'}`}>
+        {invalid ? 'يجب أن يبدأ بـ 5 ويتكوّن من 9 أرقام (مثال: 512345678)' : 'أدخل 9 أرقام تبدأ بـ 5'}
+      </span>
     </label>
   );
 }
