@@ -1,6 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { api } from '@/lib/api';
+import { config } from '@/lib/config';
 
 /**
  * قشرة split-screen مشتركة لكل صفحات المصادقة.
@@ -124,15 +127,46 @@ export function PhoneField({
   );
 }
 
+/** تلميح رمز التحقق في وضع التجربة فقط (config.demoMode). */
+function DemoOtpHint({ phone }: { phone?: string }): React.ReactElement | null {
+  const [otp, setOtp] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!config.demoMode || !phone) return;
+    let active = true;
+    api
+      .get<{ otp: string | null }>(`/auth/demo/otp?phone=${encodeURIComponent(phone)}`)
+      .then((r) => {
+        if (active) setOtp(r.otp);
+      })
+      .catch(() => {
+        /* تجاهل */
+      });
+    return () => {
+      active = false;
+    };
+  }, [phone]);
+
+  if (!config.demoMode || !otp) return null;
+  return (
+    <div className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-center text-sm text-amber-800">
+      رمز التجربة: <span className="font-bold tracking-widest">{otp}</span>
+    </div>
+  );
+}
+
 /** حقل رمز تحقق من 6 أرقام. */
 export function OtpField({
   label,
   value,
   onChange,
+  phone,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  /** لعرض رمز التجربة تلقائياً في وضع العرض (اختياري). */
+  phone?: string;
 }): React.ReactElement {
   return (
     <label className="block">
@@ -148,6 +182,7 @@ export function OtpField({
         onChange={(e) => onChange(e.target.value.replace(/\D/g, ''))}
         className="w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-center text-lg tracking-[0.5em] outline-none focus:border-edham-red"
       />
+      <DemoOtpHint phone={phone} />
     </label>
   );
 }

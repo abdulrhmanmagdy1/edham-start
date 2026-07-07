@@ -110,7 +110,12 @@ export default function LoginPage(): React.ReactElement {
               <PhoneField label="رقم الجوال" value={phone} onChange={setPhone} />
               {otpSent && (
                 <>
-                  <OtpField label="رمز التحقق (6 أرقام)" value={otp} onChange={setOtp} />
+                  <OtpField
+                    label="رمز التحقق (6 أرقام)"
+                    value={otp}
+                    onChange={setOtp}
+                    phone={`+966${phone}`}
+                  />
                   <button
                     type="button"
                     onClick={handleSendOtp}

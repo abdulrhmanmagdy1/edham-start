@@ -1,4 +1,14 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AuthTokens, User as UserDto } from '@edham/shared-types';
 import { AuthenticatedUser } from '../../common/auth/auth.types';
@@ -96,5 +106,17 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   me(@CurrentUser() user: AuthenticatedUser): Promise<UserDto> {
     return this.auth.me(user.sub);
+  }
+
+  /**
+   * [تجريبي فقط] إظهار رمز OTP الحالي لرقم — مبوّب بـ DEMO_OTP_ENABLED.
+   * يُعيد 404 في الإنتاج الحقيقي (الـ flag = false).
+   */
+  @Get('demo/otp')
+  demoOtp(@Query('phone') phone: string): Promise<{ otp: string | null }> {
+    if (process.env.DEMO_OTP_ENABLED !== 'true') {
+      throw new NotFoundException();
+    }
+    return this.auth.getDemoOtp(phone);
   }
 }

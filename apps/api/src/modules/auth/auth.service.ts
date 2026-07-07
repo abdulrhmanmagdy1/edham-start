@@ -29,6 +29,15 @@ export class AuthService {
     return randomInt(100000, 1000000).toString();
   }
 
+  /**
+   * [وضع التجربة فقط] يُرجّع رمز OTP الحالي لرقم — للعروض التجريبية.
+   * يُبوَّب في الـ controller بـ DEMO_OTP_ENABLED؛ يجب أن يكون false في الإنتاج الحقيقي.
+   */
+  async getDemoOtp(phone: string): Promise<{ otp: string | null }> {
+    const user = await this.users.findByPhone(phone);
+    return { otp: user?.otpCode ?? null };
+  }
+
   /** POST /auth/signup-customer — تسجيل ذاتي للعميل (CUSTOMER فقط). */
   async signupCustomer(
     dto: SignupCustomerDto,

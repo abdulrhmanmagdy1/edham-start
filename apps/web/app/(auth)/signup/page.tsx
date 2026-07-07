@@ -164,7 +164,7 @@ export default function SignupPage(): React.ReactElement {
         </div>
       ) : (
         <div className="space-y-3">
-          <OtpField label="رمز التحقق (6 أرقام)" value={otp} onChange={setOtp} />
+          <OtpField label="رمز التحقق (6 أرقام)" value={otp} onChange={setOtp} phone={`+966${phone}`} />
           <Button
             type="button"
             disabled={busy || otp.length < 6}
