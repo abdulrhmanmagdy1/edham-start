@@ -1,0 +1,16 @@
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/.git
+**/*.log
+apps/mobile
+design
+docs
+.claude
+**/.env
+**/.env.local
+**/firebase-service-account.json
+**/google-services.json
+**/GoogleService-Info.plist
