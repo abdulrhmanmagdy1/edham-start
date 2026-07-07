@@ -4,13 +4,15 @@ import { DashboardShell, NavItem } from '../../components/dashboard-shell';
 const NAV: NavItem[] = [
   { href: '/supervisor', label: 'لوحة التحكم' },
   { href: '/supervisor/orders', label: 'الطلبات' },
+  { href: '/supervisor/customers', label: 'العملاء' },
   { href: '/supervisor/map', label: 'الخريطة الحية' },
-  { href: '/supervisor/fleet', label: 'الأسطول' },
+  { href: '/supervisor/vehicles', label: 'المركبات' },
   { href: '/supervisor/drivers', label: 'السائقون' },
   { href: '/supervisor/users', label: 'المستخدمون' },
-  { href: '/supervisor/vehicles', label: 'المركبات' },
+  { href: '/supervisor/pricing', label: 'التسعير' },
   { href: '/supervisor/reports', label: 'التقارير' },
   { href: '/supervisor/cold-chain', label: 'سلسلة التبريد' },
+  { href: '/supervisor/audit', label: 'سجل النظام' },
 ];
 
 export default function SupervisorLayout({

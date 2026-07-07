@@ -191,9 +191,14 @@ export default function SupervisorVehiclesPage(): React.ReactElement {
       <PageHeader
         title="المركبات"
         action={
-          <Button variant="outline" onClick={() => setShowForm((s) => !s)}>
-            {showForm ? 'إغلاق' : 'إضافة مركبة'}
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => void api.download('/vehicles/export', 'vehicles.csv')}>
+              تصدير CSV
+            </Button>
+            <Button variant="outline" onClick={() => setShowForm((s) => !s)}>
+              {showForm ? 'إغلاق' : 'إضافة مركبة'}
+            </Button>
+          </div>
         }
       />
 

@@ -94,10 +94,29 @@ async function tryRefresh(): Promise<boolean> {
   return false;
 }
 
+/** تنزيل ملف (CSV) مع ترويسة المصادقة ثم حفظه في المتصفح. */
+async function download(path: string, filename: string): Promise<void> {
+  const headers: Record<string, string> = {};
+  const token = tokenStore.access;
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(`${config.apiBaseUrl}${path}`, { headers });
+  if (!res.ok) throw new ApiError('تعذّر تنزيل الملف', undefined, res.status);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export const api = {
   get: <T>(path: string): Promise<T> => request<T>('GET', path),
   getPaged: <T>(path: string): Promise<Paged<T>> => requestPaged<T>(path),
   post: <T>(path: string, body?: unknown): Promise<T> => request<T>('POST', path, body),
   patch: <T>(path: string, body?: unknown): Promise<T> => request<T>('PATCH', path, body),
   del: <T>(path: string): Promise<T> => request<T>('DELETE', path),
+  download,
 };

@@ -24,26 +24,32 @@ function LiveIndicator({ connected }: { connected: boolean }): React.ReactElemen
   );
 }
 
+interface DashboardStats {
+  orders: {
+    total: number;
+    pendingPricing: number;
+    awaitingCustomer: number;
+    inProgress: number;
+    completed: number;
+    cancelled: number;
+  };
+  trips: { active: number };
+  vehicles: { total: number; available: number; inMaintenance: number };
+  drivers: { available: number };
+  coldChainCompliancePct: number;
+}
+
 interface DashboardData {
-  pendingPricing: number;
-  confirmed: number;
-  inTransit: number;
+  stats: DashboardStats;
   recent: Order[];
 }
 
 async function loadDashboard(): Promise<DashboardData> {
-  const [pending, confirmed, transit, recent] = await Promise.all([
-    api.getPaged<Order>('/orders?status=PENDING_PRICING&page=1&limit=1'),
-    api.getPaged<Order>('/orders?status=CUSTOMER_CONFIRMED&page=1&limit=1'),
-    api.getPaged<Order>('/orders?status=IN_TRANSIT&page=1&limit=1'),
+  const [stats, recent] = await Promise.all([
+    api.get<DashboardStats>('/reports/dashboard'),
     api.getPaged<Order>('/orders?page=1&limit=8'),
   ]);
-  return {
-    pendingPricing: pending.meta.total,
-    confirmed: confirmed.meta.total,
-    inTransit: transit.meta.total,
-    recent: recent.data,
-  };
+  return { stats, recent: recent.data };
 }
 
 function Kpi({
@@ -88,24 +94,57 @@ export default function SupervisorDashboardPage(): React.ReactElement {
 
       {data && (
         <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <Kpi
               label="بانتظار التسعير"
-              value={data.pendingPricing}
+              value={data.stats.orders.pendingPricing}
               href="/supervisor/orders?status=PENDING_PRICING"
               accent="text-amber-600"
             />
             <Kpi
-              label="مؤكّدة — للإسناد"
-              value={data.confirmed}
-              href="/supervisor/orders?status=CUSTOMER_CONFIRMED"
+              label="بانتظار موافقة العميل"
+              value={data.stats.orders.awaitingCustomer}
+              href="/supervisor/orders?status=PRICED"
+              accent="text-blue-600"
+            />
+            <Kpi
+              label="قيد التنفيذ"
+              value={data.stats.orders.inProgress}
+              href="/supervisor/orders"
+              accent="text-green-600"
+            />
+            <Kpi
+              label="مكتملة"
+              value={data.stats.orders.completed}
+              href="/supervisor/orders?status=COMPLETED"
+              accent="text-edham-black"
+            />
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <Kpi
+              label="رحلات نشطة"
+              value={data.stats.trips.active}
+              href="/supervisor/map"
               accent="text-edham-red"
             />
             <Kpi
-              label="في الطريق"
-              value={data.inTransit}
-              href="/supervisor/orders?status=IN_TRANSIT"
+              label="مركبات متاحة"
+              value={data.stats.vehicles.available}
+              href="/supervisor/vehicles"
               accent="text-green-600"
+            />
+            <Kpi
+              label="سائقون متاحون"
+              value={data.stats.drivers.available}
+              href="/supervisor/drivers"
+              accent="text-green-600"
+            />
+            <Kpi
+              label="التزام التبريد %"
+              value={data.stats.coldChainCompliancePct}
+              href="/supervisor/cold-chain"
+              accent="text-blue-600"
             />
           </div>
 

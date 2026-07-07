@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuth } from '../lib/auth-context';
 import { roleArabic } from '../lib/labels';
+import { NotificationBell } from './notification-bell';
 import { Spinner } from './ui';
 
 export interface NavItem {
@@ -60,9 +61,12 @@ export function DashboardShell({
       <div className="flex flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
           <div className="text-sm text-neutral-500">{user.fullName || roleArabic(role)}</div>
-          <button onClick={logout} className="text-sm font-medium text-edham-red hover:underline">
-            تسجيل الخروج
-          </button>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+            <button onClick={logout} className="text-sm font-medium text-edham-red hover:underline">
+              تسجيل الخروج
+            </button>
+          </div>
         </header>
         <main className="flex-1 overflow-x-hidden p-6">{children}</main>
       </div>

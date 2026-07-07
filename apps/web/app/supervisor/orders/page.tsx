@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { api, type Paged } from '@/lib/api';
 import { useQuery } from '@/hooks/use-query';
 import { useRealtime, SOCKET_EVENTS } from '@/lib/realtime';
-import { Card, Spinner, ErrorText, PageHeader, Badge, EmptyState } from '@/components/ui';
+import { Button, Card, Spinner, ErrorText, PageHeader, Badge, EmptyState } from '@/components/ui';
 import { orderStatusArabic, vehicleTypeArabic } from '@/lib/labels';
 import type { Order } from '@edham/shared-types';
 
@@ -64,7 +64,17 @@ function OrdersContent(): React.ReactElement {
 
   return (
     <div>
-      <PageHeader title="الطلبات" action={<LiveIndicator connected={connected} />} />
+      <PageHeader
+        title="الطلبات"
+        action={
+          <div className="flex items-center gap-2">
+            <LiveIndicator connected={connected} />
+            <Button variant="outline" onClick={() => void api.download('/orders/export', 'orders.csv')}>
+              تصدير CSV
+            </Button>
+          </div>
+        }
+      />
 
       <div className="mb-5 flex flex-wrap gap-2">
         {FILTERS.map((f) => (
