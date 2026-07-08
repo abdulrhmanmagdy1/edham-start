@@ -24,6 +24,8 @@ class ApiClient {
           if (e.response?.statusCode == 401 && !isAuthCall && _storage.refreshToken != null) {
             try {
               await _refreshToken();
+              // إعادة المحاولة بالتوكن الجديد صراحةً (لا نعتمد على إعادة تطبيق الترويسة)
+              e.requestOptions.headers['Authorization'] = 'Bearer ${_storage.accessToken}';
               final Response<dynamic> retry = await _dio.fetch<dynamic>(e.requestOptions);
               return handler.resolve(retry);
             } catch (_) {
@@ -40,13 +42,18 @@ class ApiClient {
   final TokenStorage _storage;
 
   Future<void> _refreshToken() async {
-    final Response<dynamic> res = await _dio.post<dynamic>(
+    // Dio منفصل بلا interceptors — يتجنّب تداخل/تكرار عند تجديد التوكن
+    final Dio refreshDio = Dio(BaseOptions(baseUrl: AppConfig.apiBaseUrl));
+    final Response<dynamic> res = await refreshDio.post<dynamic>(
       '/auth/refresh',
       data: <String, dynamic>{'refreshToken': _storage.refreshToken},
-      options: Options(extra: <String, dynamic>{'auth': false}),
     );
     final Map<String, dynamic> data = _unwrap(res.data);
-    await _storage.updateAccessToken(data['accessToken'] as String);
+    final String? token = data['accessToken'] as String?;
+    if (token == null) {
+      throw StateError('لا يوجد accessToken في استجابة التجديد');
+    }
+    await _storage.updateAccessToken(token);
   }
 
   Map<String, dynamic> _unwrap(Object? body) {

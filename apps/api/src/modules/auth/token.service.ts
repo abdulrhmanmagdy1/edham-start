@@ -64,9 +64,11 @@ export class TokenService {
   async issueTokens(user: IssuedUser): Promise<{ accessToken: string; refreshToken: string }> {
     const payload: JwtPayload = { sub: user.id, role: user.role };
 
+    // ACCESS_TOKEN_TTL يتجاوز الافتراضي لكل الأدوار (للضبط/الاختبار). وإلا حسب الدور.
+    const accessTtl = process.env.ACCESS_TOKEN_TTL ?? ACCESS_TTL[user.role];
     const accessToken = await this.jwt.signAsync(payload, {
       secret: this.accessSecret,
-      expiresIn: ACCESS_TTL[user.role],
+      expiresIn: accessTtl,
     });
     const refreshToken = await this.jwt.signAsync(payload, {
       secret: this.refreshSecret,
