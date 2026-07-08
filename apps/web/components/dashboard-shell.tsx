@@ -31,6 +31,11 @@ export function DashboardShell({
     if (ready && (!user || user.role !== role)) router.replace('/login');
   }, [ready, user, role, router]);
 
+  function handleLogout(): void {
+    logout();
+    router.replace('/login');
+  }
+
   if (!ready || !user) return <Spinner />;
 
   return (
@@ -63,7 +68,7 @@ export function DashboardShell({
           <div className="text-sm text-neutral-500">{user.fullName || roleArabic(role)}</div>
           <div className="flex items-center gap-4">
             <NotificationBell />
-            <button onClick={logout} className="text-sm font-medium text-edham-red hover:underline">
+            <button onClick={handleLogout} className="text-sm font-medium text-edham-red hover:underline">
               تسجيل الخروج
             </button>
           </div>
