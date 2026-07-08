@@ -65,7 +65,7 @@ async function loginOtp(phone) {
 
   const PUBLIC = ['/', '/login', '/signup', '/forgot-password', '/reset-password'];
 
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ channel: 'chrome' });
   const findings = [];
 
   async function visit(ctx, url, label) {
