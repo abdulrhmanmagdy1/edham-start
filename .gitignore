@@ -66,3 +66,4 @@ apps/mobile/ios/Pods/
 Thumbs.db
 .idea/
 *.swp
+.vercel

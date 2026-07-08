@@ -1,0 +1,13 @@
+node_modules
+**/node_modules
+.next
+**/.next
+.turbo
+**/.turbo
+.git
+.claude
+apps/mobile
+design
+docs
+coverage
+**/*.log
