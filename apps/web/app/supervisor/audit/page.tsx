@@ -15,18 +15,14 @@ interface AuditRow {
   timestamp: string;
 }
 
-interface AuditPage {
-  data: AuditRow[];
-  meta: { total: number };
-}
-
 function formatDateTime(iso: string): string {
   return new Date(iso).toLocaleString('ar-SA');
 }
 
 export default function SupervisorAuditPage(): React.ReactElement {
-  const { data, loading, error } = useQuery<AuditPage>(
-    () => api.get<AuditPage>('/audit-logs?limit=50'),
+  // endpoint مُصفَّح → getPaged يُرجّع { data, meta }
+  const { data, loading, error } = useQuery(
+    () => api.getPaged<AuditRow>('/audit-logs?limit=50'),
     [],
   );
 
