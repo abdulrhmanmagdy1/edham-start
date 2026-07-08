@@ -10,9 +10,12 @@
 | 2 | كل الأدوار / تسجيل الخروج | الشاشة تعلّق على spinner بعد الخروج (user=null بلا تنقل) | تنقل صريح `router.replace('/login')` في handleLogout | ✅ أُصلح (قيد الرفع) |
 
 ## تقدّم الـ DFS (لكل دور)
-- [ ] SUPERVISOR — كل الشاشات + الأزرار
-- [ ] ACCOUNTANT
-- [ ] WORKSHOP
-- [ ] DRIVER
-- [ ] CUSTOMER
-- [ ] Public (landing/login/signup/forgot/reset)
+
+### الطبقة 1 — تحميل كل الصفحات (Playwright + Chrome) → ✅ صفر أخطاء (31 صفحة)
+- [x] Public (5 صفحات) · SUPERVISOR (14) · ACCOUNTANT (3) · WORKSHOP (3) · DRIVER (2) · CUSTOMER (5)
+- مفيش client-side exception / console error / تعليق على أي صفحة.
+
+### الطبقة 2 — التفاعل (أزرار + فورمات + الفلو الكامل)
+- [ ] فورمات الإنشاء (عميل/شريحة/مركبة/مستخدم/طلب)
+- [ ] الفلو التجاري عبر الواجهة (طلب→تسعير→قبول→إسناد→تسليم→فاتورة→دفع)
+- [ ] الأزرار والفلاتر والتنقّل

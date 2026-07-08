@@ -23,10 +23,15 @@ interface RowFeedback {
 }
 
 export default function BillableOrdersPage(): React.ReactElement {
-  const { data, loading, error, refetch } = useQuery<Order[]>(
-    () => api.get<Order[]>('/orders?status=COMPLETED'),
-    [],
-  );
+  // طلبات مكتملة بلا فاتورة فقط (نستبعد المُفوترة لتجنّب تكرار الفوترة)
+  const { data, loading, error, refetch } = useQuery<Order[]>(async () => {
+    const [orders, invoices] = await Promise.all([
+      api.get<Order[]>('/orders?status=COMPLETED'),
+      api.get<Invoice[]>('/invoices?page=1&limit=200'),
+    ]);
+    const invoiced = new Set(invoices.map((i) => i.orderId));
+    return orders.filter((o) => !invoiced.has(o.id));
+  }, []);
 
   const [busyId, setBusyId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Record<string, RowFeedback>>({});
