@@ -14,18 +14,21 @@
 - وضع تجربة: `DEMO_OTP_ENABLED=true` (باك) + `NEXT_PUBLIC_DEMO_MODE=true` (ويب) — OTP يظهر على الشاشة.
 - أخطاء ويب اتصلحت: كراش audit (getPaged)، تعلّق logout (تنقل صريح)، فوترة مكرّرة (استبعاد المُفوترة).
 
-### 🟡 (A) تطبيقات الموبايل — **الأولوية الحالية (العميل محتاج APK أندرويد كامل)**
-| البند | الحالة | العائق |
-|------|--------|--------|
-| كود Flutter للأدوار الـ5 | ✅ مكتوب (dart analyze نظيف سابقاً) | — |
-| تثبيت Android SDK + JDK | ❌ | BLK-002 (لازم يُثبَّت للبناء) |
-| ربط الموبايل بالباك المرفوع (API + Socket URL) | ❌ | لسه على localhost غالباً |
-| توقيع release + بناء **APK موقّع** | ❌ | محتاج keystore + Android SDK |
-| اختبار APK على emulator/جهاز (صفر أخطاء) | ❌ | محتاج emulator |
-| صور POD حقيقية (image_picker) | ❌ | إضافة package |
-| Socket.io client + FCM فعلي في الموبايل | ❌ | ربط + اختبار |
-| **iOS build** | ❌ | محتاج جهاز **Mac** |
-| نشر Google Play ($25) + App Store ($99/سنة) | ❌ | حسابات مطوّر + مراجعة |
+### 🟢 (A) تطبيقات الموبايل — **APK أندرويد اكتمل واتأكد (2026-07-08)**
+| البند | الحالة |
+|------|--------|
+| كود Flutter للأدوار الـ5 | ✅ |
+| Android SDK + JDK17 + Flutter 3.24.5 مثبّتين (C:\dev) | ✅ |
+| ربط بالباك المرفوع (Railway) + demo OTP + لوجو الشركة | ✅ |
+| **APK موقّع release** (`C:\Users\DELL\Downloads\edham-logistics.apk`, arm64, 11MB) | ✅ |
+| اختبار الواجهة على جهاز حقيقي (Galaxy A72) — كل الأدوار الـ5 صفر أخطاء | ✅ |
+| 🐛 اتصلح: تجديد التوكن (401 بعد انتهاء الصلاحية) — الجلسة كانت تتكسر | ✅ |
+| **متبقٍّ:** بناء 3 معماريات (بنينا arm64 فقط بسبب RAM محدود) | ⏳ |
+| **متبقٍّ:** صور POD حقيقية (image_picker) + Socket.io client + FCM فعلي | ⏳ |
+| **متبقٍّ: iOS build** | ❌ محتاج Mac |
+| **متبقٍّ:** نشر Google Play ($25) + App Store ($99/سنة) | ❌ |
+> ملاحظة بناء: geolocator_android 4.6.2 عُدِّل في pub cache (compileSdk 34 بدل flutter.compileSdkVersion) — لازم يُعاد على أي جهاز بناء جديد، أو نثبّت نسخة geolocator أحدث.
+> keystore التوقيع: `apps/mobile/android/edham-release.jks` (سرّي، غير مرفوع) — **يجب الاحتفاظ به** لتحديثات Play Store المستقبلية.
 
 ### 🟡 (B) تفعيلات ما قبل الإطلاق الحقيقي (بعد موافقة العميل)
 | البند | الحالة |
