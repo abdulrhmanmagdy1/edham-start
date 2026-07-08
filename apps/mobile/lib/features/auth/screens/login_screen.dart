@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/config/app_config.dart';
 import '../../../core/network/api_exception.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../models/enums.dart';
@@ -17,6 +18,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   UserRole _role = UserRole.customer;
   bool _otpSent = false;
   bool _busy = false;
+  String? _demoOtp; // رمز التجربة يُعرض على الشاشة في وضع العرض
 
   final TextEditingController _phone = TextEditingController();
   final TextEditingController _otp = TextEditingController();
@@ -55,7 +57,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _sendOtp() => _guard(() async {
         final String phone = '+966${_phone.text.trim()}';
         await ref.read(authControllerProvider.notifier).sendOtp(phone);
-        if (mounted) setState(() => _otpSent = true);
+        // وضع التجربة: اجلب الرمز واعرضه على الشاشة
+        final String? demo = await ref.read(authRepositoryProvider).getDemoOtp(phone);
+        if (mounted) {
+          setState(() {
+            _otpSent = true;
+            _demoOtp = demo;
+          });
+        }
         _snack('تم إرسال رمز التحقق');
       });
 
@@ -81,7 +90,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 const SizedBox(height: 24),
-                const Icon(Icons.local_shipping, size: 64, color: EdhamColors.red),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/logo.png',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 const SizedBox(height: 12),
                 const Text(
                   'إدهام للوجستيات',
@@ -130,6 +147,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(labelText: 'رمز التحقق (6 أرقام)'),
           ),
+          if (AppConfig.demoMode && _demoOtp != null) ...<Widget>[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF3C7),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'رمز التجربة: $_demoOtp',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0xFF92400E),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
+          ],
         ],
         const SizedBox(height: 20),
         ElevatedButton(

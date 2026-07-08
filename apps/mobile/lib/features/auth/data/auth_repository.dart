@@ -1,3 +1,4 @@
+import '../../../core/config/app_config.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../models/enums.dart';
@@ -33,6 +34,17 @@ class AuthRepository {
       auth: false,
     );
     return _persist(AuthResult.fromJson(data));
+  }
+
+  /// [وضع التجربة فقط] يجلب رمز OTP الحالي لعرضه على الشاشة (DEMO_MODE + DEMO_OTP_ENABLED بالخادم).
+  Future<String?> getDemoOtp(String phone) async {
+    if (!AppConfig.demoMode) return null;
+    try {
+      final Map<String, dynamic> data = await _api.get('/auth/demo/otp', query: <String, dynamic>{'phone': phone});
+      return data['otp'] as String?;
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<void> logout() => _storage.clear();
