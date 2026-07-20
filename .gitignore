@@ -23,6 +23,10 @@ apps/mobile/lib/firebase_options.dart
 **/*firebase-adminsdk-*.json
 **/*service-account*.json
 apps/api/firebase-service-account.json
+firebase-admin.json
+
+# ── كل الأسرار المحلية (مفاتيح خدمة، توكنات) — لا تُرفع أبداً ──
+_secrets/
 
 # ── Android signing ──
 apps/mobile/android/key.properties

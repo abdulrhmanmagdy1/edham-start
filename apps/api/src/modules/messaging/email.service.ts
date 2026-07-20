@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { BrevoEmailProvider } from './email/brevo-email.provider';
 import { EmailProvider } from './email/email-provider';
 import { MockEmailProvider } from './email/mock-email.provider';
 import { ResendProvider } from './email/resend-email.provider';
@@ -21,10 +22,12 @@ interface InvoiceEmailInput {
 }
 
 /**
- * واجهة إرسال البريد — تختار المزوّد تلقائياً:
- * - EMAIL_PROVIDER=resend + RESEND_API_KEY مضبوط → Resend.
+ * واجهة إرسال البريد — تختار المزوّد تلقائياً (الأولوية بالترتيب):
+ * - EMAIL_PROVIDER=brevo + BREVO_API_KEY  → Brevo عبر HTTPS (منفذ 443، لا يُحجب).
+ * - EMAIL_PROVIDER=smtp  + SMTP_USER/PASS → SMTP (محجوب على Railway — للتطوير المحلي فقط).
+ * - EMAIL_PROVIDER=resend + RESEND_API_KEY → Resend (يتطلب دوميناً موثّقاً).
  * - غير ذلك (أو dev) → Mock (يطبع في اللوج).
- * أهم استخدام: إرسال السعر للعميل (PRE-001) + الفواتير.
+ * أهم استخدام: إرسال السعر للعميل (PRE-001) + رمز الدخول + الفواتير.
  */
 @Injectable()
 export class EmailService {
@@ -33,12 +36,15 @@ export class EmailService {
 
   constructor(config: ConfigService) {
     const chosen = config.get<string>('EMAIL_PROVIDER', 'mock');
+    const brevoKey = config.get<string>('BREVO_API_KEY');
     const apiKey = config.get<string>('RESEND_API_KEY');
     const smtpUser = config.get<string>('SMTP_USER');
     const smtpPass = config.get<string>('SMTP_PASS');
     const from = config.get<string>('EMAIL_FROM', 'no-reply@edham.sa');
 
-    if (chosen === 'smtp' && smtpUser && smtpPass) {
+    if (chosen === 'brevo' && brevoKey) {
+      this.provider = new BrevoEmailProvider(brevoKey, from);
+    } else if (chosen === 'smtp' && smtpUser && smtpPass) {
       this.provider = new SmtpEmailProvider(from, {
         host: config.get<string>('SMTP_HOST', 'smtp.gmail.com'),
         port: Number(config.get<string>('SMTP_PORT', '587')),
