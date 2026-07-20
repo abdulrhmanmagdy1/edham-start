@@ -1,7 +1,6 @@
 import Flutter
 import UIKit
 import Firebase
-import GoogleMaps
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,8 +8,8 @@ import GoogleMaps
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    // الخرائط: OpenStreetMap عبر flutter_map — لا تحتاج مفتاح ولا تهيئة.
     FirebaseApp.configure()
-    GMSServices.provideAPIKey("REMOVED_MAPS_KEY")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

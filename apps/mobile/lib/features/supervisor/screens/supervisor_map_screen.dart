@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:edham_mobile/core/theme/app_theme.dart';
+import 'package:edham_mobile/core/widgets/osm_map.dart';
 import 'package:edham_mobile/features/supervisor/providers/supervisor_providers.dart';
 import 'package:edham_mobile/models/fleet.dart';
-
-/// مركز الرياض (نقطة البداية الافتراضية للكاميرا).
-const CameraPosition _riyadh = CameraPosition(
-  target: LatLng(24.7136, 46.6753),
-  zoom: 6,
-);
 
 class SupervisorMapScreen extends ConsumerStatefulWidget {
   const SupervisorMapScreen({super.key});
@@ -20,13 +14,14 @@ class SupervisorMapScreen extends ConsumerStatefulWidget {
 }
 
 class _SupervisorMapScreenState extends ConsumerState<SupervisorMapScreen> {
-  Set<Marker> _markers(List<LocationPoint> points) => points
-      .map((LocationPoint p) => Marker(
-            markerId: MarkerId(p.vehicleId),
-            position: LatLng(p.lat, p.lng),
-            infoWindow: InfoWindow(title: 'مركبة ${p.vehicleId}'),
+  List<OsmPoint> _points(List<LocationPoint> points) => points
+      .map((LocationPoint p) => OsmPoint(
+            id: p.vehicleId,
+            lat: p.lat,
+            lng: p.lng,
+            label: 'مركبة ${p.vehicleId}',
           ))
-      .toSet();
+      .toList();
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +59,7 @@ class _SupervisorMapScreenState extends ConsumerState<SupervisorMapScreen> {
               ),
             );
           }
-          return GoogleMap(
-            initialCameraPosition: _riyadh,
-            markers: _markers(points),
-            myLocationButtonEnabled: false,
-          );
+          return OsmMap(points: _points(points), zoom: 10);
         },
       ),
     );

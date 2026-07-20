@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/osm_map.dart';
 import '../../../models/enums.dart';
 import '../../../models/track.dart';
 import '../providers/orders_providers.dart';
@@ -68,14 +68,11 @@ class CustomerTrackingScreen extends ConsumerWidget {
         ),
       );
     }
-    final LatLng pos = LatLng(info.lat!, info.lng!);
-    return GoogleMap(
-      initialCameraPosition: CameraPosition(target: pos, zoom: 12),
-      markers: <Marker>{
-        Marker(markerId: const MarkerId('vehicle'), position: pos, infoWindow: const InfoWindow(title: 'موقع الشحنة')),
-      },
-      myLocationButtonEnabled: false,
-      zoomControlsEnabled: false,
+    return OsmMap(
+      points: <OsmPoint>[
+        OsmPoint(id: 'vehicle', lat: info.lat!, lng: info.lng!, label: 'موقع الشحنة'),
+      ],
+      zoom: 12,
     );
   }
 

@@ -26,7 +26,6 @@ dependencies:
   go_router: ^14.0.0
 
   # الخرائط والموقع
-  google_maps_flutter: ^2.6.0
   geolocator: ^12.0.0
 
   # التتبع الحي (Socket.io)
@@ -38,6 +37,8 @@ dependencies:
 
   # التعريب والتنسيق
   intl: ^0.19.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

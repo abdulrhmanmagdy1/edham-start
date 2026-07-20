@@ -1,7 +1,6 @@
 'use client';
 
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { config } from '../lib/config';
+import dynamic from 'next/dynamic';
 
 export interface MapPoint {
   id: string;
@@ -10,9 +9,20 @@ export interface MapPoint {
   label?: string;
 }
 
-const RIYADH = { lat: 24.7136, lng: 46.6753 };
+/** Leaflet يحتاج المتصفح — نحمّله بلا SSR. */
+const OsmPointsMap = dynamic(
+  () => import('./osm-map').then((m) => m.OsmPointsMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-[420px] items-center justify-center rounded-xl bg-neutral-100 text-neutral-400">
+        جاري تحميل الخريطة…
+      </div>
+    ),
+  },
+);
 
-/** خريطة Google تعرض نقاطاً (مركبات/شحنة). تحتاج NEXT_PUBLIC_GOOGLE_MAPS_API_KEY. */
+/** خريطة حيّة تعرض نقاطاً (مركبات/شحنة) — OpenStreetMap مجاني بلا مفتاح. */
 export function LiveMap({
   points,
   height = 420,
@@ -22,43 +32,5 @@ export function LiveMap({
   height?: number;
   zoom?: number;
 }): React.ReactElement {
-  const { isLoaded } = useJsApiLoader({
-    id: 'edham-maps',
-    googleMapsApiKey: config.mapsApiKey,
-  });
-
-  if (!config.mapsApiKey) {
-    return (
-      <div
-        style={{ height }}
-        className="flex items-center justify-center rounded-xl bg-neutral-100 text-neutral-400"
-      >
-        مفتاح الخرائط غير مضبوط (NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)
-      </div>
-    );
-  }
-  if (!isLoaded) {
-    return (
-      <div style={{ height }} className="flex items-center justify-center rounded-xl bg-neutral-100">
-        جاري تحميل الخريطة…
-      </div>
-    );
-  }
-
-  const first = points[0];
-  const center = first ? { lat: first.lat, lng: first.lng } : RIYADH;
-
-  return (
-    <div className="overflow-hidden rounded-xl">
-      <GoogleMap
-        mapContainerStyle={{ width: '100%', height }}
-        center={center}
-        zoom={first ? Math.max(zoom, 10) : zoom}
-      >
-        {points.map((p) => (
-          <Marker key={p.id} position={{ lat: p.lat, lng: p.lng }} title={p.label} />
-        ))}
-      </GoogleMap>
-    </div>
-  );
+  return <OsmPointsMap points={points} height={height} zoom={zoom} />;
 }
