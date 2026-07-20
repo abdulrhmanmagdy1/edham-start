@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:edham_mobile/core/network/api_exception.dart';
 import 'package:edham_mobile/core/theme/app_theme.dart';
@@ -73,7 +77,6 @@ class _DriverTripScreenState extends ConsumerState<DriverTripScreen> {
         stop.id,
         recipientName: result.recipientName,
         podPhotoUrl: result.podPhotoUrl,
-        podSignatureUrl: result.podSignatureUrl,
       );
       _refresh();
       _showSnack('تم تسليم المحطة');
@@ -84,7 +87,6 @@ class _DriverTripScreenState extends ConsumerState<DriverTripScreen> {
               stopId: stop.id,
               recipientName: result.recipientName,
               podPhotoUrl: result.podPhotoUrl,
-              podSignatureUrl: result.podSignatureUrl,
             );
         _showSnack('لا يوجد اتصال — سيُزامَن التسليم عند عودة الاتصال');
       } else {
@@ -489,11 +491,10 @@ class _StopTile extends StatelessWidget {
 
 /// نتيجة حوار التسليم.
 class _DeliverResult {
-  const _DeliverResult({this.recipientName, this.podPhotoUrl, this.podSignatureUrl});
+  const _DeliverResult({this.recipientName, this.podPhotoUrl});
 
   final String? recipientName;
   final String? podPhotoUrl;
-  final String? podSignatureUrl;
 }
 
 class _DeliverDialog extends StatefulWidget {
@@ -507,7 +508,10 @@ class _DeliverDialog extends StatefulWidget {
 
 class _DeliverDialogState extends State<_DeliverDialog> {
   final TextEditingController _recipient = TextEditingController();
-  bool _captured = false;
+  final ImagePicker _picker = ImagePicker();
+  Uint8List? _photoBytes; // معاينة الصورة
+  String? _photoDataUri; // تُرسل للخادم
+  bool _capturing = false;
 
   @override
   void initState() {
@@ -523,6 +527,33 @@ class _DeliverDialogState extends State<_DeliverDialog> {
     super.dispose();
   }
 
+  /// التقاط صورة إثبات التسليم (مضغوطة) وتحويلها إلى data URI.
+  Future<void> _capture(ImageSource source) async {
+    setState(() => _capturing = true);
+    try {
+      final XFile? file = await _picker.pickImage(
+        source: source,
+        maxWidth: 1024,
+        imageQuality: 55, // ضغط لتقليل الحجم المُرسل
+      );
+      if (file == null) return;
+      final Uint8List bytes = await file.readAsBytes();
+      if (!mounted) return;
+      setState(() {
+        _photoBytes = bytes;
+        _photoDataUri = 'data:image/jpeg;base64,${base64Encode(bytes)}';
+      });
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر التقاط الصورة')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _capturing = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -535,11 +566,31 @@ class _DeliverDialogState extends State<_DeliverDialog> {
             decoration: const InputDecoration(labelText: 'اسم المستلم'),
           ),
           const SizedBox(height: 12),
-          // TODO(كاميرا): التقاط صورة/توقيع حقيقي لاحقاً عبر image_picker.
-          OutlinedButton.icon(
-            onPressed: () => setState(() => _captured = true),
-            icon: Icon(_captured ? Icons.check : Icons.camera_alt),
-            label: Text(_captured ? 'تم الالتقاط' : 'التقاط صورة / توقيع'),
+          if (_photoBytes != null) ...<Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(_photoBytes!, height: 120, fit: BoxFit.cover),
+            ),
+            const SizedBox(height: 8),
+          ],
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _capturing ? null : () => _capture(ImageSource.camera),
+                  icon: Icon(_photoBytes != null ? Icons.check : Icons.camera_alt),
+                  label: Text(_photoBytes != null ? 'إعادة الالتقاط' : 'كاميرا'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _capturing ? null : () => _capture(ImageSource.gallery),
+                  icon: const Icon(Icons.photo_library),
+                  label: const Text('من المعرض'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -553,8 +604,7 @@ class _DeliverDialogState extends State<_DeliverDialog> {
             final String name = _recipient.text.trim();
             Navigator.of(context).pop(_DeliverResult(
               recipientName: name.isEmpty ? null : name,
-              podPhotoUrl: _captured ? 'captured://pod' : null,
-              podSignatureUrl: _captured ? 'captured://pod' : null,
+              podPhotoUrl: _photoDataUri,
             ));
           },
           child: const Text('تأكيد التسليم'),

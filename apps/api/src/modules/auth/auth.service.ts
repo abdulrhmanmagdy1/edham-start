@@ -125,8 +125,11 @@ export class AuthService {
     return { success: true };
   }
 
-  /** POST /auth/send-otp — عميل (SPEC §2.1). ينشئ حساب shell للرقم الجديد. */
-  async sendOtp(phone: string): Promise<{ success: boolean; expiresIn: number }> {
+  /**
+   * POST /auth/send-otp — عميل (SPEC §2.1). ينشئ حساب shell للرقم الجديد.
+   * يُرسل الرمز عبر SMS وكذلك عبر البريد إن كان للمستخدم بريد مسجّل.
+   */
+  async sendOtp(phone: string): Promise<{ success: boolean; expiresIn: number; sentToEmail: boolean }> {
     let user = await this.users.findByPhone(phone);
     user ??= await this.users.createCustomerShell(phone);
 
@@ -135,7 +138,14 @@ export class AuthService {
     await this.users.setOtp(user.id, code, expiresAt);
     await this.sms.sendOtp(phone, code);
 
-    return { success: true, expiresIn: OTP_TTL_MINUTES * 60 };
+    // إرسال على البريد كذلك (بديل مجاني للـ SMS).
+    // بلا await: لا نُعطّل استجابة الدخول لو كان مزوّد البريد بطيئاً/محجوباً.
+    const sentToEmail = Boolean(user.email);
+    if (user.email) {
+      void this.email.sendLoginOtpEmail(user.email, code);
+    }
+
+    return { success: true, expiresIn: OTP_TTL_MINUTES * 60, sentToEmail };
   }
 
   /** POST /auth/verify-otp — تحقق + إصدار توكنات. */

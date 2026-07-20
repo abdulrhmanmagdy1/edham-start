@@ -49,5 +49,9 @@
 	<string>يستخدم التطبيق موقعك لتتبع الشحنات وبثّ موقع السائق أثناء الرحلة.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>يحتاج التطبيق موقعك في الخلفية لمواصلة بثّ موقع السائق أثناء الرحلة.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>يستخدم التطبيق الكاميرا لالتقاط صورة إثبات التسليم عند تسليم الشحنة.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>يستخدم التطبيق معرض الصور لاختيار صورة إثبات التسليم.</string>
 </dict>
 </plist>

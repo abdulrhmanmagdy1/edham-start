@@ -18,20 +18,22 @@ const ACCESS_TTL: Record<UserRole, string> = {
   [UserRole.WORKSHOP]: '15m',
 };
 
+// جلسة 30 يوم لكل الأدوار (قرار المستخدم) — تُجدَّد تلقائياً عبر refresh token.
 const REFRESH_TTL: Record<UserRole, string> = {
   [UserRole.DRIVER]: '30d',
   [UserRole.CUSTOMER]: '30d',
-  [UserRole.SUPERVISOR]: '8h',
-  [UserRole.ACCOUNTANT]: '8h',
-  [UserRole.WORKSHOP]: '8h',
+  [UserRole.SUPERVISOR]: '30d',
+  [UserRole.ACCOUNTANT]: '30d',
+  [UserRole.WORKSHOP]: '30d',
 };
 
+const THIRTY_DAYS_SECONDS = 60 * 60 * 24 * 30;
 const REFRESH_TTL_SECONDS: Record<UserRole, number> = {
-  [UserRole.DRIVER]: 60 * 60 * 24 * 30,
-  [UserRole.CUSTOMER]: 60 * 60 * 24 * 30,
-  [UserRole.SUPERVISOR]: 60 * 60 * 8,
-  [UserRole.ACCOUNTANT]: 60 * 60 * 8,
-  [UserRole.WORKSHOP]: 60 * 60 * 8,
+  [UserRole.DRIVER]: THIRTY_DAYS_SECONDS,
+  [UserRole.CUSTOMER]: THIRTY_DAYS_SECONDS,
+  [UserRole.SUPERVISOR]: THIRTY_DAYS_SECONDS,
+  [UserRole.ACCOUNTANT]: THIRTY_DAYS_SECONDS,
+  [UserRole.WORKSHOP]: THIRTY_DAYS_SECONDS,
 };
 
 type IssuedUser = Pick<AuthTokens['user'], 'id' | 'role'>;

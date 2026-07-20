@@ -1,6 +1,10 @@
+import { setDefaultResultOrder } from 'node:dns';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+
+// بيئات الاستضافة (Railway) غالباً بلا IPv6 → نفضّل IPv4 لكل الاتصالات الصادرة (SMTP وغيره).
+setDefaultResultOrder('ipv4first');
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';

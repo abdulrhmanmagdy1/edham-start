@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { EmailProvider } from './email/email-provider';
 import { MockEmailProvider } from './email/mock-email.provider';
 import { ResendProvider } from './email/resend-email.provider';
+import { SmtpEmailProvider } from './email/smtp-email.provider';
 
 interface PricingEmailInput {
   to: string;
@@ -33,9 +34,19 @@ export class EmailService {
   constructor(config: ConfigService) {
     const chosen = config.get<string>('EMAIL_PROVIDER', 'mock');
     const apiKey = config.get<string>('RESEND_API_KEY');
+    const smtpUser = config.get<string>('SMTP_USER');
+    const smtpPass = config.get<string>('SMTP_PASS');
+    const from = config.get<string>('EMAIL_FROM', 'no-reply@edham.sa');
 
-    if (chosen === 'resend' && apiKey) {
-      this.provider = new ResendProvider(apiKey, config.get<string>('EMAIL_FROM', 'no-reply@edham.sa'));
+    if (chosen === 'smtp' && smtpUser && smtpPass) {
+      this.provider = new SmtpEmailProvider(from, {
+        host: config.get<string>('SMTP_HOST', 'smtp.gmail.com'),
+        port: Number(config.get<string>('SMTP_PORT', '587')),
+        user: smtpUser,
+        pass: smtpPass,
+      });
+    } else if (chosen === 'resend' && apiKey) {
+      this.provider = new ResendProvider(apiKey, from);
     } else {
       this.provider = new MockEmailProvider();
     }
@@ -53,6 +64,19 @@ export class EmailService {
         <p>يمكنك قبول السعر أو رفضه من التطبيق.</p>
       </div>`;
     await this.provider.send(input.to, subject, body);
+  }
+
+  /** رمز الدخول (OTP) للعميل — بديل الـ SMS. */
+  async sendLoginOtpEmail(to: string, code: string): Promise<void> {
+    const subject = 'رمز الدخول — إدهام للوجستيات';
+    const body = `
+      <div dir="rtl" style="font-family:Arial,sans-serif">
+        <h2 style="color:#0D0D0D">إدهام للوجستيات</h2>
+        <p>رمز الدخول الخاص بك:</p>
+        <p style="font-size:32px;font-weight:bold;letter-spacing:6px;color:#DC2626">${code}</p>
+        <p>صالح لمدة 10 دقائق. إذا لم تطلب الدخول، تجاهل هذه الرسالة.</p>
+      </div>`;
+    await this.provider.send(to, subject, body);
   }
 
   async sendOtpEmail(to: string, code: string): Promise<void> {
