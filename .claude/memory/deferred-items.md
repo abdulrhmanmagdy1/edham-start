@@ -5,11 +5,16 @@
 
 ---
 
-## 🗂️ السجل الرئيسي — كل المتبقّي (المصدر الوحيد لـ "فاضل إيه") — آخر تحديث 2026-07-08
+## 🗂️ السجل الرئيسي — كل المتبقّي (المصدر الوحيد لـ "فاضل إيه") — آخر تحديث 2026-09-28
 
-### ✅ خلص ومرفوع (LIVE)
-- الباك اند (NestJS) على **Railway** — API + Postgres + Redis. رابط: `api-production-08eb.up.railway.app`
-- الويب (Next.js) على **Vercel** — كل الأدوار الـ5. رابط: `web-nu-lac-65.vercel.app`
+### ✅ خلص ومرفوع (LIVE) — استضافة مجانية مؤقتة (2026-09-28) لحد ما ناخد سيرفر
+- ⚠️ Railway **وقع** (Application not found — الرصيد/التجربة خلص) + مشروع Vercel القديم `web-nu-lac-65` في حساب Vercel تاني. اتنقلنا:
+- الباك اند (NestJS) على **Render Free** (Docker من `render.yaml`، autoDeploy من GitHub main): `https://edham-api.onrender.com` — بينام بعد 15د (أول طلب ~50ث).
+- الداتا بيز على **Neon Free** (Postgres، Frankfurt، project `edham`) — migrate + seed اتعملوا من الجهاز المحلي. Redis: مفيش (fallback in-memory).
+- الويب على **Vercel** (فريق abdulrhmanmagdy13-gmailcoms-projects، مشروع `edham-web`، root `apps/web` + `apps/web/vercel.json`): `https://edham-web.vercel.app`
+- اتأكد: crawl 32 صفحة صفر أخطاء + فلو (إنشاء طلب/تسعير/قبول/إسناد/CSV) ✅.
+- الكود كله على GitHub (public) — مفاتيح Maps القديمة اتشالت من التاريخ قبل الرفع.
+- 🔔 أمان: باسورد Neon اتكتب في الشات → يتغيّر عند النقل لسيرفر حقيقي. الموبايل APK لسه بيشاور على Railway → لازم rebuild على الرابط الجديد.
 - تيست E2E + شجرة اختبار Playwright كاملة (31 صفحة + كل الفلو) = صفر أخطاء.
 - وضع تجربة: `DEMO_OTP_ENABLED=true` (باك) + `NEXT_PUBLIC_DEMO_MODE=true` (ويب) — OTP يظهر على الشاشة.
 - أخطاء ويب اتصلحت: كراش audit (getPaged)، تعلّق logout (تنقل صريح)، فوترة مكرّرة (استبعاد المُفوترة).

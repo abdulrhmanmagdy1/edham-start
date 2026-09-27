@@ -73,3 +73,4 @@ DRAFT → PENDING_PRICING → PRICED → CUSTOMER_CONFIRMED → ASSIGNED → LOA
 - **DB:** PostgreSQL 16.4 محمول يعمل على **port 5433** (scratchpad/pgsql + pgdata، trust auth). `.env` يشير إليه. إعادة التشغيل بعد إقفال الجهاز عبر pg_ctl (راجع blockers.md BLK-001). Docker غير مثبّت.
 - **⚠️ تعارض ألوان (لحسمه في Phase 3):** BRAIN/CLAUDE يقولان أسود #0D0D0D + أحمر #DC2626، لكن `docs/DESIGN_SYSTEM.md §2` يعرّف primary أزرق #2563EB. الـ Web scaffold استخدم الأسود/الأحمر حالياً. يجب حسم المرجع قبل بناء شاشات Phase 3.
 - **بنية dist:** أُضيف `apps/api/tsconfig.build.json` يستثني `prisma/` كي يكون الإخراج `dist/main.js` مباشرة (seed يُشغَّل بـ ts-node).
+- **الاستضافة الحالية (2026-09-28، مؤقتة مجانية):** API على Render `edham-api.onrender.com` + DB على Neon + ويب Vercel `edham-web.vercel.app`. Railway القديم وقع. التفاصيل في [deferred-items.md](memory/deferred-items.md).
