@@ -76,12 +76,14 @@ function watch(page, label) {
     const page = await ctx.newPage(); watch(page, 'new-order');
     await page.goto(`${BASE}/customer/new-order`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1500);
-    // MapPicker بلا مفتاح خرائط → حقول نصية يدوية
-    await page.locator('label:has-text("موقع الاستلام") input').fill('مستودع الرياض - تفاعل ' + rnd);
-    await page.locator('label:has-text("الموقع") input').first().fill('وجهة جدة - تفاعل ' + rnd);
+    // MapPicker (OSM): الاستلام بالنقر على الخريطة، والوجهة بالإدخال اليدوي
+    await page.locator('.leaflet-container').first().click();
+    await page.getByText('الموقع المختار:').first().waitFor({ timeout: 30000 });
+    await page.getByRole('button', { name: 'إدخال يدوي' }).last().click();
+    await page.locator('input[placeholder^="أدخل العنوان يدوياً"]').fill('وجهة جدة - تفاعل ' + rnd);
     await page.locator('label:has-text("الوزن") input').fill('750');
     // تاريخ الجدولة
-    await page.locator('input[type="date"]').fill('2026-08-15');
+    await page.locator('input[type="date"]').fill('2026-12-15');
     await page.getByRole('button', { name: 'إرسال الطلب' }).click();
     await page.waitForTimeout(3000);
     const url = page.url();

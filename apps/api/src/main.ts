@@ -2,6 +2,7 @@ import { setDefaultResultOrder } from 'node:dns';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 
 // بيئات الاستضافة (Railway) غالباً بلا IPv6 → نفضّل IPv4 لكل الاتصالات الصادرة (SMTP وغيره).
 setDefaultResultOrder('ipv4first');
@@ -10,8 +11,12 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: false });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: false });
   const config = app.get(ConfigService);
+
+  // خلف proxy المضيف (Render/Railway): نقرأ IP العميل الحقيقي من X-Forwarded-For —
+  // بدونه كل المستخدمين يشاركون نفس الـ IP فيتقاسمون حدّ الـ rate-limit (5 OTP/ساعة للموقع كله).
+  app.set('trust proxy', true);
 
   // كل الـ endpoints تحت /api/v1 (TECH.md §5)
   app.setGlobalPrefix('api');
