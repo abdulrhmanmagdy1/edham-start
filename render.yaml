@@ -1,0 +1,29 @@
+# Render Blueprint — استضافة مؤقتة مجانية للـ API (لحد ما ناخد سيرفر)
+# الـ DB على Neon (مجانية) — DATABASE_URL يتحط يدوياً وقت إنشاء الـ Blueprint
+services:
+  - type: web
+    name: edham-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: SMS_PROVIDER
+        value: mock
+      - key: EMAIL_PROVIDER
+        value: mock
+      - key: ZATCA_ENABLED
+        value: "false"
+      - key: DEMO_OTP_ENABLED
+        value: "true"
