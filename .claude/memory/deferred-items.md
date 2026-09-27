@@ -14,6 +14,7 @@
 - الويب على **Vercel** (فريق abdulrhmanmagdy13-gmailcoms-projects، مشروع `edham-web`، root `apps/web` + `apps/web/vercel.json`): `https://edham-web.vercel.app`
 - اتأكد: crawl 32 صفحة صفر أخطاء + فلو (إنشاء طلب/تسعير/قبول/إسناد/CSV) ✅.
 - الكود كله على GitHub (public) — مفاتيح Maps القديمة اتشالت من التاريخ قبل الرفع.
+- ⏸️ مؤجَّل بقرار المستخدم: النشر التلقائي في Render مش شغال (تطبيق Render على GitHub مش متركّب على edham-start) → أي تعديل في الباك محتاج **Manual Deploy → Deploy latest commit** يدوي. الويب (Vercel) بيسحب لوحده. الحل وقت الحاجة: تركيب github.com/apps/render على الريبو أو Deploy Hook.
 - 🔔 أمان: باسورد Neon اتكتب في الشات → يتغيّر عند النقل لسيرفر حقيقي. الموبايل APK لسه بيشاور على Railway → لازم rebuild على الرابط الجديد.
 - تيست E2E + شجرة اختبار Playwright كاملة (31 صفحة + كل الفلو) = صفر أخطاء.
 - وضع تجربة: `DEMO_OTP_ENABLED=true` (باك) + `NEXT_PUBLIC_DEMO_MODE=true` (ويب) — OTP يظهر على الشاشة.
